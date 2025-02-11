@@ -23,6 +23,10 @@
 
 Para realizar este proyecto me apoyaré en los robots *Armeo Spring* y *Armeo Power* porque son similares a los objetivos de mi proyecto.
 
+Enlaces a las páginas web de ambos hospitales:
+- [Guadarrama](https://www.comunidad.madrid/hospital/guadarrama/)
+- [Los Madroños](https://hospitallosmadronos.es/unidades-especializadas/unidad-avanzada-de-neurorrehabilitacion/robotica/)
+
 ### Conceptos generales sobre el ictus
 
 - Síntomas: **adormecimiento** o debilidad repentina en la cara, el brazo o una pierna, especialmente **en uno de los lados del cuerpo**. **Confusión** repentina, **dificultad para hablar**. **Pérdida de la coordinación** o el equilibro, mareo o dificultad para andar.
