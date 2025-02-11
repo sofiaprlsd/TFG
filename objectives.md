@@ -2,11 +2,11 @@
 
 ## Semana 1, 3/02/24 - 9/02/24
 
-* Crear un repositorio para el proyecto *[Check]*
-* Definir los requerimientos y planteamiento del proyecto *[Check]*
-* Buscar hospitales que trabajen con robots durante la rahabilitación de pacientes *[Check]*
-* Leer sobre las actividades de rehabilitación post-ictus *[Check]*
-* Investigar sobre el ictus en general (síntomas, causas, efectos,...) *[Check]*
+- [x] Crear un repositorio para el proyecto
+- [x] Definir los requerimientos y planteamiento del proyecto
+- [x] Buscar hospitales que trabajen con robots durante la rahabilitación de pacientes
+- [x] Leer sobre las actividades de rehabilitación post-ictus
+- [x] Investigar sobre el ictus en general (síntomas, causas, efectos,...) *[Check]*
 
 ## Conceptos aprendidos S1
 
@@ -32,6 +32,6 @@ Para realizar este proyecto me apoyaré en los robots *Armeo Spring* y *Armeo Po
 
 ## Semana 2, 10/02/24 - 16/02/24
 
-* Leer el plan de atención a los pacientes con ictus propuesto la Comunidad de Madrid
-* Investigar sobre la técnica gaming
-* Obtener más información sobre los centros de rahabilitación de ictus en Madrid
+- [ ] Leer el plan de atención a los pacientes con ictus propuesto la Comunidad de Madrid
+- [ ] Investigar sobre la técnica gaming
+- [ ] Obtener más información sobre los centros de rahabilitación de ictus en Madrid
