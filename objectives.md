@@ -36,6 +36,12 @@ Enlaces a las páginas web de ambos hospitales:
 
 ## Semana 2, 10/02/24 - 16/02/24
 
-- [ ] Leer el plan de atención a los pacientes con ictus propuesto por la Comunidad de Madrid
+- [x] Leer el plan de atención a los pacientes con ictus propuesto por la Comunidad de Madrid
 - [ ] Investigar sobre la técnica gaming
 - [ ] Obtener más información sobre los centros de rahabilitación de ictus en Madrid
+
+## Conceptos aprendidos S2
+
+- *"Los pacientes que inician el tratamiento rehabilitador durante la primera semana después del ictus tienen menor grado de discapacidad y más calidad de vida a largo plazo que los que la inician más tarde."* Conserjería de Sanidad, Comunidad de Madrid.
+- *"La medida objetiva de la función mediante escalas y medidas válidas y fiables permite en cada paciente identificar los problemas, establecer los objetivos, determinar las intervenciones, controlar su eficacia y evaluar los resultados."* Conserjería de Sanidad, Comunidad de Madrid.
+- *"El resultado de las Unidades de Ictus en cuanto a mayor supervivencia y menor dependencia, viene determinado por disponer de procedimientos diagnósticos, monitorización y tratamientos de fase aguda"* Conserjería de Sanidad, Comunidad de Madrid.
