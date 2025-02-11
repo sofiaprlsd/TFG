@@ -29,13 +29,13 @@ Enlaces a las páginas web de ambos hospitales:
 
 ### Conceptos generales sobre el ictus
 
-- Síntomas: **adormecimiento** o debilidad repentina en la cara, el brazo o una pierna, especialmente **en uno de los lados del cuerpo**. **Confusión** repentina, **dificultad para hablar**. **Pérdida de la coordinación** o el equilibro, mareo o dificultad para andar.
+- **Síntomas**: **adormecimiento** o debilidad repentina en la cara, el brazo o una pierna, especialmente **en uno de los lados del cuerpo**. **Confusión** repentina, **dificultad para hablar**. **Pérdida de la coordinación** o el equilibro, mareo o dificultad para andar.
 
-- Causas: como causa principal tenemos la **hipertensión** arterial.
+- **Causas**: como causa principal tenemos la **hipertensión** arterial.
 
 
 ## Semana 2, 10/02/24 - 16/02/24
 
-- [ ] Leer el plan de atención a los pacientes con ictus propuesto la Comunidad de Madrid
+- [ ] Leer el plan de atención a los pacientes con ictus propuesto por la Comunidad de Madrid
 - [ ] Investigar sobre la técnica gaming
 - [ ] Obtener más información sobre los centros de rahabilitación de ictus en Madrid
