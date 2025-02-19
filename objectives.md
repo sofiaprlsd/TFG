@@ -38,7 +38,7 @@ Enlaces a las páginas web de ambos hospitales:
 
 - [x] Leer el plan de atención a los pacientes con ictus propuesto por la Comunidad de Madrid
 - [ ] Investigar sobre la técnica gaming
-- [ ] Obtener más información sobre los centros de rahabilitación de ictus en Madrid
+- [x] Investigar sobre y escribir a los centros de rahabilitación de ictus en Madrid
 
 ## Conceptos aprendidos S2
 
