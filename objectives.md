@@ -1,16 +1,15 @@
 # Objetivos semanales
 
-## Semana 1, 3/02/24 - 9/02/24
+## Semana 1, 3/02/25 - 9/02/25
 
 - [x] Crear un repositorio para el proyecto
 - [x] Definir los requerimientos y planteamiento del proyecto
 - [x] Buscar hospitales que trabajen con robots durante la rahabilitación de pacientes
-- [x] Leer sobre las actividades de rehabilitación post-ictus
 - [x] Investigar sobre el ictus en general (síntomas, causas, efectos,...) *[Check]*
 
 ## Conceptos aprendidos S1
 
-### Centros de rehabilitación ictus en Madrid
+### Centros de rehabilitación ictus con robots en Madrid
 
 | Centro | Robot | Parte del cuerpo | Función |
 | - | - | - | - |
@@ -24,8 +23,8 @@
 Para realizar este proyecto me apoyaré en los robots *Armeo Spring* y *Armeo Power* porque son similares a los objetivos de mi proyecto.
 
 Enlaces a las páginas web de ambos hospitales:
-- [Guadarrama](https://www.comunidad.madrid/hospital/guadarrama/)
-- [Los Madroños](https://hospitallosmadronos.es/unidades-especializadas/unidad-avanzada-de-neurorrehabilitacion/robotica/)
+- [Hospital de Guadarrama](https://www.comunidad.madrid/hospital/guadarrama/)
+- [Hospital Los Madroños](https://hospitallosmadronos.es/unidades-especializadas/unidad-avanzada-de-neurorrehabilitacion/robotica/)
 
 ### Conceptos generales sobre el ictus
 
@@ -34,14 +33,54 @@ Enlaces a las páginas web de ambos hospitales:
 - **Causas**: como causa principal tenemos la **hipertensión** arterial.
 
 
-## Semana 2, 10/02/24 - 16/02/24
+## Semana 2, 10/02/25 - 16/02/25
 
 - [x] Leer el plan de atención a los pacientes con ictus propuesto por la Comunidad de Madrid
-- [ ] Investigar sobre la técnica gaming
-- [x] Investigar sobre y escribir a los centros de rahabilitación de ictus en Madrid
+- [x] Buscar actividades de rehabilitación post-ictus
+- [x] Investigar sobre la técnica gaming
 
 ## Conceptos aprendidos S2
+
+Plan de atención a los pacientes con ictus, Comunidad de Madrid 2021
 
 - *"Los pacientes que inician el tratamiento rehabilitador durante la primera semana después del ictus tienen menor grado de discapacidad y más calidad de vida a largo plazo que los que la inician más tarde."* Conserjería de Sanidad, Comunidad de Madrid.
 - *"La medida objetiva de la función mediante escalas y medidas válidas y fiables permite en cada paciente identificar los problemas, establecer los objetivos, determinar las intervenciones, controlar su eficacia y evaluar los resultados."* Conserjería de Sanidad, Comunidad de Madrid.
 - *"El resultado de las Unidades de Ictus en cuanto a mayor supervivencia y menor dependencia, viene determinado por disponer de procedimientos diagnósticos, monitorización y tratamientos de fase aguda"* Conserjería de Sanidad, Comunidad de Madrid.
+
+### Ejercicios de rehabilitación post-ictus
+
+Los ejercicios más comunes para rehabilitar el brazo incluyen:
+
+1. Ejercicios de movilidad articular
+2. Ejercicios para el fortalecimiento muscular
+3. Actividades para mejorar la coordinación y destreza manual
+4. Técnicas de estimulación sensorial
+
+### Técnica Gaming
+
+La técnica gaming se refiere al uso de videojuegos y realidad virtual combinados con robots de rehabilitación para motivar a los pacientes a hacer ejercicios de rehabilitación y permite que estas actividades sean más interactivas y divertidas.
+
+Palabras cable:
+
+- Motivación a través del juego
+- RV
+- Feedback y evaluación en tiempo real
+
+Beneficios de esta técnica:
+
+1. Mejor adherencia al tratamiento
+2. Entrenamiento intensivo
+3. Mejora de la motivación
+4. Evaluación objetiva del proceso
+
+
+## Semana 3, 17/02/25 - 23/02/25
+
+- [x] Leer artículos sobre la rehabilización de robots
+- [x] Escribir a los hospitales de Guadarrama y Los Madroños para solicitar ir a ver los robots
+
+## Conceptos aprendidos S3
+
+Para leer artículos sobre el tema:
+
+[Enlace](https://www.ncbi.nlm.nih.gov) a la Biblioteca Nacional de Medicina.
