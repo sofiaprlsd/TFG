@@ -1,4 +1,4 @@
-# Objetivos semanales
+# Mes 1, febrero
 
 ## Semana 1, 3/02/25 - 9/02/25
 
