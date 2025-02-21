@@ -84,3 +84,15 @@ Beneficios de esta técnica:
 Para leer artículos sobre el tema:
 
 [Enlace](https://www.ncbi.nlm.nih.gov) a la Biblioteca Nacional de Medicina.
+
+> [Motor and psychosocial impact of robot-assisted gait training in a real-world rehabilitation setting: A pilot study](https://pmc.ncbi.nlm.nih.gov/articles/PMC5812583/)
+> 
+> **Cira Fundarò, Anna Giardini, Roberto Maestri, Silvia Traversoni, Michelangelo Bartolo, Roberto Casale**
+> 
+> PLoS One. 2018; 13(2): e0191894. Published online 2018 Feb 14. doi: 10.1371/journal.pone.0191894
+
+> [Feasibility and Efficacy of a Virtual Reality Game-Based Upper Extremity Motor Function Rehabilitation Therapy in Patients with Chronic Stroke: A Pilot Study](https://pmc.ncbi.nlm.nih.gov/articles/PMC8948798/)
+>
+> **Ángela Aguilera-Rubio, Alicia Cuesta-Gómez, Ana Mallo-López, Alberto Jardón-Huete, Edwin Daniel Oña-Simbaña, Isabel Mª Alguacil-Diego**
+>
+> Int J Environ Res Public Health. 2022 Mar; 19(6): 3381. Published online 2022 Mar 13. doi: 10.3390/ijerph19063381
