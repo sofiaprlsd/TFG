@@ -77,6 +77,7 @@ Beneficios de esta técnica:
 ## Semana 3, 17/02/25 - 23/02/25
 
 - [x] Leer artículos sobre la rehabilización de robots
+- [ ] Leer artículos sobre la técnica gaming
 - [x] Escribir a los hospitales de Guadarrama y Los Madroños para solicitar ir a ver los robots
 
 ## Conceptos aprendidos S3
