@@ -4,7 +4,7 @@
 
 - [x] Crear un repositorio para el proyecto
 - [x] Definir los requerimientos y planteamiento del proyecto
-- [x] Buscar hospitales que trabajen con robots durante la rahabilitación de pacientes
+- [x] Buscar hospitales que trabajen con robots para rahabilitar pacientes
 - [x] Investigar sobre el ictus en general (síntomas, causas, efectos,...) *[Check]*
 
 ## Conceptos aprendidos S1
@@ -96,3 +96,14 @@ Para leer artículos sobre el tema:
 > **Ángela Aguilera-Rubio, Alicia Cuesta-Gómez, Ana Mallo-López, Alberto Jardón-Huete, Edwin Daniel Oña-Simbaña, Isabel Mª Alguacil-Diego**
 >
 > Int J Environ Res Public Health. 2022 Mar; 19(6): 3381. Published online 2022 Mar 13. doi: 10.3390/ijerph19063381
+
+
+## Semana 4, 24/02/25 - 2/03/25
+
+- [ ] Leer artículos sobre la rehabilización de robots
+- [ ] Leer artículos sobre la técnica gaming
+- [ ] Investigar simulación de sensores en ros2
+
+## Conceptos aprendidos S4
+
+
