@@ -107,7 +107,7 @@ Para leer artículos sobre el tema:
 >
 > **Nadia Vanessa García Hernández**
 >
-> Conexión Cinvestav. Publicado online 2018 Nov 22
+> Cinvestav. Publicado online 2018 Nov 22
 
 
 > [Sistemas de juegos de rehabilitación (Rehabilitation Gaming System - R.G.S.) en fisioterapia: historia, métodos de aplicación, beneficios y desventajas con evidencia científica](https://www.fisiocampus.com/sistemas-de-juegos-de-rehabilitacion-rehabilitation-gaming-system-rgs-en-fisioterapia-historia-metodos-de-aplicacion-beneficios-y-desventajas-con-evidencia-cientifica)
