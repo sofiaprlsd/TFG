@@ -127,6 +127,10 @@ Para leer artículos sobre el tema:
 
 ### Gaming
 
+> [Realidad Virtual En Rehabilitación](https://www.clinicauniversitarialasalle.es/robotica-y-realidad-virtual-en-rehabilitacion/?utm_source=chatgpt.com)
+>
+> **La Salle**
+
 > [Rehabilitation Technology, Robotics, and Gaming at UPMC Rehabilitation Institute](https://www.upmc.com/services/rehab/technology)
 >
 > **UPMC**
