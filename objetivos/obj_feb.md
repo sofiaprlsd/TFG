@@ -94,13 +94,6 @@ Para leer artículos sobre el tema:
 > 
 > PLoS One. 2018; 13(2): e0191894. Published online 2018 Feb 14. doi: 10.1371/journal.pone.0191894
 
-
-> [Feasibility and Efficacy of a Virtual Reality Game-Based Upper Extremity Motor Function Rehabilitation Therapy in Patients with Chronic Stroke: A Pilot Study](https://pmc.ncbi.nlm.nih.gov/articles/PMC8948798/)
->
-> **Ángela Aguilera-Rubio, Alicia Cuesta-Gómez, Ana Mallo-López, Alberto Jardón-Huete, Edwin Daniel Oña-Simbaña, Isabel Mª Alguacil-Diego**
->
-> Int J Environ Res Public Health. 2022 Mar; 19(6): 3381. Published online 2022 Mar 13. doi: 10.3390/ijerph19063381
-
 ### Gaming
 
 > [Diseñan videojuegos y sistemas robóticos para rehabilitación](https://conexion.cinvestav.mx/Publicaciones/dise241an-videojuegos-y-sistemas-rob243ticos-para-rehabilitaci243n)
@@ -108,7 +101,6 @@ Para leer artículos sobre el tema:
 > **Nadia Vanessa García Hernández**
 >
 > Cinvestav. Publicado online 2018 Nov 22
-
 
 > [Sistemas de juegos de rehabilitación (Rehabilitation Gaming System - R.G.S.) en fisioterapia: historia, métodos de aplicación, beneficios y desventajas con evidencia científica](https://www.fisiocampus.com/sistemas-de-juegos-de-rehabilitacion-rehabilitation-gaming-system-rgs-en-fisioterapia-historia-metodos-de-aplicacion-beneficios-y-desventajas-con-evidencia-cientifica)
 >
@@ -119,10 +111,28 @@ Para leer artículos sobre el tema:
 
 ## Semana 4, 24/02/25 - 2/03/25
 
-- [ ] Leer artículos sobre la rehabilización de robots
-- [ ] Leer artículos sobre la técnica gaming
-- [ ] Investigar simulación de sensores en ros2
+- [x] Leer artículos sobre la rehabilización de robots
+- [x] Leer artículos sobre la técnica gaming
+- [x] Investigar simulación de sensores en ros2
 
 ## Conceptos aprendidos S4
 
+### Rehabilitación con robots impacto y eficacia
 
+> [Feasibility and Efficacy of a Virtual Reality Game-Based Upper Extremity Motor Function Rehabilitation Therapy in Patients with Chronic Stroke: A Pilot Study](https://pmc.ncbi.nlm.nih.gov/articles/PMC8948798/)
+>
+> **Ángela Aguilera-Rubio, Alicia Cuesta-Gómez, Ana Mallo-López, Alberto Jardón-Huete, Edwin Daniel Oña-Simbaña, Isabel Mª Alguacil-Diego**
+>
+> Int J Environ Res Public Health. 2022 Mar; 19(6): 3381. Published online 2022 Mar 13. doi: 10.3390/ijerph19063381
+
+### Gaming
+
+> [Rehabilitation Technology, Robotics, and Gaming at UPMC Rehabilitation Institute](https://www.upmc.com/services/rehab/technology)
+>
+> **UPMC**
+
+### Simulación de robots con Gazebo
+
+Enlaces a videos:
+* [Implementación de Sensores en ROS 2 Humble](https://www.youtube.com/watch?v=R-wE4PcN_E4)
+* [Robótica: Simulación de robots con Gazebo. Construimos nuestro brazo robótico](https://www.youtube.com/watch?v=uI406H8YxCA)
