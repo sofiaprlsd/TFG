@@ -22,3 +22,24 @@
 
 4. Implementación del protocolo gaming.
 5. Validación y pruebas.
+
+## Semana 6, 10/03/25 - 16/03/25
+
+- [x] Hacer pruebas con el código de la rama de Pablo.
+- [x] Actualizar repo.
+
+## Conceptos aprendidos S6
+
+El nodo principal del workspace se ejecuta de la siguiente forma:
+```bash
+ros2 run main main_node
+```
+
+Este nodo recive por la entrada estándar el tipo de función (sinuidal o pulso) y sus parámetros (frecuencia, amplitud y fase).
+
+## Semana 7, 17/03/25 - 23/03/25
+
+- [ ] Redactar introcucción memoria.
+- [ ] Leer artículos médicos.
+
+## Conceptos aprendidos S7
