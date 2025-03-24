@@ -43,3 +43,12 @@ Este nodo recive por la entrada estándar el tipo de función (sinuidal o pulso)
 - [ ] Leer artículos médicos.
 
 ## Conceptos aprendidos S7
+
+
+
+## Semana 8, 24/03/25 - 30/03/25
+
+- [ ] Crear nodo para generar las señales de trayectoria.
+- [ ] Leer artículos médicos.
+
+## Conceptos aprendidos S8
