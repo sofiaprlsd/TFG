@@ -40,16 +40,20 @@ Este nodo recive por la entrada estándar el tipo de función (sinuidal o pulso)
 ## Semana 7, 17/03/25 - 23/03/25
 
 - [ ] Redactar introducción memoria.
-- [ ] Leer artículos médicos.
+- [x] Leer artículos médicos.
 
 ## Conceptos aprendidos S7
 
-
+> [Electromechanical and robot‐assisted arm training for improving activities of daily living, arm function, and arm muscle strength after stroke](https://pmc.ncbi.nlm.nih.gov/articles/PMC6513114/)
+> 
+> **Jan Mehrholz, Marcus Pohl, Thomas Platz, Joachim Kugler, Bernhard Elsner, Cochrane Stroke Group**
+> 
+> Cochrane Database Syst Rev. 2018; 2018(9): CD006876. Published online 2018 Sep 3.
 
 ## Semana 8, 24/03/25 - 30/03/25
 
-- [x] Crear nodo para generar las señales de trayectoria.
-- [ ] Leer artículos médicos.
+- [x] Investigar sobre la librería *matplotlib*.
+- [x] Crear nodo suscriptor para graficar una señal.
 
 ## Conceptos aprendidos S8
 
