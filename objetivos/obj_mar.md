@@ -53,6 +53,8 @@ Este nodo recive por la entrada estándar el tipo de función (sinuidal o pulso)
 
 ## Conceptos aprendidos S8
 
+### Gráfica
+
 He usado la librería *matplotlib* de python y he creado un script de python que crea un suscriptor al topic `/PositionReference` para recibir los datos de frecuencia y amplitud que se publican en formato `msg.data`.
 
 ```txt
@@ -60,7 +62,7 @@ Frecuencia: eje X
 Amplitud: eje Y
 ```
 
-### Problema 1.
+#### Problema 1.
 
 He fijado un tamaño mínimo y máximo de ventana para que sea estática, pero no se muestran los datos actualizados de la señal una vez llega al tamaño máximo de la ventana x.
 
@@ -89,3 +91,13 @@ def listener_callback(self, msg):
 ```
 
 El *if* es el que permite que la gráfica vaya avanzando en el tiempo.
+
+![Captura desde 2025-03-24 20-38-19](https://github.com/user-attachments/assets/34f99442-6c83-4cc4-b0fd-c154fe66be59)
+
+### Ejecución
+
+```bash
+ros2 run neurobot_graphics main_node
+python3 plot_signal.py
+```
+
