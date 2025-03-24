@@ -48,7 +48,17 @@ Este nodo recive por la entrada estándar el tipo de función (sinuidal o pulso)
 
 ## Semana 8, 24/03/25 - 30/03/25
 
-- [ ] Crear nodo para generar las señales de trayectoria.
+- [x] Crear nodo para generar las señales de trayectoria.
 - [ ] Leer artículos médicos.
 
 ## Conceptos aprendidos S8
+
+He usado la librería *matplotlib* de python y he creado un script de python que crea un suscriptor al topic `/PositionReference` para recibir los datos de frecuencia y amplitud que se publican en formato `msg.data`.
+
+```txt
+Frecuencia: eje X
+Amplitud: eje Y
+```
+
+> [!NOTE]
+> He fijado un tamaño mínimo y máximo de ventana para que sea estática, pero no se muestran los datos actualizados de la señal una vez llega al tamaño máximo de la ventana x.
