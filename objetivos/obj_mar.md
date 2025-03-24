@@ -60,5 +60,32 @@ Frecuencia: eje X
 Amplitud: eje Y
 ```
 
-> [!NOTE]
-> He fijado un tamaño mínimo y máximo de ventana para que sea estática, pero no se muestran los datos actualizados de la señal una vez llega al tamaño máximo de la ventana x.
+### Problema 1.
+
+He fijado un tamaño mínimo y máximo de ventana para que sea estática, pero no se muestran los datos actualizados de la señal una vez llega al tamaño máximo de la ventana x.
+
+Para resolver esto he definido dos arrays con un tamaño máximo y los voy actualizando en el *callback*:
+
+```py
+def listener_callback(self, msg):
+    self.time_data = np.roll(self.time_data, -1)
+    self.signal_data = np.roll(self.signal_data, -1)
+
+    self.time_data[-1] = self.time
+    self.signal_data[-1] = msg.data
+
+    self.time += 0.01
+
+    if self.time_data[-1] > self.window_size_x:
+        self.ax.set_xlim(self.time - self.window_size_x, self.time)
+    
+    self.line.set_xdata(self.time_data)
+    self.line.set_ydata(self.signal_data)
+    
+    self.ax.relim()
+    self.ax.autoscale_view()
+    self.fig.canvas.draw()
+    self.fig.canvas.flush_events()
+```
+
+El *if* es el que permite que la gráfica vaya avanzando en el tiempo.
