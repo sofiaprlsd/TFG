@@ -92,11 +92,11 @@ def listener_callback(self, msg):
 
 El *if* es el que permite que la gráfica vaya avanzando en el tiempo.
 
-**SINWAVE**:
+**SINWAVE**: [frequencia=0.3, amplitud=1.0]
 
 ![Captura desde 2025-03-24 20-38-19](https://github.com/user-attachments/assets/34f99442-6c83-4cc4-b0fd-c154fe66be59)
 
-**PULSE**:
+**PULSE**: [frequencia=1.0, amplitud=1.0]
 
 ![Captura desde 2025-03-24 20-46-46](https://github.com/user-attachments/assets/25a01933-0034-4fd0-a4d3-dff8ac62911e)
 
