@@ -1,0 +1,9 @@
+float32 new_maxy
+float32 new_miny
+float32 new_delta_y
+float32 new_minu
+float32 new_maxu
+float32 new_delta_u
+float64 new_alpha
+int32 new_constraint
+---
