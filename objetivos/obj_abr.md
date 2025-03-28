@@ -32,6 +32,6 @@ self.dual_mode = False  # 1 signal
 ## Semana 10, 7/04/25 - 13/04/25
 
 - [ ] Crear interfaz para ingresar los datos del paciente.
-- [ ] Avanzar con la memoria (objetivos)
+- [ ] Avanzar con la memoria (objetivos).
 
 ## Conceptos aprendidos S10
