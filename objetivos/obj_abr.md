@@ -2,7 +2,7 @@
 
 - [x] Arreglar publicador del topic */PositionReference*.
 - [x] Crear posibilidad de representar 1 o 2 señales para gaming.
-- [ ] Crear *umlet* con los nodos, scripts, publicadores, suscriptores y topics.
+- [x] Crear *umlet* con los nodos, scripts, publicadores, suscriptores y topics.
 
 ## Conceptos aprendidos S9
 
@@ -28,6 +28,11 @@ Para seleccionar entre graficar 1 o 2 señales uso un booleano.
 self.dual_mode = True   # 2 signals
 self.dual_mode = False  # 1 signal
 ```
+
+### Conexiones entre nodos
+
+![Captura desde 2025-03-28 17-25-06](https://github.com/user-attachments/assets/d8993eb0-9514-48e1-a372-6f6ddf657eba)
+
 
 ## Semana 10, 7/04/25 - 13/04/25
 
