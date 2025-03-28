@@ -8,6 +8,14 @@
 
 En vez de publicar los datos de la señal a través de *main_node*, publico desde el script de python *scroller_publisher* para que no haya conflicto entre dos publicadores y así actualizo los valores desde una ventana gráfica con dos sliders, uno para la frecuencia y otro para la amplitud de la señal.
 
+### Ejecución de los scripts
+
+```bash
+cd <ruta_a_la_carpeta_scrpits>
+python3 scroll_publisher.py
+python3 signal_plotter.py
+```
+
 ![Captura desde 2025-03-28 16-08-58](https://github.com/user-attachments/assets/02ab94e6-cd18-4e4f-bc97-e3c7f7f95844)
 
 Para graficar dos señales idénticas pero desplazadas en el eje Y, desplazo verticalmente la señal sumando/restando un *offset*.
