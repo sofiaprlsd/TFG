@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>90</x>
+      <y>220</y>
+      <w>240</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>ScrollPublisherNode
+--
++ Topic: PositionReference
++ Publica: std_msgs/Float32
++ Freq: float (0.0 - 10.0 Hz)
++ Ampl: float (0.0 - 10.0)
++ GUI: Tkinter Scroll
++ Timer: 0.05 s (20 Hz)
+    </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>440</x>
+      <y>220</y>
+      <w>240</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>SignalPlotterNode
+--
++ Topic: PositionReference
++ Suscribe: std_msgs/Float32
++ Ventana tiempo: 2 s
++ Plot: matplotlib (real time)
++ Modo dual: sí
++ Offset Y: 3.0
+    </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>320</x>
+      <y>80</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>/PositionReference</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>190</x>
+      <y>100</y>
+      <w>150</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>460</x>
+      <y>100</y>
+      <w>120</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;120.0;100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
