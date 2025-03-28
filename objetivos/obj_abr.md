@@ -1,18 +1,18 @@
 ## Semana 9, 31/03/25 - 6/04/25
 
-- [x] Arreglar publicador del topic /PositionReference.
+- [x] Arreglar publicador del topic */PositionReference*.
 - [x] Crear posibilidad de representar 1 o 2 señales para gaming.
-- [ ] Crear umlet con los nodos, scripts, publicadores, suscriptores y topics.
+- [ ] Crear *umlet* con los nodos, scripts, publicadores, suscriptores y topics.
 
 ## Conceptos aprendidos S9
 
 En vez de publicar los datos de la señal a través de *main_node*, publico desde el script de python *scroller_publisher* para que no haya conflicto entre dos publicadores y así actualizo los valores desde una ventana gráfica con dos sliders, uno para la frecuencia y otro para la amplitud de la señal.
 
-
+![Captura desde 2025-03-28 16-08-58](https://github.com/user-attachments/assets/02ab94e6-cd18-4e4f-bc97-e3c7f7f95844)
 
 Para graficar dos señales idénticas pero desplazadas en el eje Y, desplazo verticalmente la señal sumando/restando un *offset*.
 
-
+![Captura desde 2025-03-28 16-10-03](https://github.com/user-attachments/assets/a534299f-db26-4426-97dc-0008eef75df9)
 
 Para seleccionar entre graficar 1 o 2 señales uso un booleano.
 
@@ -26,4 +26,4 @@ self.dual_mode = False  # 1 signal
 - [ ] Crear interfaz para ingresar los datos del paciente.
 - [ ] Avanzar con la memoria (objetivos)
 
-## Conceptos aprendidos S9
+## Conceptos aprendidos S10
