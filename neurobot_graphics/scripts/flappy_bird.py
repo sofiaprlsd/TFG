@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pynput import keyboard
 
-class SignalPlotterNode(Node):
+class FlappyBirdNode(Node):
     def __init__(self):
-        super().__init__('signal_plotter_node')
+        super().__init__('flappy_bird_node')
 
         self.subscription = self.create_subscription(
             Float32,
@@ -97,15 +97,15 @@ class SignalPlotterNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    signal_plotter_node = SignalPlotterNode()
+    flappy_bird_node = FlappyBirdNode()
 
     try:
-        rclpy.spin(signal_plotter_node)
+        rclpy.spin(flappy_bird_node)
     except KeyboardInterrupt:
         pass
     finally:
         plt.close('all')
-        signal_plotter_node.destroy_node()
+        flappy_bird_node.destroy_node()
         rclpy.shutdown()
 
 if __name__ == '__main__':

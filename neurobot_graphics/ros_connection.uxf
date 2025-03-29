@@ -5,18 +5,17 @@
     <id>UMLClass</id>
     <coordinates>
       <x>90</x>
-      <y>220</y>
+      <y>140</y>
       <w>240</w>
       <h>200</h>
     </coordinates>
-    <panel_attributes>ScrollPublisherNode
+    <panel_attributes>MainNode
 --
 + Topic: PositionReference
 + Publica: std_msgs/Float32
-+ Freq: float (0.0 - 10.0 Hz)
-+ Ampl: float (0.0 - 10.0)
-+ GUI: Tkinter Scroll
-+ Timer: 0.05 s (20 Hz)
++ Freq: float FX.X
++ Ampl: float AX.X
++ Timer: 10 ms
     </panel_attributes>
     <additional_attributes/>
   </element>
@@ -24,7 +23,7 @@
     <id>UMLClass</id>
     <coordinates>
       <x>440</x>
-      <y>220</y>
+      <y>140</y>
       <w>240</w>
       <h>200</h>
     </coordinates>
@@ -34,8 +33,6 @@
 + Suscribe: std_msgs/Float32
 + Ventana tiempo: 2 s
 + Plot: matplotlib (real time)
-+ Modo dual: sí
-+ Offset Y: 3.0
     </panel_attributes>
     <additional_attributes/>
   </element>
@@ -43,7 +40,7 @@
     <id>UMLUseCase</id>
     <coordinates>
       <x>320</x>
-      <y>80</y>
+      <y>20</y>
       <w>150</w>
       <h>60</h>
     </coordinates>
@@ -54,22 +51,93 @@
     <id>Relation</id>
     <coordinates>
       <x>190</x>
-      <y>100</y>
+      <y>40</y>
       <w>150</w>
-      <h>140</h>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>130.0;10.0;10.0;10.0;10.0;120.0</additional_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0;10.0;100.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>460</x>
-      <y>100</y>
+      <y>40</y>
       <w>120</w>
-      <h>140</h>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>100.0;120.0;100.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>100.0;100.0;100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>90</x>
+      <y>510</y>
+      <w>240</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>ScrollPublisherNode
+--
++ Topic: LimitReference
++ Publica: std_msgs/Float32
++ Freq: float (0.0 - 10.0 Hz)
++ Ampl: float (0.0 - 10.0)
++ GUI: Tkinter Scroll
++ Timer: 0.05 s (20 Hz)
+    </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>190</x>
+      <y>410</y>
+      <w>150</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>320</x>
+      <y>390</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>/LimitReference</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>460</x>
+      <y>410</y>
+      <w>120</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;100.0;100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>440</x>
+      <y>510</y>
+      <w>240</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>FlappyBirdNode
+--
++ Topic: LimitReference
++ Suscribe: std_msgs/Float32
++ Ventana tiempo: 2 s
++ Plot: matplotlib (real time)
++ Modo dual: sí
++ Offset Y: 3.0
+    </panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
