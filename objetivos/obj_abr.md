@@ -6,7 +6,7 @@
 
 ## Conceptos aprendidos S9
 
-En vez de publicar los datos de la señal a través de *main_node*, publico desde el script de python *scroller_publisher* para que no haya conflicto entre dos publicadores y así actualizo los valores desde una ventana gráfica con dos sliders, uno para la frecuencia y otro para la amplitud de la señal.
+En vez de publicar los datos de la señal en el topic `/PsitionReference` a través de *main_node*, publico desde el script de python *scroller_publisher* en un nuevo topic `/LimitReference` para que no haya conflicto entre dos publicadores y así actualizo los valores desde una ventana gráfica con dos sliders, uno para la frecuencia y otro para la amplitud de la señal.
 
 ### Ejecución de los scripts
 
