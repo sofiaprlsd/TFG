@@ -72,7 +72,7 @@ Además, a medida que pasa el tiempo se va reduciendo el offset de las señales 
 
 ### Conexiones entre nodos
 
-![Captura desde 2025-03-29 23-00-56](https://github.com/user-attachments/assets/6f77e646-02f1-4ba4-92f7-ef9e672ea6ba)
+![Captura desde 2025-03-29 23-10-01](https://github.com/user-attachments/assets/084b40d6-8d05-479c-917c-0455d794503f)
 
 
 ## Semana 10, 7/04/25 - 13/04/25
