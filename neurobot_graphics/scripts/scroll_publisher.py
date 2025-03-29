@@ -13,7 +13,7 @@ class ScrollPublisherNode(Node):
 
         self.publisher = self.create_publisher(
             Float32,
-            'PositionReference',
+            'LimitReference',
             10
         )
 

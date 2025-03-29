@@ -12,7 +12,7 @@ class SignalPlotterNode(Node):
 
         self.subscription = self.create_subscription(
             Float32,
-            'PositionReference',
+            'LimitReference',
             self.listener_callback,
             10
         )
