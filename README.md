@@ -30,3 +30,7 @@ Es necesario que se permita ajustar manualmente los siguientes datos:
 * Duración
 * Ciclos de la función sinusoide
 * Fuerza máxima y mínima de las perturbaciones
+
+Cálculo del error del paciente durante el juego.
+
+Interfaz para el médico para ingresar los datos del paciente.
