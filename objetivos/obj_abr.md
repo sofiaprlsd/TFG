@@ -1,7 +1,7 @@
 ## Semana 9, 31/03/25 - 6/04/25
 
 - [x] Arreglar publicador del topic */PositionReference*.
-- [x] Crear posibilidad de representar 1 o 2 señales para gaming.
+- [x] Crear juego a partir de 2 señales para gaming.
 - [x] Crear *umlet* con los nodos, scripts, publicadores, suscriptores y topics.
 
 ## Conceptos aprendidos S9
@@ -77,7 +77,20 @@ Además, a medida que pasa el tiempo se va reduciendo el offset de las señales 
 
 ## Semana 10, 7/04/25 - 13/04/25
 
+- [ ] Añadir perturbaciones al juego.
+- [ ] Añadir inicialización de las variables del juego desde un fichero.
+
+## Conceptos aprendidos S10
+
+
+
+## Semana 11, 14/04/25 - 20/04/25
+
+*[SEMANA SANTA]*
+
+## Semana 12, 21/04/25 - 27/04/25
+
 - [ ] Crear interfaz para ingresar los datos del paciente.
 - [ ] Avanzar con la memoria (objetivos).
 
-## Conceptos aprendidos S10
+## Conceptos aprendidos S12
