@@ -13,7 +13,7 @@ class FlappyBirdNode(Node):
 
         self.subscription = self.create_subscription(
             Float32,
-            'LimitReference',
+            'PositionReference',
             self.listener_callback,
             10
         )

@@ -2,33 +2,30 @@
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float32
+from std_msgs.msg import Float32MultiArray
 import tkinter as tk
 from tkinter import ttk
-import math
 
 class ScrollPublisherNode(Node):
     def __init__(self):
         super().__init__('scroll_publisher_node')
 
-        self.publisher = self.create_publisher(
-            Float32,
-            'LimitReference',
+        self.publisher_ = self.create_publisher(
+            Float32MultiArray,
+            'SliderParameters',
             10
         )
 
         self.freq = 0.5
         self.ampl = 1.0
-        self.time = 0.0
 
-        self.timer = self.create_timer(0.05, self.publish_data)
+        self.timer = self.create_timer(0.1, self.publish_data)
 
     def publish_data(self):
-        msg = Float32()
-        msg.data = self.ampl * math.sin(2 * math.pi * self.freq * self.time)
-        self.publisher.publish(msg)
+        msg = Float32MultiArray()
+        msg.data = [self.freq, self.ampl]
+        self.publisher_.publish(msg)
         self.get_logger().info(f"Publishing F{self.freq:.2f} A{self.ampl:.2f}")
-        self.time += 0.01
     
 class ScrollGUI:
     def __init__(self, node):
