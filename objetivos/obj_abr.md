@@ -81,7 +81,7 @@ Además, a medida que pasa el tiempo se va reduciendo el offset de las señales 
 
 El esquema de todo el proyecto con lo que llevamos todos los distribuidores queda de la siguiente forma:
 
-
+![Captura desde 2025-04-03 17-15-33](https://github.com/user-attachments/assets/2c49e528-dd20-47f9-93b9-76410a1b0961)
 
 
 ## Semana 10, 7/04/25 - 13/04/25
