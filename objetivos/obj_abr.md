@@ -74,6 +74,15 @@ Además, a medida que pasa el tiempo se va reduciendo el offset de las señales 
 
 ![Captura desde 2025-03-29 23-10-01](https://github.com/user-attachments/assets/084b40d6-8d05-479c-917c-0455d794503f)
 
+> [!IMPORTANT]
+> Cambios:
+>
+> scroll_publisher.py publica un `Float32MultiArray` con la frecuencia y la amplitud en el topic `/SliderParameters` para que main_node.cpp cree una señal y la publique en el topic `/PositionReference` al que se suscriben tanto signal_plotter.py como flappy_bird.py.
+
+El esquema de todo el proyecto con lo que llevamos todos los distribuidores queda de la siguiente forma:
+
+
+
 
 ## Semana 10, 7/04/25 - 13/04/25
 
