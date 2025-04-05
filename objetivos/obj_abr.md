@@ -87,7 +87,7 @@ El esquema de todo el proyecto con lo que llevamos todos los distribuidores qued
 ## Semana 10, 7/04/25 - 13/04/25
 
 - [x] Crear script para visualizar los límites, la posición del paciente y el error.
-- [ ] Añadir imágees al juego (tuberías y pájaro).
+- [ ] Añadir imágenes al juego (tuberías y pájaro).
 
 ## Conceptos aprendidos S10
 
