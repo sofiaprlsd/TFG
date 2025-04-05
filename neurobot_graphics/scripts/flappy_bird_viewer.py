@@ -6,28 +6,25 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Float32MultiArray
 import matplotlib.pyplot as plt
 import numpy as np
-from pynput import keyboard
 
-class FlappyBirdNode(Node):
+class FlappyBirdViewerNode(Node):
     def __init__(self):
-        super().__init__('flappy_bird_node')
+        super().__init__('flappy_bird_viewer_node')
 
-        self.subscriber_ = self.create_subscription(
+        self.signal_subscriber_ = self.create_subscription(
             Float32,
             'PositionReference',
-            self.listener_callback,
+            self.signal_callback,
             10
         )
 
-        self.publisher_ = self.create_publisher(
+        self.player_subscriber_ = self.create_subscription(
             Float32MultiArray,
             'PlayerPosition',
+            self.player_callback,
             10
         )
-
-        self.keyboard_listener = keyboard.Listener(on_press=self.on_press)
-        self.keyboard_listener.start()
-
+        
         self.time = 0.0
         self.window_size_x = 2
         self.window_size_y = 10
@@ -35,33 +32,37 @@ class FlappyBirdNode(Node):
         self.player_x = 0.25
         self.player_y = 0.0
         self.offset_y = 3.0
-        self.level = 0
+
+        self.player_active = False
 
         self.time_data = np.zeros(self.sample_amount)
         self.signal_upper = np.zeros(self.sample_amount)
         self.signal_lower = np.zeros(self.sample_amount)
 
         plt.ion()   # Update graph in real time
-        self.fig, self.ax = plt.subplots(figsize=(12, 8))
+        self.fig, self.ax = plt.subplots(figsize=(8, 6))
 
-        self.line_upper, = self.ax.plot(self.time_data, self.signal_upper, label='Signal + offset')
-        self.line_lower, = self.ax.plot(self.time_data, self.signal_lower, label='Signal - offset')
-        self.player, = self.ax.plot(self.player_x, self.player_y, 'ro', label='Player')
+        self.ax.set_facecolor('black')
+        self.ax.set_title('Flappy Bird Viewer - Waiting player...')
+
+        self.line_upper, = self.ax.plot([], [], label='Signal + offset')
+        self.line_lower, = self.ax.plot([], [], label='Signal - offset')
+        self.player, = self.ax.plot([], [], 'ro', label='Player')
 
         self.ax.set_xlim(0, self.window_size_x)
         self.ax.set_ylim(-self.window_size_y, self.window_size_y)
-        self.ax.set_title(f'Flappy Bird Level {self.level}')
+
+        # Show window
+        self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
     
-    def on_press(self, key):
-        try:
-            if key == keyboard.Key.up:
-                self.player_y += 0.2
-            elif key == keyboard.Key.down:
-                self.player_y -= 0.2
-        except:
-            pass
-    
-    def listener_callback(self, msg):
+    def signal_callback(self, msg):
+        if not self.player_active:
+            return
+        
+        self.ax.set_facecolor('white')
+        self.ax.set_title(f'Flappy Bird Viewer | Offset: {self.offset_y:.2f}')
+        
         self.time_data = np.roll(self.time_data, -1)
         self.signal_upper = np.roll(self.signal_upper, -1)
         self.signal_lower = np.roll(self.signal_lower, -1)
@@ -73,25 +74,10 @@ class FlappyBirdNode(Node):
         upper_limit = self.signal_upper[-1]
         lower_limit = self.signal_lower[-1]
 
-        # Reduce the offset of the signals to make the game for difficult, 
-        # only if the player is not colliding with any limit (signals)
+        # Check if the player is colliding with any limit (signals)
         if not (lower_limit < self.player_y < upper_limit):
             self.get_logger().info("Collision!!!")
-        else:
-            if self.time % 1.0 < 0.01 and self.offset_y > 1.0:
-                self.offset_y -= 0.05
-                self.get_logger().info(f"Reducing offset: {self.offset_y:.2f}")
-            if self.time % 5.0 < 0.01 and self.offset_y > 1.0:
-                self.level += 1
-                self.ax.set_title(f'Flappy Bird Level {self.level}')
-                self.get_logger().info(f"Upgrade to level {self.level}")
-
-        # When time is grater than window size, 
-        # increment player_x to stay in same spot of the window
-        self.time += 0.01
-        if self.time >= self.window_size_x:
-            self.player_x += 0.01
-
+        
         if self.time_data[-1] > self.window_size_x:
             self.ax.set_xlim(self.time - self.window_size_x, self.time)
 
@@ -102,28 +88,32 @@ class FlappyBirdNode(Node):
         self.line_lower.set_ydata(self.signal_lower)
         self.player.set_xdata(self.player_x)
         self.player.set_ydata(self.player_y)
-        
+
+        # Adjust graph to the updated data
         self.ax.relim()
         self.ax.autoscale_view()
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
-
-        # Publish player position on topic
-        pos_msg = Float32MultiArray()
-        pos_msg.data = [self.player_x, self.player_y, self.offset_y, self.time]
-        self.publisher_.publish(pos_msg)
+    
+    def player_callback(self, msg):
+        if len(msg.data) >= 3:
+            self.player_x = msg.data[0]
+            self.player_y = msg.data[1]
+            self.offset_y = msg.data[2]
+            self.time = msg.data[3]
+            self.player_active = True
 
 def main(args=None):
     rclpy.init(args=args)
-    flappy_bird_node = FlappyBirdNode()
+    flappy_bird_viewer_node = FlappyBirdViewerNode()
 
     try:
-        rclpy.spin(flappy_bird_node)
+        rclpy.spin(flappy_bird_viewer_node)
     except KeyboardInterrupt:
         pass
     finally:
         plt.close('all')
-        flappy_bird_node.destroy_node()
+        flappy_bird_viewer_node.destroy_node()
         rclpy.shutdown()
 
 if __name__ == '__main__':
