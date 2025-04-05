@@ -101,6 +101,14 @@ Para ello he tenido que modificar el juego (flappy_bird.py) para crear un public
 
 Mi nuevo script se suscribe tanto a este topic como a `/PositionReference` para poder graficar las señales. Además, muestra una pantalla en negro indicando que está esperando al jugador si no se detecta ningún dato en el topic `/PlayerPosition`.
 
+![Captura desde 2025-04-05 14-14-09](https://github.com/user-attachments/assets/f252d854-1376-4f41-88f4-5fdc8c8a59b3)
+
+
+### Video de funcionamiento
+
+[FlappyBirdViewer.webm](https://github.com/user-attachments/assets/4971ca4e-7b7a-42b2-81ed-abfee1537a5b)
+
+
 ## Semana 11, 14/04/25 - 20/04/25
 
 *[SEMANA SANTA]*
