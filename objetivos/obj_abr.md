@@ -86,12 +86,20 @@ El esquema de todo el proyecto con lo que llevamos todos los distribuidores qued
 
 ## Semana 10, 7/04/25 - 13/04/25
 
-- [ ] Añadir perturbaciones al juego.
-- [ ] Añadir inicialización de las variables del juego desde un fichero.
+- [x] Crear script para visualizar los límites, la posición del paciente y el error.
+- [ ] Añadir imágees al juego (tuberías y pájaro).
 
 ## Conceptos aprendidos S10
 
+He creado un nuevo script (flappy_bird_viewer.py) para que el médico pueda ver la progresión y error del paciente durante el juego.
 
+Para ello he tenido que modificar el juego (flappy_bird.py) para crear un publicador de tipo `Float32MultiArray` que publique en un nuevo topic `/PlayerPosition` los datos de:
+* Posición X del paciente
+* Posición Y del paciente
+* Offset de la señal
+* Tiempo
+
+Mi nuevo script se suscribe tanto a este topic como a `/PositionReference` para poder graficar las señales. Además, muestra una pantalla en negro indicando que está esperando al jugador si no se detecta ningún dato en el topic `/PlayerPosition`.
 
 ## Semana 11, 14/04/25 - 20/04/25
 
@@ -99,7 +107,8 @@ El esquema de todo el proyecto con lo que llevamos todos los distribuidores qued
 
 ## Semana 12, 21/04/25 - 27/04/25
 
-- [ ] Crear interfaz para ingresar los datos del paciente.
+- [ ] Crear interfaz para ingresar los datos del paciente y volcarlos a un fichero.
+- [ ] Añadir inicialización de las variables del juego desde un fichero.
 - [ ] Avanzar con la memoria (objetivos).
 
 ## Conceptos aprendidos S12
