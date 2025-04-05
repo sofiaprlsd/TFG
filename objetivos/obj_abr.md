@@ -109,6 +109,11 @@ Mi nuevo script se suscribe tanto a este topic como a `/PositionReference` para 
 [FlappyBirdViewer.webm](https://github.com/user-attachments/assets/4971ca4e-7b7a-42b2-81ed-abfee1537a5b)
 
 
+### Conexiones entre nodos
+
+![Captura desde 2025-04-05 15-31-54](https://github.com/user-attachments/assets/976b0373-5a0e-43b5-b1b5-8d314cd8aeb3)
+
+
 ## Semana 11, 14/04/25 - 20/04/25
 
 *[SEMANA SANTA]*
