@@ -87,7 +87,8 @@ El esquema de todo el proyecto con lo que llevamos todos los distribuidores qued
 ## Semana 10, 7/04/25 - 13/04/25
 
 - [x] Crear script para visualizar los límites, la posición del paciente y el error.
-- [ ] Añadir imágenes al juego (tuberías y pájaro).
+- [ ] Crear interfaz para ingresar los datos del paciente y volcarlos a un fichero.
+- [ ] Añadir inicialización de las variables del juego desde un fichero.
 
 ## Conceptos aprendidos S10
 
@@ -120,8 +121,7 @@ Mi nuevo script se suscribe tanto a este topic como a `/PositionReference` para 
 
 ## Semana 12, 21/04/25 - 27/04/25
 
-- [ ] Crear interfaz para ingresar los datos del paciente y volcarlos a un fichero.
-- [ ] Añadir inicialización de las variables del juego desde un fichero.
+- [ ] Añadir imágenes al juego (tuberías y pájaro).
 - [ ] Avanzar con la memoria (objetivos).
 
 ## Conceptos aprendidos S12
