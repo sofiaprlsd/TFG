@@ -87,12 +87,20 @@ El esquema de todo el proyecto con lo que llevamos todos los distribuidores qued
 ## Semana 10, 7/04/25 - 13/04/25
 
 - [x] Crear script para visualizar los límites, la posición del paciente y el error.
-- [ ] Crear interfaz para ingresar los datos del paciente y volcarlos a un fichero.
+- [x] Crear interfaz para ingresar los datos del paciente y volcarlos a un fichero.
 - [ ] Añadir inicialización de las variables del juego desde un fichero.
 
 ## Conceptos aprendidos S10
 
-He creado un nuevo script (flappy_bird_viewer.py) para que el médico pueda ver la progresión y error del paciente durante el juego.
+He creado una interfaz gráfica con la librería [Tkinter](https://docs.python.org/es/3.13/library/tkinter.html) en python (database.py) para ingresar los datos de un paciente y crear un fichero .csv si no existe y actualizar el fichero si existe. Los ficheros se guardan bajo el nombre del NIF del paciente en un directorio en `$HOME` llamado `~/database`. Los datos que se pueden ingresar son:
+* Nombre
+* Apellido
+* NIF
+* Parámetros de juego (frecuencia y amplitud)
+* Progreso
+* Nota del médico
+
+También he creado un nuevo script (flappy_bird_viewer.py) para que el médico pueda ver la progresión y error del paciente durante el juego.
 
 Para ello he tenido que modificar el juego (flappy_bird.py) para crear un publicador de tipo `Float32MultiArray` que publique en un nuevo topic `/PlayerPosition` los datos de:
 * Posición X del paciente
