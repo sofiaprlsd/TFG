@@ -88,17 +88,49 @@ El esquema de todo el proyecto con lo que llevamos todos los distribuidores qued
 
 - [x] Crear script para visualizar los límites, la posición del paciente y el error.
 - [x] Crear interfaz para ingresar los datos del paciente y volcarlos a un fichero.
-- [ ] Añadir inicialización de las variables del juego desde un fichero.
+- [x] Añadir inicialización de las variables del juego desde un fichero.
 
 ## Conceptos aprendidos S10
 
-He creado una interfaz gráfica con la librería [Tkinter](https://docs.python.org/es/3.13/library/tkinter.html) en python (database.py) para ingresar los datos de un paciente y crear un fichero .csv si no existe y actualizar el fichero si existe. Los ficheros se guardan bajo el nombre del NIF del paciente en un directorio en `$HOME` llamado `~/database`. Los datos que se pueden ingresar son:
-* Nombre
-* Apellido
-* NIF
-* Parámetros de juego (frecuencia y amplitud)
-* Progreso
-* Nota del médico
+He creado una interfaz gráfica con la librería [Tkinter](https://docs.python.org/es/3.13/library/tkinter.html) en python (database.py) para ingresar los datos de un paciente y crear un fichero .csv si no existe y actualizar el fichero si existe. Los ficheros se guardan bajo el nombre del NIF del paciente en un directorio llamado `~/database` en `$HOME`. Los datos que se pueden ingresar son:
+* Nombre (string)
+* Apellido (string)
+* NIF (int)
+* Parámetros de juego (frecuencia y amplitud) (int)
+* Progreso (%) (int)
+* Nota del médico (string)
+
+> [!IMPORTANT]
+> Es obligatorio rellenar el campo NIF, el resto son opcionales.
+
+![Captura desde 2025-04-12 22-12-58](https://github.com/user-attachments/assets/1541114d-b5dc-4102-94e4-c3c39b079aac)
+
+
+Y ahora si se pasa el path de un fichero que exista, los valores de frecuencia y amplitud se cargan del .csv:
+
+```bash
+$ python3 scroll_publisher.py ~/database/0123345.csv 
+[INFO] [1744487924.049367243] [scroll_publisher_node]: Publishing F0.30 A2.00
+```
+
+Si los campos de frecuencia y amplitud no están rellenos o el fichero no existe o no se pasa ningún path, se inicializan a frecuencia=0.5 y amplitud=1.0:
+
+```bash
+$ python3 scroll_publisher.py ~/database/4455566.csv 
+Error reading file could not convert string to float: ''
+[INFO] [1744488042.942339401] [scroll_publisher_node]: Publishing F0.50 A1.00
+```
+
+```bash
+$ python3 scroll_publisher.py ./4455566.csv 
+File './4455566.csv' does not exist
+[INFO] [1744488105.984249440] [scroll_publisher_node]: Publishing F0.50 A1.00
+```
+
+```bash
+$ python3 scroll_publisher.py
+[INFO] [1744488696.220746427] [scroll_publisher_node]: Publishing F0.50 A1.00
+```
 
 También he creado un nuevo script (flappy_bird_viewer.py) para que el médico pueda ver la progresión y error del paciente durante el juego.
 
