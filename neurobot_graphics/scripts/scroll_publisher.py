@@ -5,9 +5,12 @@ from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 import tkinter as tk
 from tkinter import ttk
+import sys
+import csv
+import os
 
 class ScrollPublisherNode(Node):
-    def __init__(self):
+    def __init__(self, freq=0.5, ampl=1.0):
         super().__init__('scroll_publisher_node')
 
         self.publisher_ = self.create_publisher(
@@ -16,8 +19,8 @@ class ScrollPublisherNode(Node):
             10
         )
 
-        self.freq = 0.5
-        self.ampl = 1.0
+        self.freq = freq
+        self.ampl = ampl
 
         self.timer = self.create_timer(0.1, self.publish_data)
 
@@ -31,8 +34,8 @@ class ScrollGUI:
     def __init__(self, node):
         self.node = node
 
-        self.frequency = 0.5
-        self.amplitude = 1.0
+        self.frequency = node.freq
+        self.amplitude = node.ampl
 
         self.window = tk.Tk()
         self.window.title("Frequency and Amplitude controller")
@@ -89,9 +92,35 @@ class ScrollGUI:
         rclpy.spin_once(self.node, timeout_sec=0.1)
         self.window.after(10, self.spin_once)
 
+def load_values(file_path):
+    if not os.path.isfile(file_path):
+        print(f"File '{file_path}' does not exist")
+        return 0.5, 1.0
+    
+    try:
+        with open(file_path, 'r') as f:
+            reader = csv.DictReader(f)
+            rows = list(reader)
+            if not rows:
+                return 0.5, 1.0
+            last_row = rows[-1]
+            freq = float(last_row.get("F", 0.5))
+            ampl = float(last_row.get("A", 1.0))
+            return freq, ampl
+    except Exception as e:
+        print(f"Error reading file {e}")
+        return 0.5, 1.0
+
 def main(args=None):
     rclpy.init(args=args)
-    scroll_publisher_node = ScrollPublisherNode()
+
+    if len(sys.argv) > 1:
+        csv_path = sys.argv[1]
+        freq, ampl = load_values(csv_path)
+    else:
+        freq, ampl = 0.5, 1.0
+
+    scroll_publisher_node = ScrollPublisherNode(freq, ampl)
 
     gui = ScrollGUI(scroll_publisher_node)
 
