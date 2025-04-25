@@ -16,7 +16,10 @@ find_package(set_constraints_srv REQUIRED)
 add_executable(main_node src/main_node.cpp)
 ament_target_dependencies(main_node rclcpp std_msgs set_constraints_srv)
 
-install(TARGETS main_node DESTINATION lib/${PROJECT_NAME})
+add_executable(main_node_sliders src/main_node_sliders.cpp)
+ament_target_dependencies(main_node_sliders rclcpp std_msgs set_constraints_srv)
+
+install(TARGETS main_node main_node_sliders DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY scripts/ DESTINATION lib/${PROJECT_NAME} 
 PATTERN "*.py" PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE)
