@@ -39,7 +39,7 @@ Este nodo recive por la entrada estándar el tipo de función (sinuidal o pulso)
 
 ## Semana 7, 17/03/25 - 23/03/25
 
-- [ ] Redactar introducción memoria.
+- [x] Redactar resumen memoria.
 - [x] Leer artículos médicos.
 
 ## Conceptos aprendidos S7
