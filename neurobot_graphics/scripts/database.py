@@ -19,6 +19,8 @@ def clear():
     nif_var.set("")
     freq_var.set("")
     ampl_var.set("")
+    disturb_var.set("")
+    level_var.set("")
     progress_var.set("")
     notes_text.delete("1.0", "end")
 
@@ -28,6 +30,8 @@ def savedata():
     nif = nif_var.get().strip()
     freq = freq_var.get().strip()
     ampl = ampl_var.get().strip()
+    disturb = disturb_var.get().strip()
+    level = level_var.get().strip()
     progress = progress_var.get().strip()
     notes = notes_text.get("1.0", "end").strip()
 
@@ -44,6 +48,8 @@ def savedata():
         "NIF": nif,
         "F": freq,
         "A": ampl,
+        "D": disturb,
+        "L": level,
         "Progress": progress,
         "Notes": notes
     }
@@ -62,7 +68,7 @@ def savedata():
 
 root = tk.Tk()
 root.title("database")
-root.geometry("500x450")
+root.geometry("600x500")
 root.resizable(False, False)
 
 style = ttk.Style()
@@ -75,13 +81,15 @@ main_frame = ttk.Frame(root)
 main_frame.pack(fill="both", expand=True)
 
 button_frame = ttk.Frame(main_frame)
-button_frame.grid(column=1, row=9, pady=10, sticky=tk.W)
+button_frame.grid(column=1, row=11, pady=10, sticky=tk.W)
 
 name_var = tk.StringVar()
 surname_var = tk.StringVar()
 nif_var = tk.StringVar()
 freq_var = tk.StringVar()
 ampl_var = tk.StringVar()
+disturb_var = tk.StringVar()
+level_var = tk.StringVar()
 progress_var = tk.StringVar()
 
 ttk.Label(main_frame, text="Patient", font=("Segoe UI", 12, "bold")).grid(column=0, row=0, columnspan=2, pady=10)
@@ -101,14 +109,20 @@ ttk.Entry(main_frame, width=30, textvariable=freq_var).grid(column=1, row=4, sti
 ttk.Label(main_frame, text="Amplitude:").grid(column=0, row=5, sticky=tk.E, pady=5)
 ttk.Entry(main_frame, width=30, textvariable=ampl_var).grid(column=1, row=5, sticky=tk.W, pady=5)
 
-ttk.Label(main_frame, text="Progress (%):").grid(column=0, row=6, sticky=tk.E, pady=5)
-ttk.Entry(main_frame, width=30, textvariable=progress_var).grid(column=1, row=6, sticky=tk.W, pady=5)
+ttk.Label(main_frame, text="Disturbance:").grid(column=0, row=6, sticky=tk.E, pady=5)
+ttk.Entry(main_frame, width=30, textvariable=disturb_var).grid(column=1, row=6, sticky=tk.W, pady=5)
 
-ttk.Label(main_frame, text="Doctor notes:").grid(column=0, row=7, sticky=tk.NE, pady=5)
+ttk.Label(main_frame, text="Level:").grid(column=0, row=7, sticky=tk.E, pady=5)
+ttk.Entry(main_frame, width=30, textvariable=level_var).grid(column=1, row=7, sticky=tk.W, pady=5)
+
+ttk.Label(main_frame, text="Progress (%):").grid(column=0, row=8, sticky=tk.E, pady=5)
+ttk.Entry(main_frame, width=30, textvariable=progress_var).grid(column=1, row=8, sticky=tk.W, pady=5)
+
+ttk.Label(main_frame, text="Doctor notes:").grid(column=0, row=9, sticky=tk.NE, pady=5)
 notes_text = tk.Text(main_frame, width=30, height=5, font=("Segoe UI", 10))
-notes_text.grid(column=1, row=7, sticky=tk.W, pady=5)
+notes_text.grid(column=1, row=9, sticky=tk.W, pady=5)
 
-ttk.Separator(main_frame).grid(column=0, row=8, columnspan=2, pady=10, sticky="ew")
+ttk.Separator(main_frame).grid(column=0, row=10, columnspan=2, pady=10, sticky="ew")
 
 save_btn = tk.Button(button_frame, text="Save", command=savedata, bg="green", fg="white", font=("Segoe UI", 10), width=10)
 save_btn.pack(side="left", padx=(0, 10))

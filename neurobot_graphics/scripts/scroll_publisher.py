@@ -3,6 +3,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Int32
 import tkinter as tk
 from tkinter import ttk
 import sys
@@ -10,25 +11,34 @@ import csv
 import os
 
 class ScrollPublisherNode(Node):
-    def __init__(self, freq=0.5, ampl=1.0):
+    def __init__(self, freq=0.5, ampl=1.0, disturb=0.0, level=1):
         super().__init__('scroll_publisher_node')
 
-        self.publisher_ = self.create_publisher(
+        self.slider_publisher_ = self.create_publisher(
             Float32MultiArray,
             'SliderParameters',
             10
         )
 
+        self.game_publisher_ = self.create_publisher(
+            Int32,
+            'GameParameters',
+            10
+        )
+
         self.freq = freq
         self.ampl = ampl
+        self.disturb = disturb
+        self.level = level
 
         self.timer = self.create_timer(0.1, self.publish_data)
 
     def publish_data(self):
-        msg = Float32MultiArray()
-        msg.data = [self.freq, self.ampl]
-        self.publisher_.publish(msg)
-        self.get_logger().info(f"Publishing F{self.freq:.2f} A{self.ampl:.2f}")
+        slider_msg = Float32MultiArray()
+        slider_msg.data = [self.freq, self.ampl, self.disturb]
+        self.slider_publisher_.publish(slider_msg)
+
+        self.get_logger().info(f"Publishing [F{self.freq:.2f} A{self.ampl:.2f} D{self.disturb:.2f}]")
     
 class ScrollGUI:
     def __init__(self, node):
@@ -36,48 +46,97 @@ class ScrollGUI:
 
         self.frequency = node.freq
         self.amplitude = node.ampl
+        self.disturbance = node.disturb
 
         self.window = tk.Tk()
-        self.window.title("Frequency and Amplitude controller")
-        self.window.geometry("600x400")
+        self.window.title("Gaming Parameters Controller")
+        self.window.geometry("900x700")
 
-        self.frequency_label = tk.Label(self.window, text="Frequency (Hz)", font=("Arial", 14))
-        self.frequency_label.pack(pady=5)
+        frequency_frame = ttk.Frame(self.window)
+        frequency_frame.pack(pady=10)
 
-        self.frequency_scroller = ttk.Scale(self.window, from_=0.0, to=10.0, orient="horizontal", command=self.update_frequency, length=400)
+        self.frequency_initial_label = tk.Label(frequency_frame, text=f"Initial Frequency: {self.frequency:.2f} Hz", font=("Arial", 14))
+        self.frequency_initial_label.pack(pady=5)
+
+        self.frequency_scroller = ttk.Scale(frequency_frame, from_=0.0, to=10.0, orient="horizontal", command=self.update_frequency, length=400)
         self.frequency_scroller.set(self.frequency)
         self.frequency_scroller.pack(pady=5)
 
-        self.frequency_label = tk.Label(self.window, text=f"Frequency: {self.frequency:.2f} Hz", font=("Arial", 14))
-        self.frequency_label.pack(pady=5)
+        self.frequency_label = tk.Label(frequency_frame, text=f"Current Frequency: {self.frequency:.2f} Hz", font=("Arial", 14))
+        self.frequency_label.pack(pady=2)
 
-        self.amplitude_label = tk.Label(self.window, text="Amplitude", font=("Arial", 14))
-        self.amplitude_label.pack(pady=5)
+        amplitude_frame = ttk.Frame(self.window)
+        amplitude_frame.pack(pady=10)
 
-        self.amplitude_scroller = ttk.Scale(self.window, from_=0.0, to=10.0, orient="horizontal", command=self.update_amplitude, length=400)
+        self.amplitude_initial_label = tk.Label(amplitude_frame, text=f"Initial Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
+        self.amplitude_initial_label.pack(pady=5)
+
+        self.amplitude_scroller = ttk.Scale(amplitude_frame, from_=0.0, to=10.0, orient="horizontal", command=self.update_amplitude, length=400)
         self.amplitude_scroller.set(self.amplitude)
         self.amplitude_scroller.pack(pady=5)
 
-        self.amplitude_label = tk.Label(self.window, text=f"Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
-        self.amplitude_label.pack(pady=5)
+        self.amplitude_label = tk.Label(amplitude_frame, text=f"Current Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
+        self.amplitude_label.pack(pady=2)
 
-        self.update_button = tk.Button(self.window, text="Update values", command=self.update_values, font=("Arial", 14), width=20, height=2, bg="green", fg="white")
-        self.update_button.pack(pady=10)
+        disturbance_frame = ttk.Frame(self.window)
+        disturbance_frame.pack(pady=10)
 
-        self.update_button = tk.Button(self.window, text="Salir", command=self.close, font=("Arial", 14), width=20, height=2, bg="red", fg="white")
-        self.update_button.pack(pady=10)
+        self.disturbance_initial_label = tk.Label(disturbance_frame, text=f"Initial Disturbance: {self.disturbance:.2f}", font=("Arial", 14))
+        self.disturbance_initial_label.pack(pady=5)
+
+        self.disturbance_scroller = ttk.Scale(disturbance_frame, from_=0.0, to=1.0, orient="horizontal", command=self.update_disturbance, length=400)
+        self.disturbance_scroller.set(self.disturbance)
+        self.disturbance_scroller.pack(pady=5)
+
+        self.disturbance_label = tk.Label(disturbance_frame, text=f"Current Disturbance: {self.disturbance:.2f}", font=("Arial", 14))
+        self.disturbance_label.pack(pady=2)
+
+        self.update_signal_button = tk.Button(self.window, text="Update signal", command=self.update_signal, font=("Arial", 14), width=20, height=2, bg="green", fg="white")
+        self.update_signal_button.pack(pady=10)
+
+        level_frame = ttk.Frame(self.window)
+        level_frame.pack(pady=10)
+
+        self.level_label = tk.Label(level_frame, text="Select Level", font=("Arial", 14))
+        self.level_label.pack(pady=5)
+
+        self.level_var = tk.StringVar()
+        self.level_combobox = ttk.Combobox(level_frame, textvariable=self.level_var, font=("Arial", 14), state="readonly", width=10)
+        self.level_combobox['values'] = [str(i) for i in range(1, 11)]
+        self.level_combobox.set(str(self.node.level))
+        self.level_combobox.pack(pady=2)
+
+        self.update_level_button = tk.Button(self.window, text="Update level", command=self.update_level, font=("Arial", 14), width=20, height=2, bg="blue", fg="white")
+        self.update_level_button.pack(pady=10)
+
+        self.exit_button = tk.Button(self.window, text="Salir", command=self.close, font=("Arial", 14), width=20, height=2, bg="red", fg="white")
+        self.exit_button.pack(pady=10)
     
     def update_frequency(self, val):
         self.frequency = float(val)
-        self.frequency_label.config(text=f"Frequency: {self.frequency:.2f} Hz")
+        self.frequency_label.config(text=f"Current Frequency: {self.frequency:.2f} Hz")
     
     def update_amplitude(self, val):
         self.amplitude = float(val)
-        self.amplitude_label.config(text=f"Amplitude: {self.amplitude:.2f}")
+        self.amplitude_label.config(text=f"Current Amplitude: {self.amplitude:.2f}")
     
-    def update_values(self):
+    def update_disturbance(self, val):
+        self.disturbance = float(val)
+        self.disturbance_label.config(text=f"Current Disturbance: {self.disturbance:.2f}")
+    
+    def update_signal(self):
         self.node.freq = self.frequency
         self.node.ampl = self.amplitude
+        self.node.disturb = self.disturbance
+    
+    def update_level(self):
+        self.level = int(self.level_var.get())
+
+        game_msg = Int32()
+        game_msg.data = self.level
+        self.node.game_publisher_.publish(game_msg)
+
+        self.node.get_logger().info(f"Publishing [L{self.level}]")
     
     def close(self):
         self.node.destroy_node()
@@ -95,32 +154,34 @@ class ScrollGUI:
 def load_values(file_path):
     if not os.path.isfile(file_path):
         print(f"File '{file_path}' does not exist")
-        return 0.5, 1.0
+        return 0.5, 1.0, 0.0, 1
     
     try:
         with open(file_path, 'r') as f:
             reader = csv.DictReader(f)
             rows = list(reader)
             if not rows:
-                return 0.5, 1.0
+                return 0.5, 1.0, 0.0, 1
             last_row = rows[-1]
             freq = float(last_row.get("F", 0.5))
             ampl = float(last_row.get("A", 1.0))
-            return freq, ampl
+            disturb = float(last_row.get("D", 0.0))
+            level = int(last_row.get("L", 1))
+            return freq, ampl, disturb, level
     except Exception as e:
         print(f"Error reading file {e}")
-        return 0.5, 1.0
+        return 0.5, 1.0, 0.0, 1
 
 def main(args=None):
     rclpy.init(args=args)
 
     if len(sys.argv) > 1:
         csv_path = sys.argv[1]
-        freq, ampl = load_values(csv_path)
+        freq, ampl, disturb, level = load_values(csv_path)
     else:
-        freq, ampl = 0.5, 1.0
+        freq, ampl, disturb, level = 0.5, 1.0, 0.0, 1
 
-    scroll_publisher_node = ScrollPublisherNode(freq, ampl)
+    scroll_publisher_node = ScrollPublisherNode(freq, ampl, disturb, level)
 
     gui = ScrollGUI(scroll_publisher_node)
 
