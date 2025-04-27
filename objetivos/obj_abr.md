@@ -174,5 +174,11 @@ Las mejoras propuestas por los tutores son las siguientes:
 - [x] Añadir al .csv los datos de la perturbación y el nivel (database.py)
 - [ ] Ejecutar los scripts desde un icono y no desde el terminal.
 
+### Conexiones entre nodos
+
+![Captura desde 2025-04-27 19-29-56](https://github.com/user-attachments/assets/8dd99748-ee96-4560-9609-b736e3584e00)
+
+### Video funcionamiento
+
 [UpdatesFlappyBird.webm](https://github.com/user-attachments/assets/3df6b691-a7d7-497f-8c85-49e52abf04c8)
 
