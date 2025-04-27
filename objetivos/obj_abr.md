@@ -162,6 +162,14 @@ Mi nuevo script se suscribe tanto a este topic como a `/PositionReference` para 
 ## Semana 12, 21/04/25 - 27/04/25
 
 - [ ] Añadir imágenes al juego (tuberías y pájaro).
-- [ ] Avanzar con la memoria (objetivos).
+- [x] Avanzar con la memoria (objetivos).
 
 ## Conceptos aprendidos S12
+
+Las mejoras propuestas por los tutores son las siguientes:
+- [x] Puntear las señales del juego en vez de que se muestren con una línea continua.
+- [x] Cambiar de color el punto que indica la posición del paciente según se acerca a los límites que son las señales desplazas un offset.
+- [ ] Añadir una perturbación que actúe como la fuerza del viento y se modifique desde la interfaz del médico (scroll_publisher.py)
+- [x] Permitir que el nivel del juego se modifique desde la interfaz del médico (scroll_publisher.py)
+- [x] Añadir al .csv los datos de la perturbación y el nivel (database.py)
+- [ ] Ejecutar los scripts desde un icono y no desde el terminal.
