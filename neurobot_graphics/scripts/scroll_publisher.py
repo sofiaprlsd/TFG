@@ -29,16 +29,18 @@ class ScrollPublisherNode(Node):
         self.freq = freq
         self.ampl = ampl
         self.disturb = disturb
+        self.duration = 0.5
+        self.interval = 30.0
         self.level = level
 
         self.timer = self.create_timer(0.1, self.publish_data)
 
     def publish_data(self):
         slider_msg = Float32MultiArray()
-        slider_msg.data = [self.freq, self.ampl, self.disturb]
+        slider_msg.data = [self.freq, self.ampl, self.disturb, self.duration, self.interval]
         self.slider_publisher_.publish(slider_msg)
 
-        self.get_logger().info(f"Publishing [F{self.freq:.2f} A{self.ampl:.2f} D{self.disturb:.2f}]")
+        self.get_logger().info(f"Publishing [F{self.freq:.2f} A{self.ampl:.2f} D{self.disturb:.2f} d{self.duration:.2f} i{self.interval:.2f}]")
     
 class ScrollGUI:
     def __init__(self, node):
@@ -47,49 +49,56 @@ class ScrollGUI:
         self.frequency = node.freq
         self.amplitude = node.ampl
         self.disturbance = node.disturb
+        self.duration = node.duration
+        self.interval = node.interval
 
         self.window = tk.Tk()
         self.window.title("Gaming Parameters Controller")
-        self.window.geometry("900x700")
+        self.window.geometry("1000x700")
 
         frequency_frame = ttk.Frame(self.window)
         frequency_frame.pack(pady=10)
-
-        self.frequency_initial_label = tk.Label(frequency_frame, text=f"Initial Frequency: {self.frequency:.2f} Hz", font=("Arial", 14))
-        self.frequency_initial_label.pack(pady=5)
 
         self.frequency_scroller = ttk.Scale(frequency_frame, from_=0.0, to=10.0, orient="horizontal", command=self.update_frequency, length=400)
         self.frequency_scroller.set(self.frequency)
         self.frequency_scroller.pack(pady=5)
 
-        self.frequency_label = tk.Label(frequency_frame, text=f"Current Frequency: {self.frequency:.2f} Hz", font=("Arial", 14))
+        self.frequency_label = tk.Label(frequency_frame, text=f"Frequency: {self.frequency:.2f} Hz", font=("Arial", 14))
         self.frequency_label.pack(pady=2)
 
         amplitude_frame = ttk.Frame(self.window)
         amplitude_frame.pack(pady=10)
 
-        self.amplitude_initial_label = tk.Label(amplitude_frame, text=f"Initial Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
-        self.amplitude_initial_label.pack(pady=5)
-
         self.amplitude_scroller = ttk.Scale(amplitude_frame, from_=0.0, to=10.0, orient="horizontal", command=self.update_amplitude, length=400)
         self.amplitude_scroller.set(self.amplitude)
         self.amplitude_scroller.pack(pady=5)
 
-        self.amplitude_label = tk.Label(amplitude_frame, text=f"Current Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
+        self.amplitude_label = tk.Label(amplitude_frame, text=f"Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
         self.amplitude_label.pack(pady=2)
 
         disturbance_frame = ttk.Frame(self.window)
         disturbance_frame.pack(pady=10)
 
-        self.disturbance_initial_label = tk.Label(disturbance_frame, text=f"Initial Disturbance: {self.disturbance:.2f}", font=("Arial", 14))
-        self.disturbance_initial_label.pack(pady=5)
-
         self.disturbance_scroller = ttk.Scale(disturbance_frame, from_=0.0, to=1.0, orient="horizontal", command=self.update_disturbance, length=400)
         self.disturbance_scroller.set(self.disturbance)
         self.disturbance_scroller.pack(pady=5)
 
-        self.disturbance_label = tk.Label(disturbance_frame, text=f"Current Disturbance: {self.disturbance:.2f}", font=("Arial", 14))
+        self.disturbance_label = tk.Label(disturbance_frame, text=f"Disturbance: {self.disturbance:.2f}", font=("Arial", 14))
         self.disturbance_label.pack(pady=2)
+
+        self.duration_scroller = ttk.Scale(disturbance_frame, from_=0.5, to=5.0, orient="horizontal", command=self.update_duration, length=400)
+        self.duration_scroller.set(self.duration)
+        self.duration_scroller.pack(pady=5)
+
+        self.duration_label = tk.Label(disturbance_frame, text=f"Disturbance duration: {self.duration:.2f} s", font=("Arial", 14))
+        self.duration_label.pack(pady=2)
+
+        self.interval_scroller = ttk.Scale(disturbance_frame, from_=5.0, to=30.0, orient="horizontal", command=self.update_interval, length=400)
+        self.interval_scroller.set(self.interval)
+        self.interval_scroller.pack(pady=5)
+
+        self.interval_label = tk.Label(disturbance_frame, text=f"Interval between disturbances: {self.interval:.2f} s", font=("Arial", 14))
+        self.interval_label.pack(pady=2)
 
         self.update_signal_button = tk.Button(self.window, text="Update signal", command=self.update_signal, font=("Arial", 14), width=20, height=2, bg="green", fg="white")
         self.update_signal_button.pack(pady=10)
@@ -123,11 +132,21 @@ class ScrollGUI:
     def update_disturbance(self, val):
         self.disturbance = float(val)
         self.disturbance_label.config(text=f"Current Disturbance: {self.disturbance:.2f}")
+
+    def update_duration(self, val):
+        self.duration = float(val)
+        self.duration_label.config(text=f"Disturbance duration: {self.duration:.2f} s")
+    
+    def update_interval(self, val):
+        self.interval = float(val)
+        self.interval_label.config(text=f"Interval between disturbances: {self.interval:.2f} s")
     
     def update_signal(self):
         self.node.freq = self.frequency
         self.node.ampl = self.amplitude
         self.node.disturb = self.disturbance
+        self.node.duration = self.duration
+        self.node.interval = self.interval
     
     def update_level(self):
         self.level = int(self.level_var.get())
