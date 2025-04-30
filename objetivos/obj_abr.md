@@ -174,7 +174,10 @@ Las mejoras propuestas por los tutores son las siguientes:
 - [x] Añadir al .csv los datos de la perturbación y el nivel (database.py)
 - [ ] Ejecutar los scripts desde un icono y no desde el terminal.
 - [ ] Botones para elegir el tipo de señal (sinuidal o escalón).
-- [ ] Modo para elegir posición 0 del motor (independiente de la posición del juego). Definir los límites del motor por separado. Guardar el dato en el .csv. Pantalla una vez antes del juego.
+- [ ] Definir los límites del motor por separado (mínimo == p0 del motor). Guardar el dato en el .csv. Pantalla una vez antes del juego.
+- [ ] Definir offset de comienzo de la señal en la parte de señales (slider).
+- [ ] Dividir archivos por ID-fecha-[conf.csv/metrics.csv/analisis.py] en un directorio bajo el ID. Permitir escritura en conf y metrics.
+- [ ] Pantalla del juego para el médico a parte para la visualización del error de la posición del paciente en forma de señal. Y la otra que sea lo que ve el paciente.
 
 ### Conexiones entre nodos
 
