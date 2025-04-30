@@ -173,6 +173,8 @@ Las mejoras propuestas por los tutores son las siguientes:
 - [x] Permitir que el nivel del juego se modifique desde la interfaz del médico (scroll_publisher.py)
 - [x] Añadir al .csv los datos de la perturbación y el nivel (database.py)
 - [ ] Ejecutar los scripts desde un icono y no desde el terminal.
+- [ ] Botones para elegir el tipo de señal (sinuidal o escalón).
+- [ ] Modo para elegir posición 0 del motor (independiente de la posición del juego). Definir los límites del motor por separado. Guardar el dato en el .csv. Pantalla una vez antes del juego.
 
 ### Conexiones entre nodos
 
