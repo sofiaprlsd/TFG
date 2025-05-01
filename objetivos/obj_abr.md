@@ -168,13 +168,14 @@ Las mejoras propuestas por los tutores son las siguientes:
 **flappy_bird.py**
 - [x] Puntear las señales del juego en vez de que se muestren con una línea continua.
 - [x] Cambiar de color el punto que indica la posición del paciente según se acerca a los límites que son las señales desplazas un offset.
-- [ ] Añadir la señal de la trayectoría deseada (línea continua).
+- [x] Añadir la señal de la trayectoría deseada (línea continua).
 - [ ] Cambiar el suscriptor del topic /PositionReference a /CleanSignal.
 - [ ] Añadir una perturbación que actúe como la fuerza del viento (nueo suscriptor).
 
 **flappy_bird_viewer.py**
-- [ ] Mostrar la misma pantalla que ve el jugador.
+- [x] Mostrar la misma pantalla que ve el jugador.
 - [ ] Mostrar una pantalla con el error de la trayectoria del paciente.
+- [ ] Corregir los cuarteos de las señales.
 
 **scroll_publisher**
 - [x] Permitir la modificación de los parámetros de la perturbación (fuerza, duración, periodo entre perturbaciones).
