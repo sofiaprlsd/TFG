@@ -1,8 +1,11 @@
-## Semana 
+## Semana 13, 28/04/25 - 4/05/25
 
-## Conceptos aprendidos S
+- [ ] Incluir mejoras propuestas por el equipo durante las reuniones del V25 y X30.
+- [ ] Hacer la introducción de la memoria.
 
-Después de incluir lo siguiente lo siguiente:
+## Conceptos aprendidos S13
+
+Después de incluir lo siguiente:
 
 **flappy_bird.py**
 - Añadir la señal de la trayectoría deseada (línea continua).
