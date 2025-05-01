@@ -161,23 +161,37 @@ Mi nuevo script se suscribe tanto a este topic como a `/PositionReference` para 
 
 ## Semana 12, 21/04/25 - 27/04/25
 
-- [ ] Añadir imágenes al juego (tuberías y pájaro).
 - [x] Avanzar con la memoria (objetivos).
 
-## Conceptos aprendidos S12
-
 Las mejoras propuestas por los tutores son las siguientes:
+
+**flappy_bird.py**
 - [x] Puntear las señales del juego en vez de que se muestren con una línea continua.
 - [x] Cambiar de color el punto que indica la posición del paciente según se acerca a los límites que son las señales desplazas un offset.
-- [ ] Añadir una perturbación que actúe como la fuerza del viento y se modifique desde la interfaz del médico (scroll_publisher.py)
-- [x] Permitir que el nivel del juego se modifique desde la interfaz del médico (scroll_publisher.py)
-- [x] Añadir al .csv los datos de la perturbación y el nivel (database.py)
-- [ ] Ejecutar los scripts desde un icono y no desde el terminal.
-- [ ] Botones para elegir el tipo de señal (sinuidal o escalón).
-- [ ] Definir los límites del motor por separado (mínimo == p0 del motor). Guardar el dato en el .csv. Pantalla una vez antes del juego.
+- [ ] Añadir una perturbación que actúe como la fuerza del viento.
+- [ ] Añadir la señal de la trayectoría deseada (línea continua).
+
+**flappy_bird_viewer.py**
+- [ ] Mostrar la misma pantalla que ve el jugador.
+- [ ] Mostrar una pantalla con el error de la trayectoria del paciente.
+
+**scroll_publisher**
+- [x] Permitir la modificación de los parámetros de la perturbación (fuerza, duración, periodo entre perturbaciones).
+- [x] Permitir que el nivel del juego se modifique desde la interfaz del médico.
+- [ ] Botones para elegir el tipo de señal y perturbación (sinuidal o escalón) de forma independiente.
 - [ ] Definir offset de comienzo de la señal en la parte de señales (slider).
+- [ ] Definir los límites del motor por separado (mínimo == p0 del motor). Pantalla antes del juego (con retorno).
 - [ ] Dividir archivos por ID-fecha-[conf.csv/metrics.csv/analisis.py] en un directorio bajo el ID. Permitir escritura en conf y metrics.
-- [ ] Pantalla del juego para el médico a parte para la visualización del error de la posición del paciente en forma de señal. Y la otra que sea lo que ve el paciente.
+
+**database.py**
+- [x] Añadir al .csv los datos de la perturbación y el nivel.
+- [ ] Cambiar el nombre y directorio en el que se guarda el .csv.
+
+**General**
+- [ ] Ejecutar los scripts desde un icono y no desde el terminal.
+
+
+## Conceptos aprendidos S12
 
 ### Conexiones entre nodos
 
