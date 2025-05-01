@@ -168,8 +168,9 @@ Las mejoras propuestas por los tutores son las siguientes:
 **flappy_bird.py**
 - [x] Puntear las señales del juego en vez de que se muestren con una línea continua.
 - [x] Cambiar de color el punto que indica la posición del paciente según se acerca a los límites que son las señales desplazas un offset.
-- [ ] Añadir una perturbación que actúe como la fuerza del viento.
 - [ ] Añadir la señal de la trayectoría deseada (línea continua).
+- [ ] Cambiar el suscriptor del topic /PositionReference a /CleanSignal.
+- [ ] Añadir una perturbación que actúe como la fuerza del viento (nueo suscriptor).
 
 **flappy_bird_viewer.py**
 - [ ] Mostrar la misma pantalla que ve el jugador.
@@ -180,7 +181,7 @@ Las mejoras propuestas por los tutores son las siguientes:
 - [x] Permitir que el nivel del juego se modifique desde la interfaz del médico.
 - [ ] Botones para elegir el tipo de señal y perturbación (sinuidal o escalón) de forma independiente.
 - [ ] Definir offset de comienzo de la señal en la parte de señales (slider).
-- [ ] Definir los límites del motor por separado (mínimo == p0 del motor). Pantalla antes del juego (con retorno).
+- [ ] Definir los límites del motor por separado (mínimo == p0 del motor). Pantalla antes del juego (con retorno). Nuevo publicador booleano cuando se configure.
 - [ ] Dividir archivos por ID-fecha-[conf.csv/metrics.csv/analisis.py] en un directorio bajo el ID. Permitir escritura en conf y metrics.
 
 **database.py**
