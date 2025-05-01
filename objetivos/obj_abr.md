@@ -175,19 +175,19 @@ Las mejoras propuestas por los tutores son las siguientes:
 **flappy_bird_viewer.py**
 - [x] Mostrar la misma pantalla que ve el jugador.
 - [x] Mostrar una pantalla con el error de la trayectoria del paciente.
-- [ ] Volcar los datos de la trayectoria y error a un .csv para su posterior análisis.
+- [x] Volcar los datos de la terapia a un .csv para su posterior análisis.
 
 **scroll_publisher**
 - [x] Permitir la modificación de los parámetros de la perturbación (fuerza, duración, periodo entre perturbaciones).
 - [x] Permitir que el nivel del juego se modifique desde la interfaz del médico.
-- [ ] Botones para elegir el tipo de señal y perturbación (sinuidal o escalón) de forma independiente.
+- [x] Caja para elegir el tipo de señal y perturbación (sinuidal o escalón) de forma independiente.
 - [ ] Definir offset de comienzo de la señal en la parte de señales (slider).
 - [ ] Definir los límites del motor por separado (mínimo == p0 del motor). Pantalla antes del juego (con retorno). Nuevo publicador booleano cuando se configure.
-- [ ] Dividir archivos por ID-fecha-[conf.csv/metrics.csv/analisis.py] en un directorio bajo el ID. Permitir escritura en conf y metrics.
+- [x] Dividir archivos por ID-fecha-[conf.csv/metrics.csv/analisis.py] en un directorio bajo el ID. Permitir escritura en conf y metrics.
 
 **database.py**
 - [x] Añadir al .csv los datos de la perturbación y el nivel.
-- [ ] Cambiar el nombre y directorio en el que se guarda el .csv.
+- [x] Cambiar el nombre y directorio en el que se guarda el .csv.
 
 **General**
 - [ ] Crear un nuevo script que analice los datos del juego.
