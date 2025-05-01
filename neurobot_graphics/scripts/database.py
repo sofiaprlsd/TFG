@@ -6,8 +6,8 @@ from tkinter import messagebox
 import csv
 import os
 
-DATABASE_DIR = os.path.join(os.path.expanduser("~"), "database")
-
+HOME_DIR = os.path.expanduser("~")
+DATABASE_DIR = os.path.join(HOME_DIR, "database")
 os.makedirs(DATABASE_DIR, exist_ok=True)
 
 def exit():
@@ -16,10 +16,12 @@ def exit():
 def clear():
     name_var.set("")
     surname_var.set("")
-    nif_var.set("")
+    id_var.set("")
     freq_var.set("")
     ampl_var.set("")
     disturb_var.set("")
+    duration_var.set("")
+    period_var.set("")
     level_var.set("")
     progress_var.set("")
     notes_text.delete("1.0", "end")
@@ -27,28 +29,35 @@ def clear():
 def savedata():
     name = name_var.get().strip()
     surname = surname_var.get().strip()
-    nif = nif_var.get().strip()
+    id = id_var.get().strip()
     freq = freq_var.get().strip()
     ampl = ampl_var.get().strip()
     disturb = disturb_var.get().strip()
+    duration = duration_var.get().strip()
+    period = period_var.get().strip()
     level = level_var.get().strip()
     progress = progress_var.get().strip()
     notes = notes_text.get("1.0", "end").strip()
 
-    if not (nif.isdigit()):
-        messagebox.showwarning("Invalid input", "NIF must be a number")
+    if not (id.isdigit()):
+        messagebox.showwarning("Invalid input", "ID must be a number")
         return
-    
-    file_name = f"{nif}.csv"
-    file_path = os.path.join(DATABASE_DIR, file_name)
+
+    ext = ".csv"
+    ID_DIR = os.path.join(DATABASE_DIR, id)
+    os.makedirs(ID_DIR, exist_ok=True)
+    file_name = f"{id}{ext}"
+    file_path = os.path.join(ID_DIR, file_name)
 
     patient_data = {
         "Name": name,
         "Surname": surname,
-        "NIF": nif,
+        "ID": id,
         "F": freq,
         "A": ampl,
         "D": disturb,
+        "d": duration,
+        "i": period,
         "L": level,
         "Progress": progress,
         "Notes": notes
@@ -81,14 +90,16 @@ main_frame = ttk.Frame(root)
 main_frame.pack(fill="both", expand=True)
 
 button_frame = ttk.Frame(main_frame)
-button_frame.grid(column=1, row=11, pady=10, sticky=tk.W)
+button_frame.grid(column=1, row=12, pady=10, sticky=tk.W)
 
 name_var = tk.StringVar()
 surname_var = tk.StringVar()
-nif_var = tk.StringVar()
+id_var = tk.StringVar()
 freq_var = tk.StringVar()
 ampl_var = tk.StringVar()
 disturb_var = tk.StringVar()
+duration_var = tk.StringVar()
+period_var = tk.StringVar()
 level_var = tk.StringVar()
 progress_var = tk.StringVar()
 
@@ -100,8 +111,8 @@ ttk.Entry(main_frame, width=30, textvariable=name_var).grid(column=1, row=1, sti
 ttk.Label(main_frame, text="Surname:").grid(column=0, row=2, sticky=tk.E, pady=5)
 ttk.Entry(main_frame, width=30, textvariable=surname_var).grid(column=1, row=2, sticky=tk.W, pady=5)
 
-ttk.Label(main_frame, text="NIF:").grid(column=0, row=3, sticky=tk.E, pady=5)
-ttk.Entry(main_frame, width=30, textvariable=nif_var).grid(column=1, row=3, sticky=tk.W, pady=5)
+ttk.Label(main_frame, text="ID:").grid(column=0, row=3, sticky=tk.E, pady=5)
+ttk.Entry(main_frame, width=30, textvariable=id_var).grid(column=1, row=3, sticky=tk.W, pady=5)
 
 ttk.Label(main_frame, text="Frequency:").grid(column=0, row=4, sticky=tk.E, pady=5)
 ttk.Entry(main_frame, width=30, textvariable=freq_var).grid(column=1, row=4, sticky=tk.W, pady=5)
@@ -112,17 +123,21 @@ ttk.Entry(main_frame, width=30, textvariable=ampl_var).grid(column=1, row=5, sti
 ttk.Label(main_frame, text="Disturbance:").grid(column=0, row=6, sticky=tk.E, pady=5)
 ttk.Entry(main_frame, width=30, textvariable=disturb_var).grid(column=1, row=6, sticky=tk.W, pady=5)
 
-ttk.Label(main_frame, text="Level:").grid(column=0, row=7, sticky=tk.E, pady=5)
-ttk.Entry(main_frame, width=30, textvariable=level_var).grid(column=1, row=7, sticky=tk.W, pady=5)
+ttk.Label(main_frame, text="Disturbance duration:").grid(column=0, row=7, sticky=tk.E, pady=5)
+ttk.Entry(main_frame, width=30, textvariable=duration_var).grid(column=1, row=7, sticky=tk.W, pady=5)
 
-ttk.Label(main_frame, text="Progress (%):").grid(column=0, row=8, sticky=tk.E, pady=5)
-ttk.Entry(main_frame, width=30, textvariable=progress_var).grid(column=1, row=8, sticky=tk.W, pady=5)
+ttk.Label(main_frame, text="Disturbance period:").grid(column=0, row=8, sticky=tk.E, pady=5)
+ttk.Entry(main_frame, width=30, textvariable=period_var).grid(column=1, row=8, sticky=tk.W, pady=5)
 
-ttk.Label(main_frame, text="Doctor notes:").grid(column=0, row=9, sticky=tk.NE, pady=5)
+ttk.Label(main_frame, text="Level:").grid(column=0, row=9, sticky=tk.E, pady=5)
+ttk.Entry(main_frame, width=30, textvariable=level_var).grid(column=1, row=9, sticky=tk.W, pady=5)
+
+ttk.Label(main_frame, text="Progress (%):").grid(column=0, row=10, sticky=tk.E, pady=5)
+ttk.Entry(main_frame, width=30, textvariable=progress_var).grid(column=1, row=10, sticky=tk.W, pady=5)
+
+ttk.Label(main_frame, text="Doctor notes:").grid(column=0, row=11, sticky=tk.NE, pady=5)
 notes_text = tk.Text(main_frame, width=30, height=5, font=("Segoe UI", 10))
-notes_text.grid(column=1, row=9, sticky=tk.W, pady=5)
-
-ttk.Separator(main_frame).grid(column=0, row=10, columnspan=2, pady=10, sticky="ew")
+notes_text.grid(column=1, row=11, sticky=tk.W, pady=5)
 
 save_btn = tk.Button(button_frame, text="Save", command=savedata, bg="green", fg="white", font=("Segoe UI", 10), width=10)
 save_btn.pack(side="left", padx=(0, 10))

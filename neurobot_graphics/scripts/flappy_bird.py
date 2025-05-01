@@ -52,14 +52,16 @@ class FlappyBirdNode(Node):
         self.game_completed = False
 
         self.time_data = np.zeros(self.sample_amount)
+        self.signal_data = np.zeros(self.sample_amount)
         self.signal_upper = np.zeros(self.sample_amount)
         self.signal_lower = np.zeros(self.sample_amount)
 
         plt.ion()   # Update graph in real time
         self.fig, self.ax = plt.subplots(figsize=(12, 8))
 
-        self.line_upper, = self.ax.plot(self.time_data, self.signal_upper, linestyle='--', label='Signal + offset')
-        self.line_lower, = self.ax.plot(self.time_data, self.signal_lower, linestyle='--', label='Signal - offset')
+        self.line, = self.ax.plot(self.time_data, self.signal_data, color='blue', label='Signal')
+        self.line_upper, = self.ax.plot(self.time_data, self.signal_upper, linestyle='--', color='orange', label='Signal + offset')
+        self.line_lower, = self.ax.plot(self.time_data, self.signal_lower, linestyle='--', color='orange', label='Signal - offset')
         self.player, = self.ax.plot(self.player_x, self.player_y, 'ro', label='Player')
 
         self.ax.set_xlim(0, self.window_size_x)
@@ -83,10 +85,12 @@ class FlappyBirdNode(Node):
     
     def listener_callback(self, msg):
         self.time_data = np.roll(self.time_data, -1)
+        self.signal_data = np.roll(self.signal_data, -1)
         self.signal_upper = np.roll(self.signal_upper, -1)
         self.signal_lower = np.roll(self.signal_lower, -1)
 
         self.time_data[-1] = self.time
+        self.signal_data[-1] = msg.data
         self.signal_upper[-1] = msg.data + self.offset_y
         self.signal_lower[-1] = msg.data - self.offset_y
 
@@ -112,7 +116,7 @@ class FlappyBirdNode(Node):
                         self.ax.set_title(f'Flappy Bird Level {self.level}')
                         self.get_logger().info(f"Upgrade to level {self.level}")
 
-        # When time is grater than window size, 
+        # When time is greater than window size, 
         # increment player_x to stay in same spot of the window
         self.time += 0.01
         if self.time >= self.window_size_x:
@@ -122,6 +126,8 @@ class FlappyBirdNode(Node):
             self.ax.set_xlim(self.time - self.window_size_x, self.time)
 
         # Plot sigal and player position
+        self.line.set_xdata(self.time_data)
+        self.line.set_ydata(self.signal_data)
         self.line_upper.set_xdata(self.time_data)
         self.line_upper.set_ydata(self.signal_upper)
         self.line_lower.set_xdata(self.time_data)

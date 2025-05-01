@@ -9,9 +9,14 @@ from tkinter import ttk
 import sys
 import csv
 import os
+from datetime import datetime
+
+HOME_DIR = os.path.expanduser("~")
+DIR = os.path.join(HOME_DIR, "database")
+os.makedirs(DIR, exist_ok=True)
 
 class ScrollPublisherNode(Node):
-    def __init__(self, freq=0.5, ampl=1.0, disturb=0.0, level=1):
+    def __init__(self, freq=0.5, ampl=1.0, disturb=0.0, duration=0.5, interval=30.0, level=1):
         super().__init__('scroll_publisher_node')
 
         self.slider_publisher_ = self.create_publisher(
@@ -25,12 +30,12 @@ class ScrollPublisherNode(Node):
             'GameParameters',
             10
         )
-
+        
         self.freq = freq
         self.ampl = ampl
         self.disturb = disturb
-        self.duration = 0.5
-        self.interval = 30.0
+        self.duration = duration
+        self.interval = interval
         self.level = level
 
         self.timer = self.create_timer(0.1, self.publish_data)
@@ -43,9 +48,33 @@ class ScrollPublisherNode(Node):
         self.get_logger().info(f"Publishing [F{self.freq:.2f} A{self.ampl:.2f} D{self.disturb:.2f} d{self.duration:.2f} i{self.interval:.2f}]")
     
 class ScrollGUI:
-    def __init__(self, node):
+    def __init__(self, node, patient_id):
         self.node = node
+        self.signal_var = "sinusoidal"
+        self.disturb_signal_var = "sinusoidal"
 
+        now = datetime.now()
+        date = now.strftime("%Y-%m-%d")
+        index = 1
+        ext = ".csv"
+        ID_DIR = os.path.join(DIR, patient_id)
+        os.makedirs(ID_DIR, exist_ok=True)
+        CONFIG_DIR = os.path.join(ID_DIR, "config")
+        os.makedirs(CONFIG_DIR, exist_ok=True)
+
+        header = ["frequency", "amplitude", "signal", "disturbance", "duration", "period", "mode"]
+
+        while True:
+            file_name = f"{patient_id}-{date}-config_{index}{ext}"
+            file_path = os.path.join(CONFIG_DIR, file_name)
+            if not os.path.exists(file_path):
+                with open(file_path, mode='w', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(header)
+                break
+            index += 1
+        
+        self.file_path = file_path
         self.frequency = node.freq
         self.amplitude = node.ampl
         self.disturbance = node.disturb
@@ -54,7 +83,7 @@ class ScrollGUI:
 
         self.window = tk.Tk()
         self.window.title("Gaming Parameters Controller")
-        self.window.geometry("1000x700")
+        self.window.geometry("1000x800")
 
         frequency_frame = ttk.Frame(self.window)
         frequency_frame.pack(pady=10)
@@ -75,6 +104,10 @@ class ScrollGUI:
 
         self.amplitude_label = tk.Label(amplitude_frame, text=f"Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
         self.amplitude_label.pack(pady=2)
+
+        self.signal_var = tk.StringVar(value="sinusoidal")
+        tk.Label(self.window, text="Signal").pack()
+        ttk.Combobox(self.window, textvariable=self.signal_var, values=["sinusoidal", "step"], state="readonly").pack()
 
         disturbance_frame = ttk.Frame(self.window)
         disturbance_frame.pack(pady=10)
@@ -97,8 +130,12 @@ class ScrollGUI:
         self.interval_scroller.set(self.interval)
         self.interval_scroller.pack(pady=5)
 
-        self.interval_label = tk.Label(disturbance_frame, text=f"Interval between disturbances: {self.interval:.2f} s", font=("Arial", 14))
+        self.interval_label = tk.Label(disturbance_frame, text=f"Disturbance period: {self.interval:.2f} s", font=("Arial", 14))
         self.interval_label.pack(pady=2)
+
+        self.disturb_signal_var = tk.StringVar(value="sinusoidal")
+        tk.Label(self.window, text="Disturbance Signal").pack()
+        ttk.Combobox(self.window, textvariable=self.disturb_signal_var, values=["sinusoidal", "step"], state="readonly").pack()
 
         self.update_signal_button = tk.Button(self.window, text="Update signal", command=self.update_signal, font=("Arial", 14), width=20, height=2, bg="green", fg="white")
         self.update_signal_button.pack(pady=10)
@@ -120,6 +157,19 @@ class ScrollGUI:
 
         self.exit_button = tk.Button(self.window, text="Salir", command=self.close, font=("Arial", 14), width=20, height=2, bg="red", fg="white")
         self.exit_button.pack(pady=10)
+    
+    def save_to_csv(self):
+        with open(self.file_path, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([
+                self.frequency,
+                self.amplitude,
+                self.signal_var.get(),
+                self.disturbance,
+                self.duration,
+                self.interval,
+                self.disturb_signal_var.get()
+            ])
     
     def update_frequency(self, val):
         self.frequency = float(val)
@@ -147,6 +197,7 @@ class ScrollGUI:
         self.node.disturb = self.disturbance
         self.node.duration = self.duration
         self.node.interval = self.interval
+        self.save_to_csv()
     
     def update_level(self):
         self.level = int(self.level_var.get())
@@ -170,39 +221,43 @@ class ScrollGUI:
         rclpy.spin_once(self.node, timeout_sec=0.1)
         self.window.after(10, self.spin_once)
 
-def load_values(file_path):
-    if not os.path.isfile(file_path):
-        print(f"File '{file_path}' does not exist")
-        return 0.5, 1.0, 0.0, 1
-    
+def load_from_csv(file_path):
     try:
         with open(file_path, 'r') as f:
             reader = csv.DictReader(f)
             rows = list(reader)
             if not rows:
-                return 0.5, 1.0, 0.0, 1
+                return 0.5, 1.0, 0.0, 0.5, 30.0, 1
             last_row = rows[-1]
             freq = float(last_row.get("F", 0.5))
             ampl = float(last_row.get("A", 1.0))
             disturb = float(last_row.get("D", 0.0))
+            duration = float(last_row.get("d", 0.5))
+            interval = float(last_row.get("i", 30.0))
             level = int(last_row.get("L", 1))
-            return freq, ampl, disturb, level
+            return freq, ampl, disturb, duration, interval, level
     except Exception as e:
         print(f"Error reading file {e}")
-        return 0.5, 1.0, 0.0, 1
+        return 0.5, 1.0, 0.0, 0.5, 30.0, 1
 
 def main(args=None):
     rclpy.init(args=args)
 
-    if len(sys.argv) > 1:
-        csv_path = sys.argv[1]
-        freq, ampl, disturb, level = load_values(csv_path)
-    else:
-        freq, ampl, disturb, level = 0.5, 1.0, 0.0, 1
+    if len(sys.argv) != 2:
+        print(f"Error: Especifique archivo con los datos del paciente")
+        sys.exit(1)
 
-    scroll_publisher_node = ScrollPublisherNode(freq, ampl, disturb, level)
+    csv_path = sys.argv[1]
+    full_path = os.path.expanduser(csv_path)
+    if not os.path.isfile(full_path):
+        print(f"Error: El archivo no existe")
+        sys.exit(1)
+    patient_id = os.path.basename(os.path.dirname(full_path))
+    freq, ampl, disturb, duration, interval, level = load_from_csv(csv_path)
 
-    gui = ScrollGUI(scroll_publisher_node)
+    scroll_publisher_node = ScrollPublisherNode(freq, ampl, disturb, duration, interval, level)
+
+    gui = ScrollGUI(scroll_publisher_node, patient_id)
 
     try:
         gui.run()
