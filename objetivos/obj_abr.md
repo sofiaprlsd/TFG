@@ -174,8 +174,8 @@ Las mejoras propuestas por los tutores son las siguientes:
 
 **flappy_bird_viewer.py**
 - [x] Mostrar la misma pantalla que ve el jugador.
-- [ ] Mostrar una pantalla con el error de la trayectoria del paciente.
-- [ ] Corregir los cuarteos de las señales.
+- [x] Mostrar una pantalla con el error de la trayectoria del paciente.
+- [ ] Volcar los datos de la trayectoria y error a un .csv para su posterior análisis.
 
 **scroll_publisher**
 - [x] Permitir la modificación de los parámetros de la perturbación (fuerza, duración, periodo entre perturbaciones).
@@ -190,6 +190,7 @@ Las mejoras propuestas por los tutores son las siguientes:
 - [ ] Cambiar el nombre y directorio en el que se guarda el .csv.
 
 **General**
+- [ ] Crear un nuevo script que analice los datos del juego.
 - [ ] Ejecutar los scripts desde un icono y no desde el terminal.
 
 
