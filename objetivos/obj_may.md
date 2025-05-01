@@ -1,6 +1,6 @@
 ## Semana 13, 28/04/25 - 4/05/25
 
-- [ ] Incluir mejoras propuestas por el equipo durante las reuniones del V25 y X30.
+- [ ] Incluir mejoras propuestas por el equipo durante las reuniones del V25 y X30 (mirar S12 en abril).
 - [ ] Hacer la introducción de la memoria.
 
 ## Conceptos aprendidos S13
