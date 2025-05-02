@@ -15,7 +15,7 @@ Después de incluir lo siguiente:
 **flappy_bird_viewer.py**
 - Mostrar la misma pantalla que ve el jugador.
 - Mostrar una pantalla con el error de la trayectoria del paciente.
-- Volcar los datos de la terapia a un .csv para su posterior análisis en un nuevo directorio dentro de `~/database/ID/`, ID-fecha-metrics.csv en `/metrics`.
+- Volcar los datos de la terapia a un .csv para su posterior análisis en un nuevo directorio dentro de `~/database/ID/metrics`, *ID-fecha-metrics_index.csv*.
 
 La pantalla de la derecha es lo que ve el paciente y la de la izquierda la del médico:
 
@@ -28,9 +28,10 @@ La pantalla de la derecha es lo que ve el paciente y la de la izquierda la del m
 **scroll_publisher**
 - Permitir la modificación de los parámetros de la perturbación (fuerza, duración, periodo entre perturbaciones).
 - Caja para elegir el tipo de señal y perturbación (sinuidal o escalón) de forma independiente.
-- Volcar los updates de los parámetros de la terapia a un .csv para su posterior análisis en un nuevo directorio dentro de `~/database/ID/`, ID-fecha-config.csv en `/config`.
+- Crear un slider para definir el offset de la señal principal.
+- Volcar los updates de los parámetros de la terapia a un .csv para su posterior análisis en un nuevo directorio dentro de `~/database/ID/config`, *ID-fecha-config_index.csv*.
 
-![Captura desde 2025-05-01 19-04-56](https://github.com/user-attachments/assets/c2254a2b-0f3c-40aa-98be-8136167d97b4)
+![Captura desde 2025-05-02 13-34-22](https://github.com/user-attachments/assets/ba85b81c-984d-42fc-9a08-5b8937fde873)
 
 
 > [!IMPORTANT]
