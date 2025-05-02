@@ -172,20 +172,22 @@ Las mejoras propuestas por los tutores son las siguientes:
 - [x] Cambiar de color el punto que indica la posición del paciente según se acerca a los límites que son las señales desplazas un offset.
 - [x] Añadir la señal de la trayectoría deseada (línea continua).
 - [ ] Cambiar el suscriptor del topic /PositionReference a /CleanSignal.
-- [ ] Añadir una perturbación que actúe como la fuerza del viento (nueo suscriptor).
+- [ ] Añadir la perturbación.
+- [ ] Añadir efectos visuales para avisar de la perturbación.
 
 **flappy_bird_viewer.py**
 - [x] Mostrar la misma pantalla que ve el jugador.
 - [x] Mostrar una pantalla con el error de la trayectoria del paciente.
 - [x] Volcar los datos de la terapia a un .csv para su posterior análisis.
+- [x] Volcar datos de la terapia en un fichero .csv bajo el nombre ID-fecha-metrics_index.csv en el directorio `~/database/ID/metrics`.
 
 **scroll_publisher**
 - [x] Permitir la modificación de los parámetros de la perturbación (fuerza, duración, periodo entre perturbaciones).
 - [x] Permitir que el nivel del juego se modifique desde la interfaz del médico.
 - [x] Caja para elegir el tipo de señal y perturbación (sinuidal o escalón) de forma independiente.
-- [ ] Definir offset de comienzo de la señal en la parte de señales (slider).
-- [ ] Definir los límites del motor por separado (mínimo == p0 del motor). Pantalla antes del juego (con retorno). Nuevo publicador booleano cuando se configure.
-- [x] Dividir archivos por ID-fecha-[conf.csv/metrics.csv/analisis.py] en un directorio bajo el ID. Permitir escritura en conf y metrics.
+- [x] Definir offset de comienzo de la señal en la parte de señales (slider).
+- [ ] Definir los límites del motor por separado (mínimo == p0 del motor). Pantalla antes del juego (con retorno). Nuevo publicador con dos booleanos.
+- [x] Volcar datos de la terapia en un fichero .csv bajo el nombre ID-fecha-config_index.csv en el directorio `~/database/ID/config`.
 
 **database.py**
 - [x] Añadir al .csv los datos de la perturbación y el nivel.
