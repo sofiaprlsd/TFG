@@ -16,7 +16,7 @@ DIR = os.path.join(HOME_DIR, "database")
 os.makedirs(DIR, exist_ok=True)
 
 class ScrollPublisherNode(Node):
-    def __init__(self, freq=0.5, ampl=1.0, disturb=0.0, duration=0.5, interval=30.0, level=1):
+    def __init__(self, freq=0.5, ampl=1.0, disturb=0.0, duration=0.5, period=30.0, level=1):
         super().__init__('scroll_publisher_node')
 
         self.slider_publisher_ = self.create_publisher(
@@ -33,19 +33,20 @@ class ScrollPublisherNode(Node):
         
         self.freq = freq
         self.ampl = ampl
+        self.offset = 0.0
         self.disturb = disturb
         self.duration = duration
-        self.interval = interval
+        self.period = period
         self.level = level
 
         self.timer = self.create_timer(0.1, self.publish_data)
 
     def publish_data(self):
         slider_msg = Float32MultiArray()
-        slider_msg.data = [self.freq, self.ampl, self.disturb, self.duration, self.interval]
+        slider_msg.data = [self.freq, self.ampl, self.offset, self.disturb, self.duration, self.period]
         self.slider_publisher_.publish(slider_msg)
 
-        self.get_logger().info(f"Publishing [F{self.freq:.2f} A{self.ampl:.2f} D{self.disturb:.2f} d{self.duration:.2f} i{self.interval:.2f}]")
+        self.get_logger().info(f"Publishing [F{self.freq:.2f} A{self.ampl:.2f} O{self.offset:.2f} D{self.disturb:.2f} d{self.duration:.2f} p{self.period:.2f}]")
     
 class ScrollGUI:
     def __init__(self, node, patient_id):
@@ -62,7 +63,7 @@ class ScrollGUI:
         CONFIG_DIR = os.path.join(ID_DIR, "config")
         os.makedirs(CONFIG_DIR, exist_ok=True)
 
-        header = ["frequency", "amplitude", "signal", "disturbance", "duration", "period", "mode"]
+        header = ["frequency", "amplitude", "offset", "signal", "disturbance", "duration", "period", "mode"]
 
         while True:
             file_name = f"{patient_id}-{date}-config_{index}{ext}"
@@ -77,33 +78,38 @@ class ScrollGUI:
         self.file_path = file_path
         self.frequency = node.freq
         self.amplitude = node.ampl
+        self.offset = node.offset
         self.disturbance = node.disturb
         self.duration = node.duration
-        self.interval = node.interval
+        self.period = node.period
 
         self.window = tk.Tk()
         self.window.title("Gaming Parameters Controller")
         self.window.geometry("1000x800")
 
-        frequency_frame = ttk.Frame(self.window)
-        frequency_frame.pack(pady=10)
+        signal_frame = ttk.Frame(self.window)
+        signal_frame.pack(pady=10)
 
-        self.frequency_scroller = ttk.Scale(frequency_frame, from_=0.0, to=10.0, orient="horizontal", command=self.update_frequency, length=400)
+        self.frequency_scroller = ttk.Scale(signal_frame, from_=0.0, to=10.0, orient="horizontal", command=self.update_frequency, length=400)
         self.frequency_scroller.set(self.frequency)
         self.frequency_scroller.pack(pady=5)
 
-        self.frequency_label = tk.Label(frequency_frame, text=f"Frequency: {self.frequency:.2f} Hz", font=("Arial", 14))
+        self.frequency_label = tk.Label(signal_frame, text=f"Signal Frequency: {self.frequency:.2f} Hz", font=("Arial", 14))
         self.frequency_label.pack(pady=2)
 
-        amplitude_frame = ttk.Frame(self.window)
-        amplitude_frame.pack(pady=10)
-
-        self.amplitude_scroller = ttk.Scale(amplitude_frame, from_=0.0, to=10.0, orient="horizontal", command=self.update_amplitude, length=400)
+        self.amplitude_scroller = ttk.Scale(signal_frame, from_=0.0, to=10.0, orient="horizontal", command=self.update_amplitude, length=400)
         self.amplitude_scroller.set(self.amplitude)
         self.amplitude_scroller.pack(pady=5)
 
-        self.amplitude_label = tk.Label(amplitude_frame, text=f"Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
+        self.amplitude_label = tk.Label(signal_frame, text=f"Signal Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
         self.amplitude_label.pack(pady=2)
+
+        self.offset_scroller = ttk.Scale(signal_frame, from_=0.0, to=10.0, orient="horizontal", command=self.update_offset, length=400)
+        self.offset_scroller.set(self.offset)
+        self.offset_scroller.pack(pady=5)
+
+        self.offset_label = tk.Label(signal_frame, text=f"Signal Offset: {self.offset:.2f}", font=("Arial", 14))
+        self.offset_label.pack(pady=2)
 
         self.signal_var = tk.StringVar(value="sinusoidal")
         tk.Label(self.window, text="Signal").pack()
@@ -123,15 +129,15 @@ class ScrollGUI:
         self.duration_scroller.set(self.duration)
         self.duration_scroller.pack(pady=5)
 
-        self.duration_label = tk.Label(disturbance_frame, text=f"Disturbance duration: {self.duration:.2f} s", font=("Arial", 14))
+        self.duration_label = tk.Label(disturbance_frame, text=f"Disturbance Duration: {self.duration:.2f} s", font=("Arial", 14))
         self.duration_label.pack(pady=2)
 
-        self.interval_scroller = ttk.Scale(disturbance_frame, from_=5.0, to=30.0, orient="horizontal", command=self.update_interval, length=400)
-        self.interval_scroller.set(self.interval)
-        self.interval_scroller.pack(pady=5)
+        self.period_scroller = ttk.Scale(disturbance_frame, from_=5.0, to=30.0, orient="horizontal", command=self.update_period, length=400)
+        self.period_scroller.set(self.period)
+        self.period_scroller.pack(pady=5)
 
-        self.interval_label = tk.Label(disturbance_frame, text=f"Disturbance period: {self.interval:.2f} s", font=("Arial", 14))
-        self.interval_label.pack(pady=2)
+        self.period_label = tk.Label(disturbance_frame, text=f"Disturbance Period: {self.period:.2f} s", font=("Arial", 14))
+        self.period_label.pack(pady=2)
 
         self.disturb_signal_var = tk.StringVar(value="sinusoidal")
         tk.Label(self.window, text="Disturbance Signal").pack()
@@ -164,39 +170,44 @@ class ScrollGUI:
             writer.writerow([
                 self.frequency,
                 self.amplitude,
+                self.offset,
                 self.signal_var.get(),
                 self.disturbance,
                 self.duration,
-                self.interval,
+                self.period,
                 self.disturb_signal_var.get()
             ])
     
     def update_frequency(self, val):
         self.frequency = float(val)
-        self.frequency_label.config(text=f"Current Frequency: {self.frequency:.2f} Hz")
+        self.frequency_label.config(text=f"Signal Frequency: {self.frequency:.2f} Hz")
     
     def update_amplitude(self, val):
         self.amplitude = float(val)
-        self.amplitude_label.config(text=f"Current Amplitude: {self.amplitude:.2f}")
+        self.amplitude_label.config(text=f"Signal Amplitude: {self.amplitude:.2f}")
+    
+    def update_offset(self, val):
+        self.offset = float(val)
+        self.offset_label.config(text=f"Signal Offset: {self.offset:.2f}")
     
     def update_disturbance(self, val):
         self.disturbance = float(val)
-        self.disturbance_label.config(text=f"Current Disturbance: {self.disturbance:.2f}")
+        self.disturbance_label.config(text=f"Disturbance: {self.disturbance:.2f}")
 
     def update_duration(self, val):
         self.duration = float(val)
-        self.duration_label.config(text=f"Disturbance duration: {self.duration:.2f} s")
+        self.duration_label.config(text=f"Disturbance Duration: {self.duration:.2f} s")
     
-    def update_interval(self, val):
-        self.interval = float(val)
-        self.interval_label.config(text=f"Interval between disturbances: {self.interval:.2f} s")
+    def update_period(self, val):
+        self.period = float(val)
+        self.period_label.config(text=f"Disturbance Period: {self.period:.2f} s")
     
     def update_signal(self):
         self.node.freq = self.frequency
         self.node.ampl = self.amplitude
         self.node.disturb = self.disturbance
         self.node.duration = self.duration
-        self.node.interval = self.interval
+        self.node.period = self.period
         self.save_to_csv()
     
     def update_level(self):
@@ -229,13 +240,13 @@ def load_from_csv(file_path):
             if not rows:
                 return 0.5, 1.0, 0.0, 0.5, 30.0, 1
             last_row = rows[-1]
-            freq = float(last_row.get("F", 0.5))
-            ampl = float(last_row.get("A", 1.0))
-            disturb = float(last_row.get("D", 0.0))
-            duration = float(last_row.get("d", 0.5))
-            interval = float(last_row.get("i", 30.0))
-            level = int(last_row.get("L", 1))
-            return freq, ampl, disturb, duration, interval, level
+            freq = float(last_row.get("frecuency", 0.5))
+            ampl = float(last_row.get("amplitude", 1.0))
+            disturb = float(last_row.get("disturbance", 0.0))
+            duration = float(last_row.get("duration", 0.5))
+            period = float(last_row.get("period", 30.0))
+            level = int(last_row.get("level", 1))
+            return freq, ampl, disturb, duration, period, level
     except Exception as e:
         print(f"Error reading file {e}")
         return 0.5, 1.0, 0.0, 0.5, 30.0, 1
@@ -253,9 +264,9 @@ def main(args=None):
         print(f"Error: El archivo no existe")
         sys.exit(1)
     patient_id = os.path.basename(os.path.dirname(full_path))
-    freq, ampl, disturb, duration, interval, level = load_from_csv(csv_path)
+    freq, ampl, disturb, duration, period, level = load_from_csv(csv_path)
 
-    scroll_publisher_node = ScrollPublisherNode(freq, ampl, disturb, duration, interval, level)
+    scroll_publisher_node = ScrollPublisherNode(freq, ampl, disturb, duration, period, level)
 
     gui = ScrollGUI(scroll_publisher_node, patient_id)
 

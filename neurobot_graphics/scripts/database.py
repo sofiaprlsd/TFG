@@ -50,17 +50,17 @@ def savedata():
     file_path = os.path.join(ID_DIR, file_name)
 
     patient_data = {
-        "Name": name,
-        "Surname": surname,
+        "name": name,
+        "surname": surname,
         "ID": id,
-        "F": freq,
-        "A": ampl,
-        "D": disturb,
-        "d": duration,
-        "i": period,
-        "L": level,
-        "Progress": progress,
-        "Notes": notes
+        "frecuency": freq,
+        "amplitude": ampl,
+        "disturbance": disturb,
+        "duration": duration,
+        "period": period,
+        "level": level,
+        "progress": progress,
+        "notes": notes
     }
 
     file_exists = os.path.isfile(file_path)
