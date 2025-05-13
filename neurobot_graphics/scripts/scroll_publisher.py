@@ -4,6 +4,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 from std_msgs.msg import Int32
+from std_msgs.msg import Int32MultiArray
 import tkinter as tk
 from tkinter import ttk
 import sys
@@ -15,6 +16,7 @@ HOME_DIR = os.path.expanduser("~")
 DIR = os.path.join(HOME_DIR, "database")
 os.makedirs(DIR, exist_ok=True)
 
+# ----------------------- ROS2 NODE ----------------------- #
 class ScrollPublisherNode(Node):
     def __init__(self, freq=0.5, ampl=1.0, disturb=0.0, duration=0.5, period=30.0, level=1):
         super().__init__('scroll_publisher_node')
@@ -47,7 +49,8 @@ class ScrollPublisherNode(Node):
         self.slider_publisher_.publish(slider_msg)
 
         self.get_logger().info(f"Publishing [F{self.freq:.2f} A{self.ampl:.2f} O{self.offset:.2f} D{self.disturb:.2f} d{self.duration:.2f} p{self.period:.2f}]")
-    
+
+# ----------------------- GUI GAMING ----------------------- #
 class ScrollGUI:
     def __init__(self, node, patient_id):
         self.node = node
@@ -232,6 +235,7 @@ class ScrollGUI:
         rclpy.spin_once(self.node, timeout_sec=0.1)
         self.window.after(10, self.spin_once)
 
+# ----------------------- GUI MAIN ----------------------- #
 def load_from_csv(file_path):
     try:
         with open(file_path, 'r') as f:
@@ -251,32 +255,80 @@ def load_from_csv(file_path):
         print(f"Error reading file {e}")
         return 0.5, 1.0, 0.0, 0.5, 30.0, 1
 
-def main(args=None):
-    rclpy.init(args=args)
-
+def main_gui(args=None):
     if len(sys.argv) != 2:
-        print(f"Error: Especifique archivo con los datos del paciente")
+        print(f"Error: Specify patient file")
         sys.exit(1)
 
-    csv_path = sys.argv[1]
-    full_path = os.path.expanduser(csv_path)
+    full_path = os.path.expanduser(sys.argv[1])
     if not os.path.isfile(full_path):
         print(f"Error: El archivo no existe")
         sys.exit(1)
+    
     patient_id = os.path.basename(os.path.dirname(full_path))
-    freq, ampl, disturb, duration, period, level = load_from_csv(csv_path)
+    freq, ampl, disturb, duration, period, level = load_from_csv(sys.argv[1])
 
-    scroll_publisher_node = ScrollPublisherNode(freq, ampl, disturb, duration, period, level)
-
-    gui = ScrollGUI(scroll_publisher_node, patient_id)
+    node = ScrollPublisherNode(freq, ampl, disturb, duration, period, level)
+    gui = ScrollGUI(node, patient_id)
 
     try:
         gui.run()
     except KeyboardInterrupt:
         gui.window.destroy()
     finally:
-        scroll_publisher_node.destroy_node()
+        node.destroy_node()
         rclpy.shutdown()
 
+# ----------------------- GUI CONFIGURATION ----------------------- #
+def start_gui(args=None):
+    rclpy.init()
+    
+    if len(sys.argv) != 2:
+        print(f"Error: Specify patient file")
+        sys.exit(1)
+    
+    limit_node = rclpy.create_node("limit_gui_node")
+    limit_publisher_ = limit_node.create_publisher(
+        Int32MultiArray,
+        'RobotLimits',
+        10
+    )
+    
+    start_root = tk.Tk()
+    start_root.title("configure Limits")
+    start_root.geometry("1000x800")
+
+    content_frame = ttk.Frame(start_root)
+    content_frame.pack(expand=True)
+
+    def publish_min():
+        msg = Int32MultiArray()
+        msg.data = [1, 0]
+        limit_publisher_.publish(msg)
+        print("Published MIN limit")
+    
+    def publish_max():
+        msg = Int32MultiArray()
+        msg.data = [0, 1]
+        limit_publisher_.publish(msg)
+        print("Published MAX limit")
+
+    min_button = tk.Button(content_frame, text="Set MIN limit", command=publish_min, font=("Arial", 14), width=30, height=10, bg="blue", fg="white")
+    max_button = tk.Button(content_frame, text="Set MAX limit", command=publish_max, font=("Arial", 14), width=30, height=10, bg="blue", fg="white")
+
+    min_button.grid(row=0, column=0, padx=50)
+    max_button.grid(row=0, column=1, padx=50)
+
+    button_frame = ttk.Frame(start_root)
+    button_frame.pack(side="bottom", pady=40)
+    ttk.Button(button_frame, text="Continue", command=lambda: continue_main()).pack()
+    
+    def continue_main():
+        start_root.destroy()
+        main_gui()
+    
+    start_root.mainloop()
+    rclpy.shutdown()
+
 if __name__ == '__main__':
-    main()
+    start_gui()

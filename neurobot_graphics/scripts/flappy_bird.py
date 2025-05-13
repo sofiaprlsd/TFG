@@ -16,7 +16,7 @@ class FlappyBirdNode(Node):
 
         self.signal_subscriber_ = self.create_subscription(
             Float32,
-            'PositionReference',
+            'CleanSignal',
             self.listener_callback,
             10
         )
