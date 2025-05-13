@@ -171,7 +171,7 @@ Las mejoras propuestas por los tutores son las siguientes:
 - [x] Puntear las señales del juego en vez de que se muestren con una línea continua.
 - [x] Cambiar de color el punto que indica la posición del paciente según se acerca a los límites que son las señales desplazas un offset.
 - [x] Añadir la señal de la trayectoría deseada (línea continua).
-- [ ] Cambiar el suscriptor del topic /PositionReference a /CleanSignal.
+- [x] Cambiar el suscriptor del topic /PositionReference a /CleanSignal.
 - [ ] Añadir la perturbación.
 - [ ] Añadir efectos visuales para avisar de la perturbación.
 
@@ -186,16 +186,16 @@ Las mejoras propuestas por los tutores son las siguientes:
 - [x] Permitir que el nivel del juego se modifique desde la interfaz del médico.
 - [x] Caja para elegir el tipo de señal y perturbación (sinuidal o escalón) de forma independiente.
 - [x] Definir offset de comienzo de la señal en la parte de señales (slider).
-- [ ] Definir los límites del motor por separado (mínimo == p0 del motor). Pantalla antes del juego (con retorno). Nuevo publicador con dos booleanos.
+- [x] Definir los límites del motor por separado (mínimo == p0 del motor). Pantalla antes del juego. Nuevo publicador con dos booleanos.
 - [x] Volcar datos de la terapia en un fichero .csv bajo el nombre ID-fecha-config_index.csv en el directorio `~/database/ID/config`.
 
 **database.py**
 - [x] Añadir al .csv los datos de la perturbación y el nivel.
 - [x] Cambiar el nombre y directorio en el que se guarda el .csv.
 
-**General**
-- [ ] Crear un nuevo script que analice los datos del juego.
+**Bonus**
 - [ ] Ejecutar los scripts desde un icono y no desde el terminal.
+- [ ] Crear un nuevo script que analice los datos del juego.
 
 
 ## Conceptos aprendidos S12
