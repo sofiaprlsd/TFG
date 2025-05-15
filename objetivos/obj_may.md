@@ -2,7 +2,7 @@
 
 ## Semana 13, 28/04/25 - 4/05/25
 
-- [ ] Incluir mejoras propuestas por el equipo durante las reuniones del V25 y X30 (mirar S12 en abril).
+- [x] Incluir mejoras propuestas por el equipo durante las reuniones del V25 y X30 (mirar S12 en abril).
 - [ ] Hacer la introducción de la memoria.
 
 ## Conceptos aprendidos S13
@@ -56,3 +56,32 @@ Estructura del directirio en `$HOME`:
 |---- metrics/
 |------ {ID}-{date}-metrics_{index}.csv
 ```
+
+## Semana 14, 5/05/25 - 11/05/25
+
+- [x] Incluir mejoras propuestas por el equipo durante las reuniones del V25 y X30 (mirar S12 en abril).
+- [x] Resolver las correcciones de la memoria.
+
+## Conceptos aprendidos S14
+
+
+
+## Semana 15, 12/05/25 - 15/05/25
+
+- [ ] Añadir la perturbación al juego.
+- [x] Crear misiones para cada nivel y hacer el juego más mono.
+- [ ] Hacer esquema con la información a incluir en cada capítulo de la memoria.
+
+## Conceptos aprendidos S15
+
+Misiones de los niveles del juego (flappy_bird.py):
+* N1. Permanecer dentro de los límites 20 segundos.
+* N2. Recolectar 3 estrellas.
+* N3. ?
+* N4. Permanecer dentro de los límites 40 segundos.
+* N5. ?
+* N6. Recolectar 5 estrellas.
+* N7. Permanecer dentro de los límites 60 segundos.
+* N8. ?
+* N9. Gravedad invertida (arriba es abajo y abajo es arriba).
+* N10. Control del offset.
