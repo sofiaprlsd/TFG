@@ -21,7 +21,7 @@ class FlappyBirdViewerNode(Node):
 
         self.signal_subscriber_ = self.create_subscription(
             Float32,
-            'PositionReference',
+            'CleanSignal',
             self.signal_callback,
             10
         )
@@ -68,8 +68,8 @@ class FlappyBirdViewerNode(Node):
         self.ax.set_xlabel('Time (s)')
         self.ax.set_ylabel('Amplitude')
         self.line, = self.ax.plot([], [], color='blue', label='Signal')
-        self.line_upper, = self.ax.plot([], [], linestyle='--', color='orange', label='Signal + offset')
-        self.line_lower, = self.ax.plot([], [], linestyle='--', color='orange', label='Signal - offset')
+        self.line_upper, = self.ax.plot([], [], linestyle='--', color='grey', label='Signal + offset')
+        self.line_lower, = self.ax.plot([], [], linestyle='--', color='grey', label='Signal - offset')
         self.player, = self.ax.plot([], [], 'ro', label='Player')
         self.ax.set_xlim(0, self.window_size_x)
         self.ax.set_ylim(-self.window_size_y, self.window_size_y)

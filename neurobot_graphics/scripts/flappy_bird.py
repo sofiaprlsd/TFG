@@ -8,7 +8,11 @@ from std_msgs.msg import Float32MultiArray
 import matplotlib.pyplot as plt
 import numpy as np
 from pynput import keyboard
-import random
+import pygame
+import os
+
+pygame.mixer.init()
+level_up_sound = pygame.mixer.Sound('../sounds/level_up.wav')
 
 class FlappyBirdNode(Node):
     def __init__(self):
@@ -48,8 +52,34 @@ class FlappyBirdNode(Node):
         self.min_offset = 1.0
         self.level = 1
         self.max_level = 10
-
+        self.score = 0
+        self.start_time = None
+        self.inside_limits = True
+        self.star_interval = 3.0
+        self.last_star_time = 0.0
+        self.max_active_stars = 2
+        self.star_radius_x = 0.08
+        self.star_radius_y = 0.3
+        self.stars_collected = 0
+        self.stars = []
+        self.collected = set()
+        self.plot_stars = []
+        self.inverted_gravity = False
+        self.mission_completed = False
         self.game_completed = False
+
+        self.level_colors = [
+            {'bg': '#e0f7fa', 'line': '#00796b'},    # light cian / teal
+            {'bg': '#fff8e1', 'line': '#f57f17'},    # light yellow / amber
+            {'bg': '#e8f5e9', 'line': '#388e3c'},    # light green / green
+            {'bg': '#fce4ec', 'line': '#c2185b'},    # light pink / pink
+            {'bg': '#ede7f6', 'line': '#5e35b1'},    # light purple / purple
+            {'bg': '#f3e5f5', 'line': '#7b1fa2'},    # lavender / violet
+            {'bg': '#fbe9e7', 'line': '#e64a19'},    # peech / deep orange
+            {'bg': '#f1f8e9', 'line': '#689f38'},    # pistachio / olive
+            {'bg': '#e0f2f1', 'line': '#00695c'},    # pale turquoise / strong teal
+            {'bg': '#e3f2fd', 'line': '#1976d2'},    # light blue / royal
+        ]
 
         self.time_data = np.zeros(self.sample_amount)
         self.signal_data = np.zeros(self.sample_amount)
@@ -59,29 +89,79 @@ class FlappyBirdNode(Node):
         plt.ion()   # Update graph in real time
         self.fig, self.ax = plt.subplots(figsize=(12, 8))
 
-        self.line, = self.ax.plot(self.time_data, self.signal_data, color='blue', label='Signal')
-        self.line_upper, = self.ax.plot(self.time_data, self.signal_upper, linestyle='--', color='orange', label='Signal + offset')
-        self.line_lower, = self.ax.plot(self.time_data, self.signal_lower, linestyle='--', color='orange', label='Signal - offset')
-        self.player, = self.ax.plot(self.player_x, self.player_y, 'ro', label='Player')
+        self.score_text = self.ax.text(0.95, 0.9, f"Score{self.score}", transform=self.ax.transAxes, fontsize=12, color='black', ha='right')
+        self.mission_text = self.ax.text(0.05, 0.9, "", transform=self.ax.transAxes, fontsize=12, color='black', ha='left')
 
+        self.line, = self.ax.plot(self.time_data, self.signal_data, color='lightblue', label='Signal')
+        self.line_upper, = self.ax.plot(self.time_data, self.signal_upper, linestyle='--', color='white', label='Signal + offset')
+        self.line_lower, = self.ax.plot(self.time_data, self.signal_lower, linestyle='--', color='white', label='Signal - offset')
+        self.player, = self.ax.plot(self.player_x, self.player_y, 'ro', label='Player')
+        
         self.ax.set_xlim(0, self.window_size_x)
         self.ax.set_ylim(-self.window_size_y, self.window_size_y)
+        # Do not show axis numbers
+        self.ax.set_xticks([])
+        self.ax.set_yticks([])
+        self.update_level_effects()
+    
+    def update_level_effects(self):
+        colors = self.level_colors[(self.level - 1) % len(self.level_colors)]
+        self.ax.set_facecolor(colors['bg'])
+        self.line.set_color(colors['line'])
         self.ax.set_title(f'Flappy Bird Level {self.level}')
+        level_up_sound.play()
+        self.fig.canvas.draw()
+        self.get_logger().info(f"Upgrade to level {self.level}")
+    
+    def increment_score(self, points):
+        self.score += points
+        self.score_text.set_text(f"Score: {self.score}")
+    
+    def decrement_score(self, points):
+        self.score -= points
+        if self.score < 0:
+            self.score = 0
+        self.score_text.set_text(f"Score: {self.score}")
+    
+    def clear_stars(self):
+        for s in self.plot_stars:
+            s.remove()
+        self.stars = []
+        self.plot_stars = []
+        self.collected = set()
+    
+    def generate_star(self):
+        x = self.time + np.random.uniform(0.5, 4.0)
+        y = np.random.uniform(-1.0, 1.0)
+        self.stars.append([x, y])
+        s = self.ax.plot(x, y, marker="*", color="gold", markersize=25)[0]
+        self.plot_stars.append(s)
     
     def on_press(self, key):
         try:
+            direction = -1 if self.inverted_gravity else 1
             if key == keyboard.Key.up:
-                self.player_y += 0.2
+                self.player_y += 0.1 * direction
             elif key == keyboard.Key.down:
-                self.player_y -= 0.2
+                self.player_y -= 0.1 * direction
         except:
             pass
     
     def level_callback(self, msg):
-        self.level = msg.data
+        self.level = msg.data[0]
+        self.get_logger().info(f'Received L{self.level}')
+
+        self.mission_completed = False
         self.game_completed = False
-        self.ax.set_title(f'Flappy Bird Level {self.level}')
-        self.get_logger().info(f'Received new level: {self.level}')
+        self.inside_limits = True
+        self.start_time = None
+        self.update_level_effects()
+
+        if self.level in [2, 6]:
+            self.clear_stars()
+            self.stars_collected = 0
+            self.generate_star()
+            self.last_star_time = self.time
     
     def listener_callback(self, msg):
         self.time_data = np.roll(self.time_data, -1)
@@ -102,19 +182,60 @@ class FlappyBirdNode(Node):
         if not (lower_limit < self.player_y < upper_limit):
             self.get_logger().info("Collision!!!")
         else:
-            if not self.game_completed:
-                if self.level == self.max_level and self.offset_y <= self.min_offset:
-                    self.game_completed = True
-                    self.get_logger().info("GAME COMPLETED!")
+            self.score_text.set_text(f"Score: {self.score}")
+            if self.level in [1, 4, 7, 9]:
+                mission_time = {1: 20.0, 4: 40.0, 7: 60.0, 9: 10.0}[self.level]
+                if self.level == 9:
+                    if not self.inverted_gravity:
+                        self.inverted_gravity = True
+                    self.ax.set_title(f'Level {self.level}: Inverted gravity for {mission_time:.0f}s')
                 else:
-                    reduction_factor = 0.005 * self.level # more level, bigger reduction
-                    if self.time % 1.0 < 0.01 and self.offset_y > self.min_offset:
-                        self.offset_y -= reduction_factor
-                        self.get_logger().info(f"Reducing offset: {self.offset_y:.2f}")
-                    if self.offset_y < (self.max_offset - self.level * 0.2) and self.level < self.max_level:
-                        self.level += 1
-                        self.ax.set_title(f'Flappy Bird Level {self.level}')
-                        self.get_logger().info(f"Upgrade to level {self.level}")
+                    self.ax.set_title(f'Level {self.level}: Stay at the path for {mission_time:.0f}s')
+                if self.start_time == None:
+                    self.start_time = self.time
+                elapsed = self.time - self.start_time
+                remaining = max(0.0, mission_time - elapsed)
+                self.mission_text.set_text(f"Time left: {remaining:.1f}s")
+                if elapsed >= mission_time:
+                    self.mission_completed = True
+                    self.inverted_gravity = False
+            elif self.level in [2, 6]:
+                mission_stars = {2: 3, 6: 5}[self.level]
+                self.ax.set_title(f'Level {self.level}: Collect {mission_stars} stars')
+                if self.start_time == None:
+                    self.start_time = self.time
+                active_stars = [i for i, (sx, _) in enumerate(self.stars) if i not in self.collected and sx > self.time - self.window_size_x]
+                if self.time - self.last_star_time > self.star_interval and len(active_stars) < self.max_active_stars:
+                    self.generate_star()
+                    self.last_star_time = self.time
+                for i, (sx, sy) in enumerate(self.stars):
+                    if i in self.collected:
+                        continue
+                    dx = self.player_x - sx
+                    dy = self.player_y - sy
+                    if abs(dx) < self.star_radius_x and abs(dy) < self.star_radius_y:
+                        self.collected.add(i)
+                        self.increment_score(10)
+                        self.stars_collected += 1
+                        self.plot_stars[i].set_visible(False)
+                        self.get_logger().info(f"Star collected!")
+                self.mission_text.set_text(f"Stars collected: {self.stars_collected}")
+                if self.stars_collected >= mission_stars:
+                    self.mission_completed = True
+                    self.stars_collected = 0
+                    self.clear_stars()
+            else:
+                self.mission_text.set_text(f"")
+                if (self.level < 10):
+                    self.level += 1
+                    self.update_level_effects()
+            
+            if self.mission_completed:
+                self.mission_completed = False
+                self.start_time = None
+                self.increment_score(30)
+                self.level += 1
+                self.update_level_effects()
 
         # When time is greater than window size, 
         # increment player_x to stay in same spot of the window
@@ -140,9 +261,9 @@ class FlappyBirdNode(Node):
         max_safe_dist = self.offset_y
         norm_dist = min(dist / max_safe_dist, 1.0) # max 1.0
         if norm_dist < 0.4:
-            color = (0, 1, 0) # green == safe
+            color = (0, 0, 0) # black == safe
         elif norm_dist < 0.7:
-            color = (1, 1, 0) # yellow == careful
+            color = (0.5, 0.5, 0.5) # grey == careful
         else:
             color = (1, 0, 0) # red == critic
         self.player.set_color(color)

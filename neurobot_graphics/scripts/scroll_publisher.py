@@ -28,14 +28,14 @@ class ScrollPublisherNode(Node):
         )
 
         self.game_publisher_ = self.create_publisher(
-            Int32,
+            Float32MultiArray,
             'GameParameters',
             10
         )
         
         self.freq = freq
         self.ampl = ampl
-        self.offset = 0.0
+        self.offset = 3.0
         self.disturb = disturb
         self.duration = duration
         self.period = period
@@ -107,7 +107,7 @@ class ScrollGUI:
         self.amplitude_label = tk.Label(signal_frame, text=f"Signal Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
         self.amplitude_label.pack(pady=2)
 
-        self.offset_scroller = ttk.Scale(signal_frame, from_=0.0, to=10.0, orient="horizontal", command=self.update_offset, length=400)
+        self.offset_scroller = ttk.Scale(signal_frame, from_=1.0, to=5.0, orient="horizontal", command=self.update_offset, length=400)
         self.offset_scroller.set(self.offset)
         self.offset_scroller.pack(pady=5)
 
@@ -208,6 +208,7 @@ class ScrollGUI:
     def update_signal(self):
         self.node.freq = self.frequency
         self.node.ampl = self.amplitude
+        self.node.offset = self.offset
         self.node.disturb = self.disturbance
         self.node.duration = self.duration
         self.node.period = self.period
@@ -215,12 +216,10 @@ class ScrollGUI:
     
     def update_level(self):
         self.level = int(self.level_var.get())
-
         game_msg = Int32()
-        game_msg.data = self.level
+        game_msg.data = [(self.level)]
         self.node.game_publisher_.publish(game_msg)
-
-        self.node.get_logger().info(f"Publishing [L{self.level}]")
+        self.node.get_logger().info(f"Publishing [L{self.level:.0f}]")
     
     def close(self):
         self.node.destroy_node()
