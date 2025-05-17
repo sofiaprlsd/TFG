@@ -25,10 +25,17 @@ class FlappyBirdNode(Node):
             10
         )
 
-        self.params_subscriber_ = self.create_subscription(
+        self.level_subscriber_ = self.create_subscription(
             Int32,
             'GameParameters',
             self.level_callback,
+            10
+        )
+
+        self.offset_subscriber_ = self.create_subscription(
+            Float32MultiArray,
+            'SliderParameters',
+            self.offset_callback,
             10
         )
 
@@ -55,15 +62,15 @@ class FlappyBirdNode(Node):
         self.score = 0
         self.start_time = None
         self.inside_limits = True
-        self.star_interval = 3.0
-        self.last_star_time = 0.0
-        self.max_active_stars = 2
-        self.star_radius_x = 0.08
-        self.star_radius_y = 0.3
-        self.stars_collected = 0
-        self.stars = []
+        self.obj_interval = 3.0
+        self.last_obj_time = 0.0
+        self.max_active_obj = 2
+        self.obj_radius_x = 0.08
+        self.obj_radius_y = 0.3
+        self.obj_counter = 0
+        self.objects = []
+        self.plot_objects = []
         self.collected = set()
-        self.plot_stars = []
         self.inverted_gravity = False
         self.mission_completed = False
         self.game_completed = False
@@ -123,19 +130,30 @@ class FlappyBirdNode(Node):
             self.score = 0
         self.score_text.set_text(f"Score: {self.score}")
     
-    def clear_stars(self):
-        for s in self.plot_stars:
+    def clear_objects(self):
+        for s in self.plot_objects:
             s.remove()
-        self.stars = []
-        self.plot_stars = []
+        self.objects = []
+        self.plot_objects = []
         self.collected = set()
     
     def generate_star(self):
         x = self.time + np.random.uniform(0.5, 4.0)
-        y = np.random.uniform(-1.0, 1.0)
-        self.stars.append([x, y])
-        s = self.ax.plot(x, y, marker="*", color="gold", markersize=25)[0]
-        self.plot_stars.append(s)
+        y = 0.0
+        if self.time_data[-1] > self.time_data[0]:
+            y = np.interp(x, self.time_data, self.signal_data)
+        self.objects.append([x, y])
+        o = self.ax.plot(x, y, marker="*", color="gold", markersize=25)[0]
+        self.plot_objects.append(o)
+    
+    def generate_asteroid(self):
+        x = self.time + np.random.uniform(0.5, 4.0)
+        y = np.random.uniform(1.0, self.offset_y)
+        if np.random.rand() > 0.5:
+            y = np.random.uniform(-self.offset_y, -1.0)
+        self.objects.append([x, y])
+        o = self.ax.plot(x, y, marker="o", color="brown", markersize=25)[0]
+        self.plot_objects.append(o)
     
     def on_press(self, key):
         try:
@@ -158,10 +176,14 @@ class FlappyBirdNode(Node):
         self.update_level_effects()
 
         if self.level in [2, 6]:
-            self.clear_stars()
-            self.stars_collected = 0
+            self.clear_objects()
+            self.obj_counter = 0
             self.generate_star()
-            self.last_star_time = self.time
+            self.last_obj_time = self.time
+    
+    def offset_callback(self, msg):
+        self.offset_y = msg.data[2]
+        self.get_logger().info(f'Current O{self.offset_y}')
     
     def listener_callback(self, msg):
         self.time_data = np.roll(self.time_data, -1)
@@ -183,9 +205,9 @@ class FlappyBirdNode(Node):
             self.get_logger().info("Collision!!!")
         else:
             self.score_text.set_text(f"Score: {self.score}")
-            if self.level in [1, 4, 7, 9]:
-                mission_time = {1: 20.0, 4: 40.0, 7: 60.0, 9: 10.0}[self.level]
-                if self.level == 9:
+            if self.level in [1, 4, 5, 7, 9]:
+                mission_time = {1: 20.0, 4: 40.0, 5: 10.0, 7: 60.0, 9: 15.0}[self.level]
+                if self.level in [5, 9]:
                     if not self.inverted_gravity:
                         self.inverted_gravity = True
                     self.ax.set_title(f'Level {self.level}: Inverted gravity for {mission_time:.0f}s')
@@ -204,26 +226,55 @@ class FlappyBirdNode(Node):
                 self.ax.set_title(f'Level {self.level}: Collect {mission_stars} stars')
                 if self.start_time == None:
                     self.start_time = self.time
-                active_stars = [i for i, (sx, _) in enumerate(self.stars) if i not in self.collected and sx > self.time - self.window_size_x]
-                if self.time - self.last_star_time > self.star_interval and len(active_stars) < self.max_active_stars:
+                active_stars = [i for i, (sx, _) in enumerate(self.objects) if i not in self.collected and sx > self.time - self.window_size_x]
+                if self.time - self.last_obj_time > self.obj_interval and len(active_stars) < self.max_active_obj:
                     self.generate_star()
-                    self.last_star_time = self.time
-                for i, (sx, sy) in enumerate(self.stars):
+                    self.last_obj_time = self.time
+                for i, (sx, sy) in enumerate(self.objects):
                     if i in self.collected:
                         continue
                     dx = self.player_x - sx
                     dy = self.player_y - sy
-                    if abs(dx) < self.star_radius_x and abs(dy) < self.star_radius_y:
+                    if abs(dx) < self.obj_radius_x and abs(dy) < self.obj_radius_y:
                         self.collected.add(i)
                         self.increment_score(10)
-                        self.stars_collected += 1
-                        self.plot_stars[i].set_visible(False)
+                        self.obj_counter += 1
+                        self.plot_objects[i].set_visible(False)
                         self.get_logger().info(f"Star collected!")
-                self.mission_text.set_text(f"Stars collected: {self.stars_collected}")
-                if self.stars_collected >= mission_stars:
+                self.mission_text.set_text(f"Stars collected: {self.obj_counter}")
+                if self.obj_counter >= mission_stars:
                     self.mission_completed = True
-                    self.stars_collected = 0
-                    self.clear_stars()
+                    self.obj_counter = 0
+                    self.clear_objects()
+            elif self.level in [3, 8]:
+                mission_asteroids = {3: 4, 8: 6}[self.level]
+                self.ax.set_title(f'Level {self.level}: Avoid {mission_asteroids} asteroids')
+                if self.start_time == None:
+                    self.start_time = self.time
+                active_asteroids = [i for i, (sx, _) in enumerate(self.objects) if i not in self.collected and sx > self.time - self.window_size_x]
+                if self.time - self.last_obj_time > self.obj_interval and len(active_asteroids) < self.max_active_obj:
+                    self.generate_asteroid()
+                    self.last_obj_time = self.time
+                for i, (sx, sy) in enumerate(self.objects):
+                    if i in self.collected:
+                        continue
+                    dx = self.player_x - sx
+                    dy = self.player_y - sy
+                    if abs(dx) < self.obj_radius_x and abs(dy) < self.obj_radius_y:
+                        self.collected.add(i)
+                        self.decrement_score(5)
+                        self.plot_objects[i].set_visible(False)
+                        self.get_logger().info(f"Hit asteroid!")
+                    elif abs(dx) < self.obj_radius_x and abs(dy) > self.obj_radius_y:
+                        self.collected.add(i)
+                        self.increment_score(10)
+                        self.obj_counter += 1
+                        self.get_logger().info(f"Asteroid avoided!")
+                self.mission_text.set_text(f"Asteroids avoided: {self.obj_counter}")
+                if self.obj_counter >= mission_asteroids:
+                    self.mission_completed = True
+                    self.obj_counter = 0
+                    self.clear_objects()
             else:
                 self.mission_text.set_text(f"")
                 if (self.level < 10):
