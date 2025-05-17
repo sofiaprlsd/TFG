@@ -13,6 +13,8 @@ import os
 
 pygame.mixer.init()
 level_up_sound = pygame.mixer.Sound('../sounds/level_up.wav')
+star_gained_sound = pygame.mixer.Sound('../sounds/star_gained.wav')
+asteroid_hit_sound = pygame.mixer.Sound('../sounds/asteroid_hit.wav')
 
 class FlappyBirdNode(Node):
     def __init__(self):
@@ -237,6 +239,7 @@ class FlappyBirdNode(Node):
                     dy = self.player_y - sy
                     if abs(dx) < self.obj_radius_x and abs(dy) < self.obj_radius_y:
                         self.collected.add(i)
+                        star_gained_sound.play()
                         self.increment_score(10)
                         self.obj_counter += 1
                         self.plot_objects[i].set_visible(False)
@@ -262,6 +265,7 @@ class FlappyBirdNode(Node):
                     dy = self.player_y - sy
                     if abs(dx) < self.obj_radius_x and abs(dy) < self.obj_radius_y:
                         self.collected.add(i)
+                        asteroid_hit_sound.play()
                         self.decrement_score(5)
                         self.plot_objects[i].set_visible(False)
                         self.get_logger().info(f"Hit asteroid!")
