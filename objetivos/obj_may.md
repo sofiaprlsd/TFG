@@ -74,14 +74,48 @@ Estructura del directirio en `$HOME`:
 
 ## Conceptos aprendidos S15
 
-Misiones de los niveles del juego (flappy_bird.py):
+**flappy_bird.py**
+
+Objetivo principal: Seguir la trayectoria
+
+Misiones:
 * N1. Permanecer dentro de los límites 20 segundos.
+![Captura desde 2025-05-17 17-27-03](https://github.com/user-attachments/assets/8b2fdcd1-884e-4fca-9f7a-fb00e02dfffd)
+
 * N2. Recolectar 3 estrellas.
-* N3. ?
+![Captura desde 2025-05-17 17-19-43](https://github.com/user-attachments/assets/c003d421-82d6-44e4-a67e-c301ad64ea35)
+
+* N3. Esquivar 4 asteroides.
+![Captura desde 2025-05-17 17-19-59](https://github.com/user-attachments/assets/bcb02742-6a2d-4de0-9dc2-e56dfb90a577)
+
 * N4. Permanecer dentro de los límites 40 segundos.
-* N5. ?
+![Captura desde 2025-05-17 17-20-23](https://github.com/user-attachments/assets/d8a79eda-2476-46c0-9af8-d8e04bada8e9)
+
+* N5. Gravedad invertida (arriba es abajo y abajo es arriba) durante 10 segundos.
+![Captura desde 2025-05-17 17-21-38](https://github.com/user-attachments/assets/4968f536-7ad3-4eb3-ba7a-faad2176f7ff)
+
 * N6. Recolectar 5 estrellas.
+![Captura desde 2025-05-17 17-22-08](https://github.com/user-attachments/assets/4c6f09e9-25c4-4795-89aa-38756220c8b0)
+
 * N7. Permanecer dentro de los límites 60 segundos.
-* N8. ?
-* N9. Gravedad invertida (arriba es abajo y abajo es arriba).
-* N10. Control del offset.
+![Captura desde 2025-05-17 17-22-48](https://github.com/user-attachments/assets/8d7be9a4-3a24-4e5c-afa5-24d8c2305fa7)
+
+* N8. Esquivar 6 asteroides.
+![Captura desde 2025-05-17 17-25-26](https://github.com/user-attachments/assets/04ea349f-2a8d-4b47-a42c-0149bdd62d48)
+
+* N9. Gravedad invertida (arriba es abajo y abajo es arriba) durante 15 segundos.
+![Captura desde 2025-05-17 17-26-04](https://github.com/user-attachments/assets/c2756784-182e-4adc-b46b-40c7ebb01aa4)
+
+* N10. Juego libre (ej. control con distintos offsets).
+![Captura desde 2025-05-17 17-26-30](https://github.com/user-attachments/assets/f0a58955-e31f-4c1d-be13-6a1cc2718b32)
+
+
+Recompensas:
+* Cada estrella recolectada suma 10 puntos.
+* Cada asteroide esquivado suma 10 puntos.
+* Cada vez que se completa una misión se suman 10 puntos.
+
+Penalizaciones:
+* Colisionar con un asteroide resta 5 puntos.
+
+He añadido sonidos cuando se choca con un asteroide, cuando se consigue una estrella y cuando se sube de nivel.
