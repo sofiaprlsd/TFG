@@ -66,10 +66,10 @@ Estructura del directirio en `$HOME`:
 
 
 
-## Semana 15, 12/05/25 - 15/05/25
+## Semana 15, 12/05/25 - 18/05/25
 
+- [x] Crear misiones para cada nivel.
 - [ ] Añadir la perturbación al juego.
-- [x] Crear misiones para cada nivel y hacer el juego más mono.
 - [ ] Hacer esquema con la información a incluir en cada capítulo de la memoria.
 
 ## Conceptos aprendidos S15
