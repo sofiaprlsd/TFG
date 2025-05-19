@@ -1,0 +1,110 @@
+\chapter{Objetivos}
+\label{cap:capitulo2}
+
+\begin{flushright}
+\begin{minipage}[]{11cm}
+\emph{Un objetivo bien definido es el punto de partida de todo logro.}\\
+\end{minipage}\\
+
+W. Clement Stone, \textit{Success Through a Positive Mental Attitude, 1959}\\
+\end{flushright}
+
+\vspace{1cm}
+\setcounter{footnote}{0}
+
+Después de haber establecido el marco contextual de este proyecto, continuo con la descripción del problema, los requisitos, las competencias, la metodología y el plan de trabajo empleado para su desempeño.\\
+
+\section{Descripción del problema}
+\label{sec:descripcion}
+
+La recuperación motora tras un ictus requiere de terapias personalizadas y motivadoras que promuevan la participación activa del paciente.
+Tal como señalan \cite{perales4b}, la ausencia de interfaces gráficas intuitivas y retroalimentación visual puede provocar una menor implicación del paciente durante el tratamiento, afectando de forma negativa los resultados terapéuticos.
+
+En este contexto, el presente proyecto aborda dicha limitación mediante el diseño y desarrollo de un sistema de interacción gráfica que combina, por un lado, una plataforma de gamificación centrada en el paciente, con el objetivo de fomentar su participación y motivación, 
+y por otro, una interfaz de visualización clínica centrada en el médico, que registre las métricas de desempeño y facilite el seguimiento de la evolución terapéutica.
+
+\subsection{Objetivo general}
+\label{sec:descripcion}
+
+Diseñar un sistema que registre y almacene los datos clínicos más relevantes e implementar interfaces gráficas interactivas y entornos gamificados que mejoren la experiencia del usuario en terapias robóticas post-ictus.
+
+\subsection{Objetivos específicos}
+\label{sec:descripcion}
+
+Con el fin de alcanzar esta meta, se han definido los siguientes objetivos específicos:
+
+\begin{itemize}
+    \item \textit{O1.} Desarrollar entornos gráficos gamificados que incluyan estimulos visuales, niveles de dificultad y misiones particulares que se adapten al perfil del usuario.
+    \item \textit{O2.} Diseñar una interfaz gráfica intuitiva para la plataforma robótica, que permita al médico visualizar el progreso del paciente y ajustar los parámetros del juego en base a su rendimiento.
+    \item \textit{O3.} Establecer sistemas de interacción visual conectados con los sensores y actuadores del robot para reflejar los movimientos del paciente y su desempeño.
+    \item \textit{O4.} Crear una interfaz gráfica para definir los datos personales y el progreso del usuario después de cada sesión.
+    \item \textit{O5.} Integrar perturbaciones controladas en el entorno de juego terapéutico, con el fin de introducir obstáculos que desafíen el control motor y la capacidad de adaptación del paciente, promoviendo así una mayor atención, planificación motora y activación neuromuscular.
+\end{itemize}\
+
+\section{Requisitos}
+\label{sec:requisitos}
+
+A continuación, se enumeran los requisitos que se deben satisfacer:
+
+\begin{itemize}
+    \item Compatibilidad con la arquitectura del sistema robótico y su software de control.
+    \item Interfaz intuitiva y adaptable en base a las necesidades de cada usuario.
+    \item Incorporación de elementos de gamificación como niveles o feedback visual.
+    \item Conectividad con sensores de interacción y EMG para adaptar el entorno de juego al esfuerzo del paciente.
+    \item Posibilidad de registro y análisis de los datos terapéuticos para su posterior uso e investigación.
+    \item Validación de uso mediante la valoración de los resultados obtenidos por los usuarios.
+\end{itemize}\
+
+\section{Competencias}
+\label{sec:competencias}
+
+Durante la realización de este proyecto, se han puesto en práctica diversas competencias generales del grado y específicas del desarrollo de interfaces y sistemas dinámicos.
+
+\subsection{Competencias generales}
+\label{sec:competencias}
+
+\begin{itemize}
+    \item \textit{CG1:} Conocimiento de materias básicas y tecnologías, que le capacite para el aprendizaje de nuevos métodos y tecnologías, así como que le dote de una gran versatilidad para adaptarse a nuevas situaciones.
+    \item \textit{CG2:} Capacidad de resolver problemas con iniciativa, toma de decisiones, creatividad, y de comunicar y transmitir conocimientos, habilidades y destrezas, comprendiendo la responsabilidad ética y profesional de la actividad de la Ingeniería Robótica.
+    \item \textit{CG3:} Redactar, representar e interpretar documentación legal, técnica, así como el manejo de especificaciones, reglamentos y normas de obligado cumplimiento en el ámbito de la robótica.
+    \item \textit{CG4:} Capacidad de analizar y valorar el impacto social de los robots y el impacto medioambiental de las soluciones técnicas.
+\end{itemize}\
+
+\subsection{Competencias específicas}
+\label{sec:competencias}
+
+\begin{itemize}
+    \item \textit{CE1.} Diseño e implementación de interfaces gráficas de usuario (GUI) con herramientas como Tkinter.
+    \item \textit{CE2.} Desarrollo de aplicaciones interactivas con elementos de gamificación, aplicando principios de diseño centrado en el usuario.
+    \item \textit{CE3.} Integración de interfaces con dispositivos físicos mediante comunicación en tiempo real basada en el Sistema Operativo Robótico (ROS\footnote{\url{https://www.ros.org/}}).
+    \item \textit{CE4.} Evaluación de la usabilidad y experiencia de usuario con métricas cuantitativas y cualitativas.
+\end{itemize}\
+
+\section{Metodología}
+\label{sec:metodologia}
+
+Para llevar a cabo este proyecto, se ha optado por seguir el paradigma iterativo centrado en el usuario (User-Centered Design).
+Previamente, se ha realizado una fase de análisis e investigación sobre el estado del arte y necesidades específicas para comprobar la viabilidad de su desarrollo.
+Posteriormente, se procedió con el diseño del prototipo para validar el diseño gráfico y la navegación.
+Más adelante, la realización de pruebas contínuas favoreció la incorporación de mejoras en el diseño visual, la lógica de juego y la retroalimentación.
+Una vez se desarrolló una primera versión fiable, las interfaces se conectaron con el sistema de control del robot permitiendo crear un entorno cambiante y adaptable.
+Por último, se llevó a cabo una evaluación de conformidad a los usuarios para comprobar la efectividad de la plataforma.
+
+\section{Plan de trabajo}
+\label{sec:plantrabajo}
+
+El trabajo se ha organizado de forma progresiva y coordinada con el resto del equipo técnico.
+Para ello, el proyecto se ha divido en las siguientes etapas:
+
+\begin{enumerate}
+    \item \textit{Investigación.} En esta fase inicial, se llevó a cabo un análisis detallado de plataformas robóticas existentes en el ámbito de la rehabilitación, como el dispositivo Armeo Spring\footnote{\url{https://www.comunidad.madrid/noticias/2019/04/16/comunidad-incorpora-robot-rehabilitacion-hospital-guadarrama}}, entre otros. El fin de este estudio fue identificar funcionalidades relevantes y enfoques innovadores que pudieran servir de inspiración para el diseño y desarrollo de la nueva plataforma.
+    \item \textit{Planteamiento del software.} Una vez se establecieron los objetivos y requisitos del proyecto, se procedió con el diseño de un esquema de nodos y topics que permitió estructurar de forma organizada la arquitectura de la plataforma.
+    \item \textit{Desarrollo de la parte gráfica.} Después de definir la arquitectura del sistema, se inició el desarrollo de las interfaces gráficas. A través de continuas pruebas se fueron optimizando tanto su aplicación como su uso.
+    \item \textit{Conexión entre el software y hardware.} Una vez consolidada una primera versión fiable del software, se continuó con la integración de las interfaces con el sistema de sensonorización del robot.
+    \item \textit{Evaluación y conclusiones.} En esta etapa final, se evaluó la usabilidad y se validaron los controles de forma técnica.
+\end{enumerate}\
+
+Paralelamente, se ha ido completando la presente memoria a lo largo de este proceso.
+Asimismo, se han realizado reuniones mensuales con el equipo para compartir los progresos de cada área, proponer mejoras y resolver cuestiones, trabajando de manera coordinada hacia un objetivo común.\\
+
+A continuación, se procede a tratar las plataformas de desarrollo empleadas en este proyecto.
