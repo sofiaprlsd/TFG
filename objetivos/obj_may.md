@@ -3,7 +3,7 @@
 ## Semana 13, 28/04/25 - 4/05/25
 
 - [x] Incluir mejoras propuestas por el equipo durante las reuniones del V25 y X30 (mirar S12 en abril).
-- [ ] Hacer la introducción de la memoria.
+- [x] Hacer el capítulo 4 de la memoria.
 
 ## Conceptos aprendidos S13
 
@@ -70,7 +70,7 @@ Estructura del directirio en `$HOME`:
 
 - [x] Crear misiones para cada nivel.
 - [ ] Añadir la perturbación al juego.
-- [ ] Hacer esquema con la información a incluir en cada capítulo de la memoria.
+- [x] Hacer esquema con la información a incluir en cada capítulo de la memoria.
 
 ## Conceptos aprendidos S15
 
