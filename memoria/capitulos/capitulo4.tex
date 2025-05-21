@@ -68,66 +68,75 @@ El aspecto final de la interfaz puede observarse en la Imagen \ref{fig:database}
 
 \section{Interfaz de control}
 
+Este script permite especificar y controlar parámetros de una señal y perturbación para su posterior creación y uso.
+Para ejecutarlo se debe especificar el archivo con los datos de registro del paciente.
 
+Al inicio se muestra una pantalla de configuración de los límites del brazo robótico.
+Para guardar la posición de mínimo y máximo, se deberá presionar el botón correspondiente, después de cada ajuste, como se observa en la Imagen \ref{fig:config}.
+Para avanzar a la siguiente pantalla pulsar \textit{Continue}.
 
-\section{Verbatim}
+A continuación, emergerá una nueva ventana que permite ajustar la frecuencia, amplitud y offset de una señal, configurar perturbaciones especificando la intensidad, la duración y el periodo, seleccionar el tipo de señal, sinusoidal o escalón, y cambiar el nivel del juego o su dificultad.
+Para actualizar estos datos se debe pulsar el botón \textit{Update signal} para las señales y \textit{Update level} para el nivel del juego.
+Además, la nueva configuración se almacenará en un archivo .csv, en un subdirectorio bajo el nombre \textit{config}.
 
-Para mencionar identificadores usados en el código ---como nombres de funciones o variables--- en el texto, usa el entorno literal o verbatim \verb|hypothesizeParallelograms()|. También se puede usar este entorno para varias líneas, como se ve a continuación:
+Para salir de la interfaz pulse \textit{Exit}.
 
-\begin{verbatim}
-void Memory::hypothesizeParallelograms () {
-  // add your code here
-}
-\end{verbatim}
+En la Imagen \ref{fig:control} se muestran los campos de la segunda ventana.
 
-\section{Ecuaciones}
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.85\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/config_limits.png}
+	\end{minipage}
+	\caption[Interfaz de configuración de los límites del brazo robótico]{Interfaz de configuración de los límites del brazo robótico}
+	\label{fig:config}
+\end{figure}
 
-Si necesitas insertar alguna ecuación, puedes hacerlo. Al igual que las figuras, no te olvides de referenciarlas. A continuación se exponen algunas ecuaciones de ejemplo: Ecuación \ref{ec:ec1} y Ecuación \ref{ec:ec2}.
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.85\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/control_pannel.png}
+	\end{minipage}
+	\caption[Interfaz de control]{Interfaz de control}
+	\label{fig:control}
+\end{figure}
+
+\section{Interfaz de visualización}
+
+Este script permite observar el comportamiento del paciente a lo largo de la terapia en un entorno gamificado.
+
+En un principio, se mostrará una pantalla negra y un mensaje indicando que está en estado de espera hasta que un paciente comience el juego.
+Una vez haya un jugador activo, el médico podrá ver una pantalla con dos gráficas.
+La primera mostrará la señal de referencia y la posición del jugador, el gráfico se actualiza en tiempo real permitiendo un seguimiento continuo del rendimiento del paciente.
+La segunda grafica el error de trayectoria del paciente con respecto a la deseada, lo que permite evaluar la precisión del movimiento.
+
+El código detecta si el jugador sale de los límites definidos por la señal principal a la que se le suma y resta un offset.
+Esto permite detectar fallos de control, fatiga o pérdida de atención.
+Para el cálculo del error se utiliza la Fórmula \ref{ec:ec1}.
 
 \begin{myequation}[h]
 \begin{equation}
-H = 1 - \frac{\sum_{i=0}^{N}\frac{(\frac{d_{j_s} + d_{j_e}}{2})}{N}}{M}
+error(t) = | y_{player}(y) - y_{reference}(t) |
 \nonumber
 \label{ec:ec1}
 \end{equation}
-\caption[Ejemplo de ecuación con fracciones]{Ejemplo de ecuación con fracciones}
+\caption[Cálculo del error de trayectoria]{Cálculo del error de trayectoria}
 \end{myequation} 
 
-\begin{myequation}[h]
-\begin{equation}
-v(entrada)= \left\{
-	\begin{array}{lcc}
-		0 & \mbox{if} & \epsilon_t < 0.1\\
-		K_p\cdot{(T_{t}-T)} & \mbox{if}& 0.1 \leq \epsilon_t < M_t\\
-		K_p \cdot M_t & \mbox{if}& M_t < \epsilon_t
-	\end{array}
-\right.
-\label{ec:ec2}
-\end{equation}
-\caption[Ejemplo de ecuación con array y letras y símbolos especiales]{Ejemplo de ecuación con array y letras y símbolos especiales}
-\end{myequation}
+Al finalizar la sesión, se guardan en un archivo .csv, en un subdirectorio bajo el nombre \textit{metrics}, los datos más relevantes de la sesión, como los tiempos, la señal, la posición del jugador, el offset, errores en la trayectoria y posibles colisiones, para facilitar su análisis posterior.
 
-\section{Tablas o cuadros}
+En la Imagen \ref{fig:visual} se puede visualizar la retroalimentación obtenida durante la terapia.
 
-Si necesitas insertar una tabla, hazlo dígnamente usando las propias tablas de \LaTeX, no usando pantallazos e insertándolas como figuras... En el Cuadro \ref{cuadro:ejemplo} vemos un ejemplo.
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.85\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/visual.png}
+	\end{minipage}
+	\caption[Interfaz de visualización]{Interfaz de visualización}
+	\label{fig:visual}
+\end{figure}
 
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{|c|c|}
-\hline
-\textbf{Parámetros} & \textbf{Valores} \\
-\hline
-Tipo de sensor & Sony IMX219PQ[7] CMOS 8-Mpx \\
-Tamaño del sensor & 3.674 x 2.760 mm (1/4" format) \\
-Número de pixels & 3280 x 2464 (active pixels) \\
-Tamaño de pixel & 1.12 x 1.12 um \\
-Lente & f=3.04 mm, f/2.0 \\
-Ángulo de visión & 62.2 x 48.8 degrees \\
-Lente SLR equivalente & 29 mm \\
-\hline
-\end{tabular}
-\caption{Parámetros intrínsecos de la cámara}
-\label{cuadro:ejemplo}
-\end{center}
-\end{table}
-
+\section{Juego flappy}
