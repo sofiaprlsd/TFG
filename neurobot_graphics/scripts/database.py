@@ -53,7 +53,7 @@ def savedata():
         "name": name,
         "surname": surname,
         "ID": id,
-        "frecuency": freq,
+        "frequency": freq,
         "amplitude": ampl,
         "disturbance": disturb,
         "duration": duration,

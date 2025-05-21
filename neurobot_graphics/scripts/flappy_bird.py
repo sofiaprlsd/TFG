@@ -2,7 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Int32
+from std_msgs.msg import Int32MultiArray
 from std_msgs.msg import Float32
 from std_msgs.msg import Float32MultiArray
 import matplotlib.pyplot as plt
@@ -27,8 +27,15 @@ class FlappyBirdNode(Node):
             10
         )
 
+        self.disturbance_subscriber_ = self.create_subscription(
+            Float32,
+            'Disturbance',
+            self.disturb_callback,
+            10
+        )
+
         self.level_subscriber_ = self.create_subscription(
-            Int32,
+            Int32MultiArray,
             'GameParameters',
             self.level_callback,
             10
@@ -41,9 +48,15 @@ class FlappyBirdNode(Node):
             10
         )
 
-        self.publisher_ = self.create_publisher(
+        self.pos_publisher_ = self.create_publisher(
             Float32MultiArray,
             'PlayerPosition',
+            10
+        )
+
+        self.signal_publisher_ = self.create_publisher(
+            Float32MultiArray,
+            'MotorParameters',
             10
         )
 
@@ -61,6 +74,7 @@ class FlappyBirdNode(Node):
         self.min_offset = 1.0
         self.level = 1
         self.max_level = 10
+        self.assistance = 5
         self.score = 0
         self.start_time = None
         self.inside_limits = True
@@ -76,6 +90,7 @@ class FlappyBirdNode(Node):
         self.inverted_gravity = False
         self.mission_completed = False
         self.game_completed = False
+        self.last_disturb_val = 0.0
 
         self.level_colors = [
             {'bg': '#e0f7fa', 'line': '#00796b'},    # light cian / teal
@@ -94,6 +109,7 @@ class FlappyBirdNode(Node):
         self.signal_data = np.zeros(self.sample_amount)
         self.signal_upper = np.zeros(self.sample_amount)
         self.signal_lower = np.zeros(self.sample_amount)
+        self.disturb_data = np.zeros(self.sample_amount)
 
         plt.ion()   # Update graph in real time
         self.fig, self.ax = plt.subplots(figsize=(12, 8))
@@ -104,6 +120,7 @@ class FlappyBirdNode(Node):
         self.line, = self.ax.plot(self.time_data, self.signal_data, color='lightblue', label='Signal')
         self.line_upper, = self.ax.plot(self.time_data, self.signal_upper, linestyle='--', color='white', label='Signal + offset')
         self.line_lower, = self.ax.plot(self.time_data, self.signal_lower, linestyle='--', color='white', label='Signal - offset')
+        self.line_disturb, = self.ax.plot(self.time_data, self.disturb_data, color='white', label='Disturbance')
         self.player, = self.ax.plot(self.player_x, self.player_y, 'ro', label='Player')
         
         self.ax.set_xlim(0, self.window_size_x)
@@ -112,7 +129,7 @@ class FlappyBirdNode(Node):
         self.ax.set_xticks([])
         self.ax.set_yticks([])
         self.update_level_effects()
-    
+
     def update_level_effects(self):
         colors = self.level_colors[(self.level - 1) % len(self.level_colors)]
         self.ax.set_facecolor(colors['bg'])
@@ -120,7 +137,8 @@ class FlappyBirdNode(Node):
         self.ax.set_title(f'Flappy Bird Level {self.level}')
         level_up_sound.play()
         self.fig.canvas.draw()
-        self.get_logger().info(f"Upgrade to level {self.level}")
+        self.assistance = max(0, 5 - (self.level - 1) // 2) # each 2 game levels decrement 1 level of assistance
+        self.get_logger().info(f"Upgrade to level {self.level} with assistance {self.assistance}")
     
     def increment_score(self, points):
         self.score += points
@@ -167,9 +185,13 @@ class FlappyBirdNode(Node):
         except:
             pass
     
+    def disturb_callback(self, msg):
+        self.last_disturb_val = msg.data
+    
     def level_callback(self, msg):
         self.level = msg.data[0]
-        self.get_logger().info(f'Received L{self.level}')
+        self.assistance = msg.data[1]
+        self.get_logger().info(f'Received [L{self.level} a{self.assistance}]')
 
         self.mission_completed = False
         self.game_completed = False
@@ -192,11 +214,13 @@ class FlappyBirdNode(Node):
         self.signal_data = np.roll(self.signal_data, -1)
         self.signal_upper = np.roll(self.signal_upper, -1)
         self.signal_lower = np.roll(self.signal_lower, -1)
+        self.disturb_data = np.roll(self.disturb_data, -1)
 
         self.time_data[-1] = self.time
         self.signal_data[-1] = msg.data
         self.signal_upper[-1] = msg.data + self.offset_y
         self.signal_lower[-1] = msg.data - self.offset_y
+        self.disturb_data[-1] = self.last_disturb_val
 
         upper_limit = self.signal_upper[-1]
         lower_limit = self.signal_lower[-1]
@@ -301,13 +325,15 @@ class FlappyBirdNode(Node):
         if self.time_data[-1] > self.window_size_x:
             self.ax.set_xlim(self.time - self.window_size_x, self.time)
 
-        # Plot sigal and player position
+        # Plot sigal, disturbance and player position
         self.line.set_xdata(self.time_data)
         self.line.set_ydata(self.signal_data)
         self.line_upper.set_xdata(self.time_data)
         self.line_upper.set_ydata(self.signal_upper)
         self.line_lower.set_xdata(self.time_data)
         self.line_lower.set_ydata(self.signal_lower)
+        self.line_disturb.set_xdata(self.time_data)
+        self.line_disturb.set_ydata(self.disturb_data)
         self.player.set_xdata(self.player_x)
         self.player.set_ydata(self.player_y)
 
@@ -331,7 +357,13 @@ class FlappyBirdNode(Node):
         # Publish player position on topic
         pos_msg = Float32MultiArray()
         pos_msg.data = [self.player_x, self.player_y, self.offset_y, self.time]
-        self.publisher_.publish(pos_msg)
+        self.pos_publisher_.publish(pos_msg)
+
+        # Publish signal and disturbance y references and level of assistance
+        signal_msg = Float32MultiArray()
+        y_signal = self.signal_data[-1]
+        signal_msg.data = [y_signal, self.assistance]
+        self.signal_publisher_.publish(signal_msg)
 
 def main(args=None):
     rclpy.init(args=args)
@@ -344,7 +376,8 @@ def main(args=None):
     finally:
         plt.close('all')
         flappy_bird_node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
