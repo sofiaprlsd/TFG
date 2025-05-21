@@ -7,6 +7,7 @@ from std_msgs.msg import Int32
 from std_msgs.msg import Int32MultiArray
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import sys
 import csv
 import os
@@ -164,7 +165,7 @@ class ScrollGUI:
         self.update_level_button = tk.Button(self.window, text="Update level", command=self.update_level, font=("Arial", 14), width=20, height=2, bg="blue", fg="white")
         self.update_level_button.pack(pady=10)
 
-        self.exit_button = tk.Button(self.window, text="Salir", command=self.close, font=("Arial", 14), width=20, height=2, bg="red", fg="white")
+        self.exit_button = tk.Button(self.window, text="Exit", command=self.close, font=("Arial", 14), width=20, height=2, bg="red", fg="white")
         self.exit_button.pack(pady=10)
     
     def save_to_csv(self):
@@ -294,35 +295,54 @@ def start_gui(args=None):
     )
     
     start_root = tk.Tk()
-    start_root.title("configure Limits")
+    start_root.title("Configure limits")
     start_root.geometry("1000x800")
 
     content_frame = ttk.Frame(start_root)
     content_frame.pack(expand=True)
 
+    min_published = tk.BooleanVar(value=False)
+    max_published = tk.BooleanVar(value=False)
+
     def publish_min():
         msg = Int32MultiArray()
-        msg.data = [1, 0]
+        msg.data = [1, 0, 0]
         limit_publisher_.publish(msg)
+        min_published.set(True)
         print("Published MIN limit")
     
     def publish_max():
         msg = Int32MultiArray()
-        msg.data = [0, 1]
+        msg.data = [0, 1, 0]
         limit_publisher_.publish(msg)
+        max_published.set(True)
         print("Published MAX limit")
 
-    min_button = tk.Button(content_frame, text="Set MIN limit", command=publish_min, font=("Arial", 14), width=30, height=10, bg="blue", fg="white")
-    max_button = tk.Button(content_frame, text="Set MAX limit", command=publish_max, font=("Arial", 14), width=30, height=10, bg="blue", fg="white")
+    def publish_offset():
+        if not min_published.get() or not max_published.get():
+            messagebox.showwarning("Warning", "Limits must be define before declaring offset")
+            return
+        msg = Int32MultiArray()
+        msg.data = [0, 0, 1]
+        limit_publisher_.publish(msg)
+        print("Published offset")
 
-    min_button.grid(row=0, column=0, padx=50)
-    max_button.grid(row=0, column=1, padx=50)
+    min_button = tk.Button(content_frame, text="Set MIN limit", command=publish_min, font=("Arial", 14), width=25, height=10, bg="blue", fg="white")
+    max_button = tk.Button(content_frame, text="Set MAX limit", command=publish_max, font=("Arial", 14), width=25, height=10, bg="blue", fg="white")
+    offset_button = tk.Button(content_frame, text="Set Offset", command=publish_offset, font=("Arial", 14), width=25, height=10, bg="blue", fg="white")
+
+    min_button.grid(row=0, column=0, padx=25)
+    max_button.grid(row=0, column=1, padx=25)
+    offset_button.grid(row=0, column=2, padx=25)
 
     button_frame = ttk.Frame(start_root)
     button_frame.pack(side="bottom", pady=40)
     ttk.Button(button_frame, text="Continue", command=lambda: continue_main()).pack()
     
     def continue_main():
+        if not min_published.get() or not max_published.get():
+            messagebox.showerror("Error", "Limits must be define before continuing")
+            return
         start_root.destroy()
         main_gui()
     
