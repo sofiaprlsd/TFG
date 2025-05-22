@@ -23,28 +23,28 @@ class FlappyBirdNode(Node):
         self.signal_subscriber_ = self.create_subscription(
             Float32,
             'CleanSignal',
-            self.listener_callback,
+            self.listenercallback,
             10
         )
 
         self.disturbance_subscriber_ = self.create_subscription(
             Float32,
             'Disturbance',
-            self.disturb_callback,
+            self.disturbcallback,
             10
         )
 
         self.level_subscriber_ = self.create_subscription(
             Int32MultiArray,
             'GameParameters',
-            self.level_callback,
+            self.levelcallback,
             10
         )
 
         self.offset_subscriber_ = self.create_subscription(
             Float32MultiArray,
             'SliderParameters',
-            self.offset_callback,
+            self.offsetcallback,
             10
         )
 
@@ -128,9 +128,9 @@ class FlappyBirdNode(Node):
         # Do not show axis numbers
         self.ax.set_xticks([])
         self.ax.set_yticks([])
-        self.update_level_effects()
+        self.updatelevel()
 
-    def update_level_effects(self):
+    def updatelevel(self):
         colors = self.level_colors[(self.level - 1) % len(self.level_colors)]
         self.ax.set_facecolor(colors['bg'])
         self.line.set_color(colors['line'])
@@ -140,24 +140,24 @@ class FlappyBirdNode(Node):
         self.assistance = max(0, 5 - (self.level - 1) // 2) # each 2 game levels decrement 1 level of assistance
         self.get_logger().info(f"Upgrade to level {self.level} with assistance {self.assistance}")
     
-    def increment_score(self, points):
+    def incrementscore(self, points):
         self.score += points
         self.score_text.set_text(f"Score: {self.score}")
     
-    def decrement_score(self, points):
+    def decrementscore(self, points):
         self.score -= points
         if self.score < 0:
             self.score = 0
         self.score_text.set_text(f"Score: {self.score}")
     
-    def clear_objects(self):
+    def clearobjects(self):
         for s in self.plot_objects:
             s.remove()
         self.objects = []
         self.plot_objects = []
         self.collected = set()
     
-    def generate_star(self):
+    def generatestar(self):
         x = self.time + np.random.uniform(0.5, 4.0)
         y = 0.0
         if self.time_data[-1] > self.time_data[0]:
@@ -166,7 +166,7 @@ class FlappyBirdNode(Node):
         o = self.ax.plot(x, y, marker="*", color="gold", markersize=25)[0]
         self.plot_objects.append(o)
     
-    def generate_asteroid(self):
+    def generateasteroid(self):
         x = self.time + np.random.uniform(0.5, 4.0)
         y = np.random.uniform(1.0, self.offset_y)
         if np.random.rand() > 0.5:
@@ -185,10 +185,10 @@ class FlappyBirdNode(Node):
         except:
             pass
     
-    def disturb_callback(self, msg):
+    def disturbcallback(self, msg):
         self.last_disturb_val = msg.data
     
-    def level_callback(self, msg):
+    def levelcallback(self, msg):
         self.level = msg.data[0]
         self.assistance = msg.data[1]
         self.get_logger().info(f'Received [L{self.level} a{self.assistance}]')
@@ -197,19 +197,19 @@ class FlappyBirdNode(Node):
         self.game_completed = False
         self.inside_limits = True
         self.start_time = None
-        self.update_level_effects()
+        self.updatelevel()
 
         if self.level in [2, 6]:
-            self.clear_objects()
+            self.clearobjects()
             self.obj_counter = 0
-            self.generate_star()
+            self.generatestar()
             self.last_obj_time = self.time
     
-    def offset_callback(self, msg):
+    def offsetcallback(self, msg):
         self.offset_y = msg.data[2]
         self.get_logger().info(f'Current O{self.offset_y}')
     
-    def listener_callback(self, msg):
+    def listenercallback(self, msg):
         self.time_data = np.roll(self.time_data, -1)
         self.signal_data = np.roll(self.signal_data, -1)
         self.signal_upper = np.roll(self.signal_upper, -1)
@@ -254,7 +254,7 @@ class FlappyBirdNode(Node):
                     self.start_time = self.time
                 active_stars = [i for i, (sx, _) in enumerate(self.objects) if i not in self.collected and sx > self.time - self.window_size_x]
                 if self.time - self.last_obj_time > self.obj_interval and len(active_stars) < self.max_active_obj:
-                    self.generate_star()
+                    self.generatestar()
                     self.last_obj_time = self.time
                 for i, (sx, sy) in enumerate(self.objects):
                     if i in self.collected:
@@ -264,7 +264,7 @@ class FlappyBirdNode(Node):
                     if abs(dx) < self.obj_radius_x and abs(dy) < self.obj_radius_y:
                         self.collected.add(i)
                         star_gained_sound.play()
-                        self.increment_score(10)
+                        self.incrementscore(10)
                         self.obj_counter += 1
                         self.plot_objects[i].set_visible(False)
                         self.get_logger().info(f"Star collected!")
@@ -272,7 +272,7 @@ class FlappyBirdNode(Node):
                 if self.obj_counter >= mission_stars:
                     self.mission_completed = True
                     self.obj_counter = 0
-                    self.clear_objects()
+                    self.clearobjects()
             elif self.level in [3, 8]:
                 mission_asteroids = {3: 4, 8: 6}[self.level]
                 self.ax.set_title(f'Level {self.level}: Avoid {mission_asteroids} asteroids')
@@ -280,7 +280,7 @@ class FlappyBirdNode(Node):
                     self.start_time = self.time
                 active_asteroids = [i for i, (sx, _) in enumerate(self.objects) if i not in self.collected and sx > self.time - self.window_size_x]
                 if self.time - self.last_obj_time > self.obj_interval and len(active_asteroids) < self.max_active_obj:
-                    self.generate_asteroid()
+                    self.generateasteroid()
                     self.last_obj_time = self.time
                 for i, (sx, sy) in enumerate(self.objects):
                     if i in self.collected:
@@ -290,31 +290,31 @@ class FlappyBirdNode(Node):
                     if abs(dx) < self.obj_radius_x and abs(dy) < self.obj_radius_y:
                         self.collected.add(i)
                         asteroid_hit_sound.play()
-                        self.decrement_score(5)
+                        self.decrementscore(5)
                         self.plot_objects[i].set_visible(False)
                         self.get_logger().info(f"Hit asteroid!")
                     elif abs(dx) < self.obj_radius_x and abs(dy) > self.obj_radius_y:
                         self.collected.add(i)
-                        self.increment_score(10)
+                        self.incrementscore(10)
                         self.obj_counter += 1
                         self.get_logger().info(f"Asteroid avoided!")
                 self.mission_text.set_text(f"Asteroids avoided: {self.obj_counter}")
                 if self.obj_counter >= mission_asteroids:
                     self.mission_completed = True
                     self.obj_counter = 0
-                    self.clear_objects()
+                    self.clearobjects()
             else:
                 self.mission_text.set_text(f"")
                 if (self.level < 10):
                     self.level += 1
-                    self.update_level_effects()
+                    self.updatelevel()
             
             if self.mission_completed:
                 self.mission_completed = False
                 self.start_time = None
-                self.increment_score(30)
+                self.incrementscore(30)
                 self.level += 1
-                self.update_level_effects()
+                self.updatelevel()
 
         # When time is greater than window size, 
         # increment player_x to stay in same spot of the window
@@ -362,7 +362,8 @@ class FlappyBirdNode(Node):
         # Publish signal and disturbance y references and level of assistance
         signal_msg = Float32MultiArray()
         y_signal = self.signal_data[-1]
-        signal_msg.data = [y_signal, self.assistance]
+        y_disturb = self.disturb_data[-1]
+        signal_msg.data = [y_signal, y_disturb, self.assistance]
         self.signal_publisher_.publish(signal_msg)
 
 def main(args=None):
