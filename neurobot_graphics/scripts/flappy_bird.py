@@ -91,6 +91,7 @@ class FlappyBirdNode(Node):
         self.mission_completed = False
         self.game_completed = False
         self.last_disturb_val = 0.0
+        self.disturb_markers = []
 
         self.level_colors = [
             {'bg': '#e0f7fa', 'line': '#00796b'},    # light cian / teal
@@ -158,10 +159,8 @@ class FlappyBirdNode(Node):
         self.collected = set()
     
     def generatestar(self):
-        x = self.time + np.random.uniform(0.5, 4.0)
-        y = 0.0
-        if self.time_data[-1] > self.time_data[0]:
-            y = np.interp(x, self.time_data, self.signal_data)
+        x = self.time + np.random.uniform(0.5, 0.4)
+        y = np.interp(x, self.time_data, self.signal_data)
         self.objects.append([x, y])
         o = self.ax.plot(x, y, marker="*", color="gold", markersize=25)[0]
         self.plot_objects.append(o)
@@ -224,6 +223,11 @@ class FlappyBirdNode(Node):
 
         upper_limit = self.signal_upper[-1]
         lower_limit = self.signal_lower[-1]
+
+        # If there is a disturbance advaise it to the player
+        if self.disturb_data[-1] != 0.0 and self.disturb_data[-2] == 0.0:
+            triangle = self.ax.plot(self.time, self.signal_data[-1], marker='v', color='orange', markersize=20)[0]
+            self.disturb_markers.append((self.time, self.signal_data[-1], triangle))
 
         # Reduce the offset of the signals to make the game more difficult, 
         # only if the player is not colliding with any limit (signals)
@@ -332,15 +336,17 @@ class FlappyBirdNode(Node):
         self.line_upper.set_ydata(self.signal_upper)
         self.line_lower.set_xdata(self.time_data)
         self.line_lower.set_ydata(self.signal_lower)
-        # If disturbance is different from 0
-        if np.any(self.disturb_data):
-            self.line_disturb.set_xdata(self.time_data)
-            self.line_disturb.set_ydata(self.disturb_data)
-            self.line_disturb.set_visible(True)
-        else:
-            self.line_disturb.set_visible(False)
         self.player.set_xdata(self.player_x)
         self.player.set_ydata(self.player_y)
+
+        visible_marker_time = self.time - self.window_size_x
+        reachable_markers = []
+        for x, y, marker in self.disturb_markers:
+            if x < visible_marker_time:
+                marker.remove()
+            else:
+                reachable_markers.append((x, y, marker))
+        self.disturb_markers = reachable_markers
 
         # Change color of the dot based on the distance from the limits
         dist = abs(self.player_y)
@@ -364,10 +370,11 @@ class FlappyBirdNode(Node):
         pos_msg.data = [self.player_x, self.player_y, self.offset_y, self.time]
         self.pos_publisher_.publish(pos_msg)
 
-        # Publish signal and disturbance y references and level of assistance
+        # Publish signal and disturbance y references when closest to player_x
+        index = np.argmin(np.abs(self.time_data - self.player_x))
+        y_signal = self.signal_data[index]
+        y_disturb = self.disturb_data[index]
         signal_msg = Float32MultiArray()
-        y_signal = self.signal_data[-1]
-        y_disturb = self.disturb_data[-1]
         signal_msg.data = [y_signal, y_disturb, float(self.assistance)]
         self.signal_publisher_.publish(signal_msg)
 

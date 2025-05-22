@@ -90,7 +90,7 @@ class FlappyBirdViewerNode(Node):
         self.line, = self.ax.plot([], [], color='blue', label='Signal')
         self.line_upper, = self.ax.plot([], [], linestyle='--', color='grey', label='Signal + offset')
         self.line_lower, = self.ax.plot([], [], linestyle='--', color='grey', label='Signal - offset')
-        self.line_disturb, = self.ax.plot(self.time_data, self.disturb_data, color='white', label='Disturbance')
+        self.line_disturb, = self.ax.plot(self.time_data, self.disturb_data, color='green', label='Disturbance')
         self.player, = self.ax.plot([], [], 'ro', label='Player')
         
         self.ax.set_xlim(0, self.window_size_x)
@@ -146,7 +146,8 @@ class FlappyBirdViewerNode(Node):
         if len(self.traj_time) > self.sample_amount:
             self.traj_time = self.traj_time[-self.sample_amount:]
         
-        ref_y = self.signal_data[-1]
+        index = np.argmin(np.abs(self.time_data - self.player_x))
+        ref_y = self.signal_data[index]
         self.error.append(abs(self.player_y - ref_y))
         if len(self.error) > self.sample_amount:
             self.error = self.error[-self.sample_amount:]

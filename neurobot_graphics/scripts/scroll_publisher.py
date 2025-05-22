@@ -219,7 +219,7 @@ class ScrollGUI:
     
     def updatedisturbance(self, val):
         self.disturbance = float(val)
-        self.disturbance_label.config(text=f"Disturbance: {self.disturbance:.2f}")
+        self.disturbance_label.config(text=f"Disturbance Amplitude: {self.disturbance:.2f}")
 
     def updateduration(self, val):
         self.duration = float(val)
