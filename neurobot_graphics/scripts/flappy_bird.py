@@ -120,7 +120,7 @@ class FlappyBirdNode(Node):
         self.line, = self.ax.plot(self.time_data, self.signal_data, color='lightblue', label='Signal')
         self.line_upper, = self.ax.plot(self.time_data, self.signal_upper, linestyle='--', color='white', label='Signal + offset')
         self.line_lower, = self.ax.plot(self.time_data, self.signal_lower, linestyle='--', color='white', label='Signal - offset')
-        self.line_disturb, = self.ax.plot(self.time_data, self.disturb_data, color='white', label='Disturbance')
+        self.line_disturb, = self.ax.plot(self.time_data, self.disturb_data, color='orange', label='Disturbance')
         self.player, = self.ax.plot(self.player_x, self.player_y, 'ro', label='Player')
         
         self.ax.set_xlim(0, self.window_size_x)
@@ -332,8 +332,13 @@ class FlappyBirdNode(Node):
         self.line_upper.set_ydata(self.signal_upper)
         self.line_lower.set_xdata(self.time_data)
         self.line_lower.set_ydata(self.signal_lower)
-        self.line_disturb.set_xdata(self.time_data)
-        self.line_disturb.set_ydata(self.disturb_data)
+        # If disturbance is different from 0
+        if np.any(self.disturb_data):
+            self.line_disturb.set_xdata(self.time_data)
+            self.line_disturb.set_ydata(self.disturb_data)
+            self.line_disturb.set_visible(True)
+        else:
+            self.line_disturb.set_visible(False)
         self.player.set_xdata(self.player_x)
         self.player.set_ydata(self.player_y)
 
@@ -363,7 +368,7 @@ class FlappyBirdNode(Node):
         signal_msg = Float32MultiArray()
         y_signal = self.signal_data[-1]
         y_disturb = self.disturb_data[-1]
-        signal_msg.data = [y_signal, y_disturb, self.assistance]
+        signal_msg.data = [y_signal, y_disturb, float(self.assistance)]
         self.signal_publisher_.publish(signal_msg)
 
 def main(args=None):
