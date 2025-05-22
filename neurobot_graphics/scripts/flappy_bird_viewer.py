@@ -158,7 +158,13 @@ class FlappyBirdViewerNode(Node):
         self.line_upper.set_ydata(self.signal_upper)
         self.line_lower.set_xdata(self.time_data)
         self.line_lower.set_ydata(self.signal_lower)
-        self.line_disturb.set_ydata(self.disturb_data)
+        # If disturbance is different from 0
+        if np.any(self.disturb_data):
+            self.line_disturb.set_xdata(self.time_data)
+            self.line_disturb.set_ydata(self.disturb_data)
+            self.line_disturb.set_visible(True)
+        else:
+            self.line_disturb.set_visible(False)
         self.player.set_xdata(self.player_x)
         self.player.set_ydata(self.player_y)
         
