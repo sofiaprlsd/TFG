@@ -246,16 +246,16 @@ neurobot_srvs/SetMaxMinSrv</panel_attributes>
     <coordinates>
       <x>864</x>
       <y>576</y>
-      <w>81</w>
+      <w>72</w>
       <h>99</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>70.0;10.0;10.0;10.0;10.0;90.0</additional_attributes>
+    <additional_attributes>60.0;10.0;10.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>927</x>
+      <x>918</x>
       <y>549</y>
       <w>189</w>
       <h>72</h>
@@ -267,13 +267,13 @@ std_msgs/Float32MultiArray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1107</x>
+      <x>1098</x>
       <y>576</y>
-      <w>54</w>
+      <w>63</w>
       <h>99</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>40.0;90.0;40.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>50.0;90.0;50.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
@@ -511,5 +511,16 @@ std_msgs/Float32</panel_attributes>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;430.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>828</x>
+      <y>756</y>
+      <w>351</w>
+      <h>171</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>370.0;10.0;370.0;170.0;10.0;170.0</additional_attributes>
   </element>
 </diagram>

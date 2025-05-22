@@ -22,14 +22,28 @@ class FlappyBirdViewerNode(Node):
         self.signal_subscriber_ = self.create_subscription(
             Float32,
             'CleanSignal',
-            self.signal_callback,
+            self.signalcallback,
+            10
+        )
+
+        self.disturbance_subscriber_ = self.create_subscription(
+            Float32,
+            'Disturbance',
+            self.disturbcallback,
             10
         )
 
         self.player_subscriber_ = self.create_subscription(
             Float32MultiArray,
             'PlayerPosition',
-            self.player_callback,
+            self.playercallback,
+            10
+        )
+
+        self.assistance_subscriber_ = self.create_subscription(
+            Float32MultiArray,
+            'MotorParameters',
+            self.assistancecallback,
             10
         )
         
@@ -44,21 +58,26 @@ class FlappyBirdViewerNode(Node):
         self.error = []
         self.mean_error = 0.0
         self.player_active = False
+        self.last_disturb_val = 0.0
+        self.assist_level = 0
 
         self.log_time = []
         self.log_signal = []
         self.log_upper_limit = []
         self.log_lower_limit = []
+        self.log_disturb = []
         self.log_player_x = []
         self.log_player_y = []
         self.log_offset_y = []
         self.log_error = []
         self.log_collision = []
+        self.log_assistance = []
 
         self.time_data = np.zeros(self.sample_amount)
         self.signal_data = np.zeros(self.sample_amount)
         self.signal_upper = np.zeros(self.sample_amount)
         self.signal_lower = np.zeros(self.sample_amount)
+        self.disturb_data = np.zeros(self.sample_amount)
 
         plt.ion()   # Update graph in real time
         self.fig, (self.ax, self.ax_traj) = plt.subplots(2, 1, figsize=(10, 10), sharex=False)
@@ -67,10 +86,13 @@ class FlappyBirdViewerNode(Node):
         self.ax.set_title('Flappy Bird Viewer - Waiting player...')
         self.ax.set_xlabel('Time (s)')
         self.ax.set_ylabel('Amplitude')
+        
         self.line, = self.ax.plot([], [], color='blue', label='Signal')
         self.line_upper, = self.ax.plot([], [], linestyle='--', color='grey', label='Signal + offset')
         self.line_lower, = self.ax.plot([], [], linestyle='--', color='grey', label='Signal - offset')
+        self.line_disturb, = self.ax.plot(self.time_data, self.disturb_data, color='white', label='Disturbance')
         self.player, = self.ax.plot([], [], 'ro', label='Player')
+        
         self.ax.set_xlim(0, self.window_size_x)
         self.ax.set_ylim(-self.window_size_y, self.window_size_y)
 
@@ -84,7 +106,13 @@ class FlappyBirdViewerNode(Node):
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
     
-    def signal_callback(self, msg):
+    def assistancecallback(self, msg):
+        self.assist_level = msg.data[2]
+    
+    def disturbcallback(self, msg):
+        self.last_disturb_val = msg.data
+    
+    def signalcallback(self, msg):
         if not self.player_active:
             return
         
@@ -97,11 +125,13 @@ class FlappyBirdViewerNode(Node):
         self.signal_data = np.roll(self.signal_data, -1)
         self.signal_upper = np.roll(self.signal_upper, -1)
         self.signal_lower = np.roll(self.signal_lower, -1)
+        self.disturb_data = np.roll(self.disturb_data, -1)
 
         self.time_data[-1] = self.time
         self.signal_data[-1] = msg.data
         self.signal_upper[-1] = msg.data + self.offset_y
         self.signal_lower[-1] = msg.data - self.offset_y
+        self.disturb_data[-1] = self.last_disturb_val
         
         # Check if the player is colliding with any limit (signals)
         upper_limit = self.signal_upper[-1]
@@ -128,6 +158,7 @@ class FlappyBirdViewerNode(Node):
         self.line_upper.set_ydata(self.signal_upper)
         self.line_lower.set_xdata(self.time_data)
         self.line_lower.set_ydata(self.signal_lower)
+        self.line_disturb.set_ydata(self.disturb_data)
         self.player.set_xdata(self.player_x)
         self.player.set_ydata(self.player_y)
         
@@ -153,13 +184,15 @@ class FlappyBirdViewerNode(Node):
         self.log_signal.append(msg.data)
         self.log_upper_limit.append(msg.data + self.offset_y)
         self.log_lower_limit.append(msg.data - self.offset_y)
+        self.log_disturb.append(self.last_disturb_val)
         self.log_player_x.append(self.player_x)
         self.log_player_y.append(self.player_y)
         self.log_offset_y.append(self.offset_y)
         self.log_error.append(abs(self.player_y - msg.data))
         self.log_collision.append(int(not (self.signal_lower[-1] < self.player_y < self.signal_upper[-1])))
-    
-    def player_callback(self, msg):
+        self.log_assistance.append(self.assist_level)
+
+    def playercallback(self, msg):
         if len(msg.data) >= 3:
             self.player_x = msg.data[0]
             self.player_y = msg.data[1]
@@ -167,7 +200,7 @@ class FlappyBirdViewerNode(Node):
             self.time = msg.data[3]
             self.player_active = True
 
-def save_to_csv(node, patient_id):
+def savemetrics(node, patient_id):
     now = datetime.now()
     date = now.strftime("%Y-%m-%d")
     index = 1
@@ -184,7 +217,7 @@ def save_to_csv(node, patient_id):
             break
         index += 1
 
-    header = ["time", "signal", "upper_limit", "lower_limit", "player_x", "player_y", "offset_y", "error", "collision"]
+    header = ["time", "signal", "upper_limit", "lower_limit", "disturbance", "player_x", "player_y", "offset_y", "error", "collision", "assistance"]
 
     with open(file_path, mode='w', newline='') as file:
         writer = csv.writer(file)
@@ -195,11 +228,13 @@ def save_to_csv(node, patient_id):
                 node.log_signal[i],
                 node.log_upper_limit[i],
                 node.log_lower_limit[i],
+                node.log_disturb[i],
                 node.log_player_x[i],
                 node.log_player_y[i],
                 node.log_offset_y[i],
                 node.log_error[i],
-                node.log_collision[i]
+                node.log_collision[i],
+                node.log_assistance[i]
             ])
 
 def main(args=None):
@@ -223,7 +258,7 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
-        save_to_csv(flappy_bird_viewer_node, patient_id)
+        savemetrics(flappy_bird_viewer_node, patient_id)
         plt.close('all')
         flappy_bird_viewer_node.destroy_node()
         rclpy.shutdown()

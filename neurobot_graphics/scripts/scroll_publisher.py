@@ -19,7 +19,7 @@ os.makedirs(DIR, exist_ok=True)
 
 # ----------------------- ROS2 NODE ----------------------- #
 class ScrollPublisherNode(Node):
-    def __init__(self, freq=0.5, ampl=1.0, disturb=0.0, duration=0.5, period=30.0, level=1):
+    def __init__(self, freq=0.5, ampl=1.0, disturb=0.0, duration=0.5, period=30.0, level=1, assist = 0):
         super().__init__('scroll_publisher_node')
 
         self.slider_publisher_ = self.create_publisher(
@@ -43,10 +43,11 @@ class ScrollPublisherNode(Node):
         self.period = period
         self.disturb_signal = "sinusoidal"
         self.level = level
+        self.assist = assist
 
-        self.timer = self.create_timer(0.1, self.publish_data)
+        self.timer = self.create_timer(0.1, self.publishdata)
 
-    def publish_data(self):
+    def publishdata(self):
         signal = 1.0
         disturb_signal = 1.0
         if self.signal in ["sinusoidal", "step"]:
@@ -104,26 +105,26 @@ class ScrollGUI:
         signal_frame = ttk.Frame(self.window)
         signal_frame.pack(pady=10)
 
-        self.frequency_scroller = ttk.Scale(signal_frame, from_=0.0, to=3.0, orient="horizontal", command=self.update_frequency, length=400)
-        self.frequency_scroller.set(self.frequency)
-        self.frequency_scroller.pack(pady=5)
-
         self.frequency_label = tk.Label(signal_frame, text=f"Signal Frequency: {self.frequency:.2f} Hz", font=("Arial", 14))
         self.frequency_label.pack(pady=2)
 
-        self.amplitude_scroller = ttk.Scale(signal_frame, from_=0.0, to=2.0, orient="horizontal", command=self.update_amplitude, length=400)
-        self.amplitude_scroller.set(self.amplitude)
-        self.amplitude_scroller.pack(pady=5)
+        self.frequency_scroller = ttk.Scale(signal_frame, from_=0.0, to=3.0, orient="horizontal", command=self.updatefrequency, length=400)
+        self.frequency_scroller.set(self.frequency)
+        self.frequency_scroller.pack(pady=5)
 
         self.amplitude_label = tk.Label(signal_frame, text=f"Signal Amplitude: {self.amplitude:.2f}", font=("Arial", 14))
         self.amplitude_label.pack(pady=2)
 
-        self.offset_scroller = ttk.Scale(signal_frame, from_=1.0, to=5.0, orient="horizontal", command=self.update_offset, length=400)
-        self.offset_scroller.set(self.offset)
-        self.offset_scroller.pack(pady=5)
+        self.amplitude_scroller = ttk.Scale(signal_frame, from_=0.0, to=2.0, orient="horizontal", command=self.updateamplitude, length=400)
+        self.amplitude_scroller.set(self.amplitude)
+        self.amplitude_scroller.pack(pady=5)
 
         self.offset_label = tk.Label(signal_frame, text=f"Signal Offset: {self.offset:.2f}", font=("Arial", 14))
         self.offset_label.pack(pady=2)
+
+        self.offset_scroller = ttk.Scale(signal_frame, from_=1.0, to=5.0, orient="horizontal", command=self.updateoffset, length=400)
+        self.offset_scroller.set(self.offset)
+        self.offset_scroller.pack(pady=5)
 
         self.signal_var = tk.StringVar(value="sinusoidal")
         tk.Label(self.window, text="Signal").pack()
@@ -132,43 +133,45 @@ class ScrollGUI:
         disturbance_frame = ttk.Frame(self.window)
         disturbance_frame.pack(pady=10)
 
-        self.disturbance_scroller = ttk.Scale(disturbance_frame, from_=0.0, to=2.0, orient="horizontal", command=self.update_disturbance, length=400)
-        self.disturbance_scroller.set(self.disturbance)
-        self.disturbance_scroller.pack(pady=5)
-
         self.disturbance_label = tk.Label(disturbance_frame, text=f"Disturbance Amplitude: {self.disturbance:.2f}", font=("Arial", 14))
         self.disturbance_label.pack(pady=2)
 
-        self.duration_scroller = ttk.Scale(disturbance_frame, from_=0.1, to=5.0, orient="horizontal", command=self.update_duration, length=400)
-        self.duration_scroller.set(self.duration)
-        self.duration_scroller.pack(pady=5)
+        self.disturbance_scroller = ttk.Scale(disturbance_frame, from_=0.0, to=2.0, orient="horizontal", command=self.updatedisturbance, length=400)
+        self.disturbance_scroller.set(self.disturbance)
+        self.disturbance_scroller.pack(pady=5)
 
         self.duration_label = tk.Label(disturbance_frame, text=f"Disturbance Duration: {self.duration:.2f} s", font=("Arial", 14))
         self.duration_label.pack(pady=2)
 
-        self.period_scroller = ttk.Scale(disturbance_frame, from_=5.0, to=30.0, orient="horizontal", command=self.update_period, length=400)
-        self.period_scroller.set(self.period)
-        self.period_scroller.pack(pady=5)
+        self.duration_scroller = ttk.Scale(disturbance_frame, from_=0.1, to=5.0, orient="horizontal", command=self.updateduration, length=400)
+        self.duration_scroller.set(self.duration)
+        self.duration_scroller.pack(pady=5)
 
         self.period_label = tk.Label(disturbance_frame, text=f"Disturbance Period: {self.period:.2f} s", font=("Arial", 14))
         self.period_label.pack(pady=2)
+
+        self.period_scroller = ttk.Scale(disturbance_frame, from_=5.0, to=30.0, orient="horizontal", command=self.updateperiod, length=400)
+        self.period_scroller.set(self.period)
+        self.period_scroller.pack(pady=5)
 
         self.disturb_signal_var = tk.StringVar(value="sinusoidal")
         tk.Label(self.window, text="Disturbance Signal").pack()
         ttk.Combobox(self.window, textvariable=self.disturb_signal_var, values=["sinusoidal", "step"], state="readonly").pack()
 
-        self.update_signal_button = tk.Button(self.window, text="Update signal", command=self.update_signal, font=("Arial", 14), width=20, height=2, bg="green", fg="white")
+        self.update_signal_button = tk.Button(self.window, text="Update signal", command=self.updatesignal, font=("Arial", 14), width=20, height=2, bg="green", fg="white")
         self.update_signal_button.pack(pady=10)
 
         assist_frame = ttk.Frame(self.window)
         assist_frame.pack(pady=10)
 
-        self.assist_scroller = ttk.Scale(assist_frame, from_=0, to=5, orient="horizontal", command=self.update_assistance, length=400)
-        self.assist_scroller.set(self.assistance)
-        self.assist_scroller.pack(pady=5)
+        self.assist_label = tk.Label(assist_frame, text=f"Robot assistance", font=("Arial", 14))
+        self.assist_label.pack(pady=5)
 
-        self.assist_label = tk.Label(assist_frame, text=f"Robot assistance: {self.assistance:.2f} s", font=("Arial", 14))
-        self.assist_label.pack(pady=2)
+        self.assist_var = tk.StringVar()
+        self.assist_combobox = ttk.Combobox(assist_frame, textvariable=self.assist_var, font=("Arial", 14), state="readonly", width=10)
+        self.assist_combobox['values'] = [str(i) for i in range(0, 6)]
+        self.assist_combobox.set(str(self.node.assist))
+        self.assist_combobox.pack(pady=2)
 
         level_frame = ttk.Frame(self.window)
         level_frame.pack(pady=10)
@@ -182,13 +185,13 @@ class ScrollGUI:
         self.level_combobox.set(str(self.node.level))
         self.level_combobox.pack(pady=2)
 
-        self.update_level_button = tk.Button(self.window, text="Update levels", command=self.update_level, font=("Arial", 14), width=20, height=2, bg="blue", fg="white")
+        self.update_level_button = tk.Button(self.window, text="Update levels", command=self.updatelevel, font=("Arial", 14), width=20, height=2, bg="blue", fg="white")
         self.update_level_button.pack(pady=10)
 
         self.exit_button = tk.Button(self.window, text="Exit", command=self.close, font=("Arial", 14), width=20, height=2, bg="red", fg="white")
         self.exit_button.pack(pady=10)
     
-    def save_to_csv(self):
+    def saveconfig(self):
         with open(self.file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([
@@ -202,31 +205,31 @@ class ScrollGUI:
                 self.disturb_signal_var.get()
             ])
     
-    def update_frequency(self, val):
+    def updatefrequency(self, val):
         self.frequency = float(val)
         self.frequency_label.config(text=f"Signal Frequency: {self.frequency:.2f} Hz")
     
-    def update_amplitude(self, val):
+    def updateamplitude(self, val):
         self.amplitude = float(val)
         self.amplitude_label.config(text=f"Signal Amplitude: {self.amplitude:.2f}")
     
-    def update_offset(self, val):
+    def updateoffset(self, val):
         self.offset = float(val)
         self.offset_label.config(text=f"Signal Offset: {self.offset:.2f}")
     
-    def update_disturbance(self, val):
+    def updatedisturbance(self, val):
         self.disturbance = float(val)
         self.disturbance_label.config(text=f"Disturbance: {self.disturbance:.2f}")
 
-    def update_duration(self, val):
+    def updateduration(self, val):
         self.duration = float(val)
         self.duration_label.config(text=f"Disturbance Duration: {self.duration:.2f} s")
     
-    def update_period(self, val):
+    def updateperiod(self, val):
         self.period = float(val)
         self.period_label.config(text=f"Disturbance Period: {self.period:.2f} s")
     
-    def update_signal(self):
+    def updatesignal(self):
         self.node.freq = self.frequency
         self.node.ampl = self.amplitude
         self.node.offset = self.offset
@@ -235,15 +238,11 @@ class ScrollGUI:
         self.node.period = self.period
         self.node.signal = self.signal_var.get()
         self.node.disturb_signal = self.disturb_signal_var.get()
-        self.save_to_csv()
+        self.saveconfig()
     
-    def update_assistance(self, val):
-        self.assistance = float(val)
-        self.assist_label.config(text=f"Robot assistance: {self.assistance:.0f}")
-    
-    def update_level(self):
+    def updatelevel(self):
         self.level = int(self.level_var.get())
-        self.assistance = int(self.assistance)
+        self.assistance = int(self.assist_var.get())
         game_msg = Int32MultiArray()
         game_msg.data = [(self.level), (self.assistance)]
         self.node.game_publisher_.publish(game_msg)
@@ -263,7 +262,7 @@ class ScrollGUI:
         self.window.after(10, self.spin_once)
 
 # ----------------------- GUI MAIN ----------------------- #
-def load_from_csv(file_path):
+def loadcsv(file_path):
     default_values = {
         "frequency": 0.5, "amplitude": 1.0, "offset": 3.0, "signal": "sinusoidal", 
         "disturbance": 0.0, "duration": 0.5, "period": 30.0, "mode": "sinusoidal",
@@ -303,7 +302,7 @@ def load_from_csv(file_path):
             default_values["level"]
         )
 
-def main_gui(args=None):
+def main(args=None):
     if len(sys.argv) != 2:
         print(f"Error: Specify patient file")
         sys.exit(1)
@@ -314,7 +313,7 @@ def main_gui(args=None):
         sys.exit(1)
     
     patient_id = os.path.basename(os.path.dirname(full_path))
-    freq, ampl, disturb, duration, period, level = load_from_csv(full_path)
+    freq, ampl, disturb, duration, period, level = loadcsv(full_path)
 
     node = ScrollPublisherNode(freq, ampl, disturb, duration, period, level)
     gui = ScrollGUI(node, patient_id)
@@ -327,7 +326,7 @@ def main_gui(args=None):
         node.destroy_node()
 
 # ----------------------- GUI CONFIGURATION ----------------------- #
-def start_gui(args=None):
+def startgui(args=None):
     if len(sys.argv) != 2:
         print(f"Error: Specify patient file")
         sys.exit(1)
@@ -351,61 +350,58 @@ def start_gui(args=None):
 
     def reset():
         msg = Int32MultiArray()
-        msg.data = [0, 0, 0, 0]
+        msg.data = [0, 0, 0]
         min_published.set(False)
         max_published.set(False)
         limit_publisher_.publish(msg)
         print("Reset limits")
 
-    def publish_min():
+    def publishmin():
         msg = Int32MultiArray()
         msg.data = [1, 0, 0]
         limit_publisher_.publish(msg)
         min_published.set(True)
         print("Published MIN limit")
     
-    def publish_max():
+    def publishmax():
         msg = Int32MultiArray()
-        msg.data = [0, 1, 0, 0]
+        msg.data = [0, 1, 0]
         limit_publisher_.publish(msg)
         max_published.set(True)
         print("Published MAX limit")
 
-    def publish_offset():
+    def publishoffset():
         if not min_published.get() or not max_published.get():
             messagebox.showwarning("Warning", "Limits must be define before declaring offset")
             return
         msg = Int32MultiArray()
-        msg.data = [0, 0, 1, 0]
+        msg.data = [0, 0, 1]
         limit_publisher_.publish(msg)
         print("Published offset")
 
-    def continue_main():
+    def continuemain():
         if not min_published.get() or not max_published.get():
             messagebox.showerror("Error", "Limits must be define before continuing")
             return
-        msg = Int32MultiArray()
-        msg.data = [0, 0, 0, 1]
-        limit_publisher_.publish(msg)
         start_root.destroy()
-        main_gui()
+        main()
 
-    min_button = tk.Button(content_frame, text="Set MIN limit", command=publish_min, font=("Arial", 14), width=25, height=10, bg="blue", fg="white")
-    max_button = tk.Button(content_frame, text="Set MAX limit", command=publish_max, font=("Arial", 14), width=25, height=10, bg="blue", fg="white")
-    offset_button = tk.Button(content_frame, text="Set Offset", command=publish_offset, font=("Arial", 14), width=25, height=10, bg="blue", fg="white")
+    min_button = tk.Button(content_frame, text="Set MIN", command=publishmin, font=("Arial", 14), width=20, height=2, bg="blue", fg="white")
+    max_button = tk.Button(content_frame, text="Set MAX", command=publishmax, font=("Arial", 14), width=20, height=2, bg="blue", fg="white")
+    offset_button = tk.Button(content_frame, text="Set Offset", command=publishoffset, font=("Arial", 14), width=20, height=2, bg="blue", fg="white")
     reset_button = tk.Button(content_frame, text="Reset", command=reset, font=("Arial", 14), width=20, height=2, bg="red", fg="white")
 
-    min_button.grid(row=0, column=0, padx=25)
-    max_button.grid(row=0, column=1, padx=25)
-    offset_button.grid(row=0, column=2, padx=25)
-    reset_button.grid(row=1, column=0, columnspan=3, pady=50)
+    min_button.grid(row=0, column=1, padx=25, pady=20)
+    max_button.grid(row=1, column=1, padx=25, pady=20)
+    offset_button.grid(row=2, column=1, padx=25, pady=20)
+    reset_button.grid(row=3, column=1, padx=25, pady=20)
 
     button_frame = ttk.Frame(start_root)
     button_frame.pack(side="bottom", pady=40)
-    ttk.Button(button_frame, text="Continue", command=lambda: continue_main()).pack()
+    ttk.Button(button_frame, text="Continue", command=lambda: continuemain()).pack()
     
     start_root.mainloop()
 
 if __name__ == '__main__':
     rclpy.init()
-    start_gui()
+    startgui()
