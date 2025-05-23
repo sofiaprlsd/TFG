@@ -69,7 +69,8 @@ Estructura del directirio en `$HOME`:
 ## Semana 15, 12/05/25 - 18/05/25
 
 - [x] Crear misiones para cada nivel.
-- [ ] Añadir la perturbación al juego.
+- [x] Añadir la perturbación al juego.
+- [x] Añadir elemento visual para indicar la perturbación
 - [x] Hacer esquema con la información a incluir en cada capítulo de la memoria.
 
 ## Conceptos aprendidos S15
@@ -117,5 +118,11 @@ Recompensas:
 
 Penalizaciones:
 * Colisionar con un asteroide resta 5 puntos.
+
+Elementos visuales (perturbación):
+
+He añadido un triángulo naranja que indica el momento en el que comienza la perturbación.
+
+Elementos auditivos:
 
 He añadido sonidos cuando se choca con un asteroide, cuando se consigue una estrella y cuando se sube de nivel.
