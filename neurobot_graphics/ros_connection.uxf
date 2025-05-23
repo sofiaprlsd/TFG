@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="13.3">
-  <zoom_level>9</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>108</x>
-      <y>405</y>
-      <w>162</w>
-      <h>90</h>
+      <x>128</x>
+      <y>424</y>
+      <w>144</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>MainNode
 --
@@ -18,27 +18,12 @@
     <additional_attributes/>
   </element>
   <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>603</x>
-      <y>405</y>
-      <w>198</w>
-      <h>90</h>
-    </coordinates>
-    <panel_attributes>SignalPlotterNode
---
-+ Time window: 2 s
-+ Plot: matplotlib (real time)
-    </panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>819</x>
-      <y>126</y>
-      <w>135</w>
-      <h>81</h>
+      <x>760</x>
+      <y>128</y>
+      <w>120</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>/PositionReference
 std_msgs/Float32</panel_attributes>
@@ -47,10 +32,10 @@ std_msgs/Float32</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>297</x>
-      <y>657</y>
-      <w>342</w>
-      <h>216</h>
+      <x>264</x>
+      <y>680</y>
+      <w>304</w>
+      <h>192</h>
     </coordinates>
     <panel_attributes>ScrollPublisherNode
 --
@@ -62,9 +47,9 @@ std_msgs/Float32</panel_attributes>
 + Disturb duration: float (0.1 - 5.0 s)
 + Disturb period: float (5.0 - 30.0 s)
 + Disturb type: float (1.0 "sinusoidal", 2.0 "step")
-+ Assist level: int (1 - 5)
++ Assistance: int (0 - 5)
 + Game level: int (1 - 10)
-+ GUI: Tkinter Scroll
++ GUI: Tkinter
 + Timer: 0.05 s (20 Hz)
 + Input: CSV
     </panel_attributes>
@@ -73,21 +58,21 @@ std_msgs/Float32</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>378</x>
-      <y>612</y>
-      <w>27</w>
-      <h>63</h>
+      <x>400</x>
+      <y>624</y>
+      <w>24</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>288</x>
-      <y>549</y>
-      <w>198</w>
-      <h>72</h>
+      <x>320</x>
+      <y>568</y>
+      <w>176</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>/SliderParameters
 std_msgs/Float32MultiArray</panel_attributes>
@@ -96,38 +81,39 @@ std_msgs/Float32MultiArray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>729</x>
-      <y>657</y>
-      <w>216</w>
-      <h>108</h>
+      <x>624</x>
+      <y>680</y>
+      <w>280</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>FlappyBirdNode
 --
 + Time window: 2 s
 + Plot: matplotlib (real time)
-+ Offset max. (Y): 5.0
-+ Offset min. (Y): 1.0
++ Offset (Y): float [1.0, 5.0]
++ Levels: 1-10
++ Assistance: max(0, assistance - (level - 1) // 2)
     </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>261</x>
-      <y>441</y>
-      <w>144</w>
-      <h>126</h>
+      <x>208</x>
+      <y>496</y>
+      <w>216</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;140.0;10.0;140.0;120.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0;250.0;60.0;250.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>666</x>
-      <y>72</y>
-      <w>135</w>
-      <h>72</h>
+      <x>624</x>
+      <y>80</y>
+      <w>120</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>/ControlMode
 std_msgs/Float32</panel_attributes>
@@ -136,10 +122,10 @@ std_msgs/Float32</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1188</x>
-      <y>387</y>
-      <w>153</w>
-      <h>81</h>
+      <x>1088</x>
+      <y>456</y>
+      <w>136</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>ControlNode
 --
@@ -150,10 +136,10 @@ std_msgs/Float32</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>180</x>
-      <y>99</y>
-      <w>504</w>
-      <h>27</h>
+      <x>192</x>
+      <y>104</y>
+      <w>448</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>540.0;10.0;10.0;10.0</additional_attributes>
@@ -161,21 +147,21 @@ std_msgs/Float32</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>792</x>
-      <y>99</y>
-      <w>495</w>
-      <h>306</h>
+      <x>736</x>
+      <y>104</y>
+      <w>440</w>
+      <h>368</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>530.0;320.0;530.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>530.0;440.0;530.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>387</x>
-      <y>0</y>
-      <w>279</w>
-      <h>81</h>
+      <x>376</x>
+      <y>16</y>
+      <w>248</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=.
 /set_max_min
@@ -185,103 +171,70 @@ neurobot_srvs/SetMaxMinSrv</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>180</x>
-      <y>27</y>
-      <w>225</w>
-      <h>396</h>
+      <x>192</x>
+      <y>40</y>
+      <w>200</w>
+      <h>400</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>230.0;10.0;10.0;10.0;10.0;420.0</additional_attributes>
+    <additional_attributes>230.0;10.0;10.0;10.0;10.0;480.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>945</x>
-      <y>153</y>
-      <w>324</w>
-      <h>252</h>
+      <x>872</x>
+      <y>152</y>
+      <w>288</w>
+      <h>320</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>340.0;260.0;340.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>340.0;380.0;340.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1044</x>
-      <y>657</y>
+      <x>936</x>
+      <y>680</y>
       <w>216</w>
-      <h>108</h>
+      <h>96</h>
     </coordinates>
     <panel_attributes>FlappyBirdViewerNode
 --
 + Time window: 2 s
 + Plot: matplotlib (real time)
++ Input: CSV
     </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>603</x>
-      <y>333</y>
-      <w>576</w>
-      <h>342</h>
+      <x>480</x>
+      <y>392</y>
+      <w>560</w>
+      <h>304</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>620.0;360.0;620.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>680.0;360.0;680.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>180</x>
-      <y>153</y>
-      <w>657</w>
-      <h>27</h>
+      <x>192</x>
+      <y>152</y>
+      <w>584</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>710.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>864</x>
-      <y>576</y>
-      <w>72</w>
-      <h>99</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>60.0;10.0;10.0;10.0;10.0;90.0</additional_attributes>
-  </element>
-  <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>918</x>
-      <y>549</y>
-      <w>189</w>
-      <h>72</h>
-    </coordinates>
-    <panel_attributes>/PlayerPosition
-std_msgs/Float32MultiArray</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1098</x>
-      <y>576</y>
-      <w>63</w>
-      <h>99</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>50.0;90.0;50.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>567</x>
-      <y>549</y>
-      <w>198</w>
-      <h>72</h>
+      <x>536</x>
+      <y>568</y>
+      <w>176</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>/GameParameters
 std_msgs/Int32</panel_attributes>
@@ -290,54 +243,43 @@ std_msgs/Int32</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>495</x>
-      <y>576</y>
-      <w>90</w>
-      <h>99</h>
+      <x>504</x>
+      <y>592</y>
+      <w>48</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>80.0;10.0;10.0;10.0;10.0;90.0</additional_attributes>
+    <additional_attributes>40.0;10.0;10.0;10.0;10.0;110.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>756</x>
-      <y>576</y>
-      <w>72</w>
-      <h>99</h>
+      <x>704</x>
+      <y>592</y>
+      <w>48</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>60.0;90.0;60.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>40.0;110.0;40.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>603</x>
-      <y>333</y>
-      <w>243</w>
-      <h>342</h>
+      <x>480</x>
+      <y>392</y>
+      <w>304</w>
+      <h>304</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>250.0;360.0;250.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>684</x>
-      <y>333</y>
-      <w>27</w>
-      <h>90</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+    <additional_attributes>360.0;360.0;360.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>477</x>
-      <y>306</y>
-      <w>135</w>
-      <h>81</h>
+      <x>368</x>
+      <y>368</y>
+      <w>120</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>/CleanSignal
 std_msgs/Float32</panel_attributes>
@@ -346,32 +288,32 @@ std_msgs/Float32</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>180</x>
-      <y>333</y>
-      <w>315</w>
-      <h>27</h>
+      <x>192</x>
+      <y>392</y>
+      <w>192</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>330.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>220.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>657</x>
-      <y>27</y>
-      <w>648</w>
-      <h>378</h>
+      <x>616</x>
+      <y>40</y>
+      <w>576</w>
+      <h>432</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>700.0;400.0;700.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>700.0;520.0;700.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>963</x>
-      <y>189</y>
-      <w>135</w>
-      <h>81</h>
+      <x>888</x>
+      <y>184</y>
+      <w>120</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>/EffortReference
 std_msgs/Float32</panel_attributes>
@@ -380,10 +322,10 @@ std_msgs/Float32</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>180</x>
-      <y>216</y>
-      <w>801</w>
-      <h>27</h>
+      <x>192</x>
+      <y>208</y>
+      <w>712</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>870.0;10.0;10.0;10.0</additional_attributes>
@@ -391,32 +333,32 @@ std_msgs/Float32</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1089</x>
-      <y>216</y>
-      <w>162</w>
-      <h>189</h>
+      <x>1000</x>
+      <y>208</y>
+      <w>144</w>
+      <h>264</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>160.0;190.0;160.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>160.0;310.0;160.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>171</x>
-      <y>612</y>
-      <w>144</w>
-      <h>180</h>
+      <x>272</x>
+      <y>592</y>
+      <w>48</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;180.0;140.0;180.0</additional_attributes>
+    <additional_attributes>10.0;10.0;40.0;10.0;40.0;110.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>90</x>
-      <y>549</y>
-      <w>180</w>
-      <h>72</h>
+      <x>120</x>
+      <y>568</y>
+      <w>160</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>/RobotLimits
 std_msgs/Int32MultiArray</panel_attributes>
@@ -425,21 +367,21 @@ std_msgs/Int32MultiArray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>171</x>
-      <y>486</y>
-      <w>27</w>
-      <h>81</h>
+      <x>192</x>
+      <y>496</y>
+      <w>24</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>747</x>
-      <y>810</y>
-      <w>180</w>
-      <h>72</h>
+      <x>688</x>
+      <y>816</y>
+      <w>160</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>/MotorParameters
 std_msgs/Float32MultiArray</panel_attributes>
@@ -448,21 +390,21 @@ std_msgs/Float32MultiArray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>45</x>
-      <y>441</y>
-      <w>810</w>
-      <h>486</h>
+      <x>72</x>
+      <y>496</y>
+      <w>712</w>
+      <h>424</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>70.0;10.0;10.0;10.0;10.0;520.0;880.0;520.0;880.0;490.0</additional_attributes>
+    <additional_attributes>140.0;10.0;140.0;60.0;10.0;60.0;10.0;510.0;870.0;510.0;870.0;480.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>828</x>
-      <y>756</y>
-      <w>27</w>
-      <h>72</h>
+      <x>760</x>
+      <y>768</y>
+      <w>24</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
@@ -470,21 +412,21 @@ std_msgs/Float32MultiArray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>180</x>
-      <y>270</y>
-      <w>504</w>
-      <h>27</h>
+      <x>192</x>
+      <y>336</y>
+      <w>328</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>540.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>390.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>666</x>
-      <y>243</y>
-      <w>135</w>
-      <h>81</h>
+      <x>504</x>
+      <y>312</y>
+      <w>120</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>/Disturbance
 std_msgs/Float32</panel_attributes>
@@ -493,21 +435,21 @@ std_msgs/Float32</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>792</x>
-      <y>270</y>
-      <w>405</w>
-      <h>405</h>
+      <x>616</x>
+      <y>336</y>
+      <w>440</w>
+      <h>360</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>430.0;430.0;430.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>530.0;430.0;530.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>837</x>
-      <y>270</y>
-      <w>27</w>
-      <h>405</h>
+      <x>776</x>
+      <y>336</y>
+      <w>24</w>
+      <h>360</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;430.0;10.0;10.0</additional_attributes>
@@ -515,12 +457,68 @@ std_msgs/Float32</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>828</x>
-      <y>756</y>
-      <w>351</w>
-      <h>171</h>
+      <x>760</x>
+      <y>656</y>
+      <w>264</w>
+      <h>264</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>370.0;10.0;370.0;170.0;10.0;170.0</additional_attributes>
+    <additional_attributes>310.0;30.0;310.0;10.0;200.0;10.0;200.0;310.0;10.0;310.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>400</x>
+      <y>536</y>
+      <w>368</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>440.0;180.0;440.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>192</x>
+      <y>272</y>
+      <w>448</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>540.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>624</x>
+      <y>248</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>/ActuatorPosition
+std_msgs/Float32</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>736</x>
+      <y>272</y>
+      <w>336</w>
+      <h>424</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>400.0;510.0;400.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>792</x>
+      <y>272</y>
+      <w>24</w>
+      <h>424</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;510.0;10.0;10.0</additional_attributes>
   </element>
 </diagram>
