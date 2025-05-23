@@ -84,14 +84,14 @@ Se crea un directorio en el directorio de inicio del usuario, si no existe, bajo
 
 Se definen dos clases, \verb|ScrollPublisherNode| es una clase de ROS 2 que publica los parámetros de una señal (frecuencia, amplitud, offset y tipo) y de una perturbación (amplitud, duración, periodo y tipo) en el topic \verb|/SliderParameters| y los datos de asistencia y nivel de juego en \verb|/GameParameters|.
 Los mensajes son de tipo \verb|Float32MultiArray| y \verb|Int32MultiArray|, y se publican cada 0.1 segundos y únicamente cuando se actualiza el valor de los datos, respectivamente.
-El tipo de señal y perturbación se codifica como 1.0 (sinusoidal) y 2.0 (escalón).
+El tipo de señal hace referencia al modo de juego y se codifica como 1.0 (hold) y 2.0 (follow), y la perturbación como 1.0 (sinusoidal) y 2.0 (escalón).
 \verb|ScrollGUI| es la clase que crea la interfaz gráfica y permite ajustar los parámetros del juego en tiempo real y publicarlos a través de un nodo de ROS.
 Los datos se guardan en un archivo CSV bajo el nombre \verb|ID-year-month-day-config_<index>.csv| en un subdirectorio llamado \textit{config} dentro del directorio \textit{home/user/database/ID/}.
 \verb|index| hace referencia al número de archivo de la sesión diaria.
 Si el archivo no existe, se escribe el encabezado.
 
 Se crean deslizadores, utilizando \verb|ttk.Scale|, para ajustar la frecuencia, amplitud, offset, duración, periodo y asistencia del robot.
-Se utiliza \verb|Combox| para permitir la selección entre los distintos tipos de señal y perturbación (sinusoidal o escalón) y niveles de asistencia (del 1 al 5 o de menor a mayor refuerzo) y de juego (del 1 al 10).
+Se utiliza \verb|Combox| para permitir la selección entre los distintos tipos de señal y perturbación (sinusoidal o escalón) y niveles de asistencia (del 0 al 5, donde 0 es asistencia nula y 5 asistencia máxima) y de juego (del 1 al 10).
 Los botones \textit{Update Signal} y \textit{Update levels} se utilizan para actualizar los datos en el topic correspondiente, y el botón \textit{Exit} para salir.
 
 La función \verb|saveconfig()| guarda la configuración actual de la GUI en el archivo CSV.
@@ -102,7 +102,7 @@ La función \verb|close()| finaliza el nodo y cirra la GUI y el método \verb|ru
 Todos son \verb|float| excepto el último que es un \verb|int|.
 
 \verb|main()| es la función principal y se encarga de extraer el ID del paciente desde la ruta al archivo de registro, cargar los datos de las señales y el juego desde el CSV, crear el nodo \verb|ScrollPublisherNode| con dichos parámetros e iniciar la GUI.
-\verb|startgui()| es la primera interfaz que se lanza y gestiona la configuración de los límites físicos del robot a través de la publicación de un \verb|Int32MultiArray| que actúa como un booleano indicando el botón que se ha pulsado (resetear, mínimo, máximo u offset).
+\verb|startgui()| es la primera interfaz que se lanza y gestiona la configuración del brazo que se va a rehabilitar y de los límites físicos del robot a través de la publicación de un \verb|Int32MultiArray| que actúa como un booleano indicando el botón que se ha pulsado (resetear, mínimo, máximo u offset).
 Además, comprueba que los límites mínimo y máximon se han definido correctamente antes de permitir establecer el offset o continuar a la siguiente ventana.
 
 En la Imagen \ref{fig:config} se muestra la ventana de inicio y en la Imagen \ref{fig:control} la ventana principal.
@@ -136,7 +136,7 @@ Además de incluir las bibliotecas mencionadas en la Sección \ref{section:contr
 Se utiliza el modo interactivo de \verb|matplotlib|, \verb|plt.ion()|, que permite actualizar dinámicamente los gráficos sin bloquear el hilo principal.
 Las ventanas son deslizantes, no obstante debemos mantener un tamaño fijo para que la señal no se desplace hacia la izquierda, por ello se implementa \verb|np.roll()|.
 
-Se define la clase \verb|FlappyBirdViewerNode| que actúa como nodo de ROS 2 y se suscribe a los topics \verb|/CleanSignal|, donde se publica la señal de referencia que se toma como trayectoria deseada que el jugador debe seguir, \verb|/Disturbance|, que contiene la señal de perturbación, \verb|/PlayerPosition|, que publica la posición del jugador, y \verb|/MotorParameters|, para obtener el nivel de asistencia del robot.
+Se define la clase \verb|FlappyBirdViewerNode| que actúa como nodo de ROS 2 y se suscribe a los topics \verb|/CleanSignal|, donde se publica la señal de referencia que se toma como trayectoria deseada que el jugador debe seguir, \verb|/Disturbance|, que contiene la señal de perturbación, \verb|/ActuatorPosition|, que publica la posición del jugador en el eje Y, y \verb|/MotorParameters|, para obtener el tiempo del juego, la posición del jugador en el eje X y el nivel de asistencia del robot.
 Los mensajes de los primeros tres topics son de tipo \verb|Float32| y el último es un \verb|Float32MultiArray|.
 \verb|signalcallback()| se activa cada vez que se recibe un valor de la señal, si el jugador está activo se actualizan los datos (tiempo, límites, posición, error de trayectoria y detección de colisiones) y se grafican.
 Para la detección de colisiones se implementa una lógica simple basada en la comparación de la posición del jugador con los límites de la señal.
@@ -163,7 +163,7 @@ error(x_p, y_p) = | y_p - f(x_p) |
 \caption[Cálculo del error de trayectoria por posición]{Cálculo del error de trayectoria por posición}
 \end{myequation}
 
-Al finalizar la ejecución, los datos más relevantes como el tiempo, la señal, los límites mínimo y máximo, la posición del jugador, el offset, el error y las colisiones se almacenan en un archivo CSV bajo el nombre \verb|ID-year-month-day-metrics_<index>.csv| en un subdirectorio llamado \textit{metrics} dentro del directorio \textit{home/user/database/ID/}.
+Al finalizar la ejecución, los datos más relevantes como el tiempo, la señal, los límites mínimo y máximo, la posición del jugador, el offset, el error, las colisiones y el nivel de asistencia se almacenan en un archivo CSV bajo el nombre \verb|ID-year-month-day-metrics_<index>.csv| en un subdirectorio llamado \textit{metrics} dentro del directorio \textit{home/user/database/ID/}.
 \verb|index| hace referencia al número de archivo de la sesión diaria.
 Esto facilita un análisis posterior de la terapia.
 
