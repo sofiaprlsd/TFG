@@ -172,8 +172,9 @@ Las mejoras propuestas por los tutores son las siguientes:
 - [x] Cambiar de color el punto que indica la posición del paciente según se acerca a los límites que son las señales desplazas un offset.
 - [x] Añadir la señal de la trayectoría deseada (línea continua).
 - [x] Cambiar el suscriptor del topic /PositionReference a /CleanSignal.
-- [ ] Añadir la perturbación.
-- [ ] Añadir efectos visuales para avisar de la perturbación.
+- [x] Añadir la perturbación.
+- [x] Añadir efectos visuales para avisar de la perturbación.
+- [x] Implementar la lectura de posición a través del sensor de posición del actuador.
 
 **flappy_bird_viewer.py**
 - [x] Mostrar la misma pantalla que ve el jugador.
@@ -196,6 +197,7 @@ Las mejoras propuestas por los tutores son las siguientes:
 **Bonus**
 - [ ] Ejecutar los scripts desde un icono y no desde el terminal.
 - [ ] Crear un nuevo script que analice los datos del juego.
+- [ ] Crear un nuevo modo de juego que combine señales para que la trayectoria no sea regular.
 
 
 ## Conceptos aprendidos S12
