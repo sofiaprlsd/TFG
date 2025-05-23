@@ -4,6 +4,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32
 from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Int32MultiArray
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
@@ -33,17 +34,24 @@ class FlappyBirdViewerNode(Node):
             10
         )
 
-        self.player_subscriber_ = self.create_subscription(
+        self.offset_subscriber_ = self.create_subscription(
             Float32MultiArray,
-            'PlayerPosition',
-            self.playercallback,
+            'SliderParameters',
+            self.offsetcallback,
             10
         )
 
-        self.assistance_subscriber_ = self.create_subscription(
+        self.position_subscriber_ = self.create_subscription(
+            Float32,
+            'ActuatorPosition',
+            self.positioncallback,
+            10
+        )
+
+        self.reference_subscriber_ = self.create_subscription(
             Float32MultiArray,
             'MotorParameters',
-            self.assistancecallback,
+            self.referencescallback,
             10
         )
         
@@ -105,12 +113,6 @@ class FlappyBirdViewerNode(Node):
         # Show window
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
-    
-    def assistancecallback(self, msg):
-        self.assist_level = msg.data[2]
-    
-    def disturbcallback(self, msg):
-        self.last_disturb_val = msg.data
     
     def signalcallback(self, msg):
         if not self.player_active:
@@ -198,14 +200,21 @@ class FlappyBirdViewerNode(Node):
         self.log_error.append(abs(self.player_y - msg.data))
         self.log_collision.append(int(not (self.signal_lower[-1] < self.player_y < self.signal_upper[-1])))
         self.log_assistance.append(self.assist_level)
-
-    def playercallback(self, msg):
-        if len(msg.data) >= 3:
-            self.player_x = msg.data[0]
-            self.player_y = msg.data[1]
-            self.offset_y = msg.data[2]
-            self.time = msg.data[3]
-            self.player_active = True
+    
+    def disturbcallback(self, msg):
+        self.last_disturb_val = msg.data
+    
+    def offsetcallback(self, msg):
+        self.offset_y = msg.data[2]
+    
+    def positioncallback(self, msg):
+        self.player_y = msg.data
+    
+    def referencescallback(self, msg):
+        self.player_x = msg.data[2]
+        self.time = msg.data[3]
+        self.assist_level = int(msg.data[4])
+        self.player_active = True
 
 def savemetrics(node, patient_id):
     now = datetime.now()

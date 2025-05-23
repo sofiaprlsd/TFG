@@ -48,20 +48,21 @@ class FlappyBirdNode(Node):
             10
         )
 
-        self.pos_publisher_ = self.create_publisher(
-            Float32MultiArray,
-            'PlayerPosition',
+        self.position_subscriber_ = self.create_subscription(
+            Float32,
+            'ActuatorPosition',
+            self.positioncallback,
             10
         )
 
-        self.signal_publisher_ = self.create_publisher(
+        self.references_publisher_ = self.create_publisher(
             Float32MultiArray,
             'MotorParameters',
             10
         )
 
-        self.keyboard_listener = keyboard.Listener(on_press=self.on_press)
-        self.keyboard_listener.start()
+        # self.keyboard_listener = keyboard.Listener(on_press=self.on_press)
+        # self.keyboard_listener.start()
 
         self.time = 0.0
         self.window_size_x = 2
@@ -138,7 +139,7 @@ class FlappyBirdNode(Node):
         self.ax.set_title(f'Flappy Bird Level {self.level}')
         level_up_sound.play()
         self.fig.canvas.draw()
-        self.assistance = max(0, 5 - (self.level - 1) // 2) # each 2 game levels decrement 1 level of assistance
+        self.assistance = max(0, self.assistance - (self.level - 1) // 2) # each 2 game levels decrement 1 level of assistance
         self.get_logger().info(f"Upgrade to level {self.level} with assistance {self.assistance}")
     
     def incrementscore(self, points):
@@ -160,7 +161,7 @@ class FlappyBirdNode(Node):
     
     def generatestar(self):
         x = self.time + np.random.uniform(0.5, 0.4)
-        y = np.interp(x, self.time_data, self.signal_data)
+        y = self.signal_data[-1]
         self.objects.append([x, y])
         o = self.ax.plot(x, y, marker="*", color="gold", markersize=25)[0]
         self.plot_objects.append(o)
@@ -183,30 +184,6 @@ class FlappyBirdNode(Node):
                 self.player_y -= 0.1 * direction
         except:
             pass
-    
-    def disturbcallback(self, msg):
-        self.last_disturb_val = msg.data
-    
-    def levelcallback(self, msg):
-        self.level = msg.data[0]
-        self.assistance = msg.data[1]
-        self.get_logger().info(f'Received [L{self.level} a{self.assistance}]')
-
-        self.mission_completed = False
-        self.game_completed = False
-        self.inside_limits = True
-        self.start_time = None
-        self.updatelevel()
-
-        if self.level in [2, 6]:
-            self.clearobjects()
-            self.obj_counter = 0
-            self.generatestar()
-            self.last_obj_time = self.time
-    
-    def offsetcallback(self, msg):
-        self.offset_y = msg.data[2]
-        self.get_logger().info(f'Current O{self.offset_y}')
     
     def listenercallback(self, msg):
         self.time_data = np.roll(self.time_data, -1)
@@ -365,18 +342,38 @@ class FlappyBirdNode(Node):
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
 
-        # Publish player position on topic
-        pos_msg = Float32MultiArray()
-        pos_msg.data = [self.player_x, self.player_y, self.offset_y, self.time]
-        self.pos_publisher_.publish(pos_msg)
-
-        # Publish signal and disturbance y references when closest to player_x
+        # Publish signal and disturbance 'y' references when closest to player_x
+        # Publish time to sync with viewer
         index = np.argmin(np.abs(self.time_data - self.player_x))
         y_signal = self.signal_data[index]
         y_disturb = self.disturb_data[index]
         signal_msg = Float32MultiArray()
-        signal_msg.data = [y_signal, y_disturb, float(self.assistance)]
-        self.signal_publisher_.publish(signal_msg)
+        signal_msg.data = [y_signal, y_disturb, self.player_x, self.time, float(self.assistance)]
+        self.references_publisher_.publish(signal_msg)
+    
+    def disturbcallback(self, msg):
+        self.last_disturb_val = msg.data
+    
+    def levelcallback(self, msg):
+        self.level = msg.data[0]
+        self.assistance = msg.data[1]
+        self.mission_completed = False
+        self.game_completed = False
+        self.inside_limits = True
+        self.start_time = None
+        self.updatelevel()
+
+        if self.level in [2, 6]:
+            self.clearobjects()
+            self.obj_counter = 0
+            self.generatestar()
+            self.last_obj_time = self.time
+    
+    def offsetcallback(self, msg):
+        self.offset_y = msg.data[2]
+    
+    def positioncallback(self, msg):
+        self.player_y = msg.data
 
 def main(args=None):
     rclpy.init(args=args)

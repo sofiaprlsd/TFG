@@ -19,7 +19,7 @@ os.makedirs(DIR, exist_ok=True)
 
 # ----------------------- ROS2 NODE ----------------------- #
 class ScrollPublisherNode(Node):
-    def __init__(self, freq=0.5, ampl=1.0, disturb=0.0, duration=0.5, period=30.0, level=1, assist = 0):
+    def __init__(self, freq=0.5, ampl=1.0, disturb=0.0, duration=0.5, period=30.0, level=1, assist=5):
         super().__init__('scroll_publisher_node')
 
         self.slider_publisher_ = self.create_publisher(
@@ -169,7 +169,7 @@ class ScrollGUI:
 
         self.assist_var = tk.StringVar()
         self.assist_combobox = ttk.Combobox(assist_frame, textvariable=self.assist_var, font=("Arial", 14), state="readonly", width=10)
-        self.assist_combobox['values'] = [str(i) for i in range(0, 6)]
+        self.assist_combobox['values'] = [str(i) for i in range(5, -1, -1)]
         self.assist_combobox.set(str(self.node.assist))
         self.assist_combobox.pack(pady=2)
 
