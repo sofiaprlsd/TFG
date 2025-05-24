@@ -57,7 +57,7 @@ class FlappyBirdViewerNode(Node):
         
         self.time = 0.0
         self.window_size_x = 2
-        self.window_size_y = 10
+        self.window_size_y = 3
         self.sample_amount = 500
         self.player_x = 0.25
         self.player_y = 0.0

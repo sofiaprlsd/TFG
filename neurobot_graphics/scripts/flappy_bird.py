@@ -66,7 +66,7 @@ class FlappyBirdNode(Node):
 
         self.time = 0.0
         self.window_size_x = 2
-        self.window_size_y = 10
+        self.window_size_y = 3
         self.sample_amount = 500
         self.player_x = 0.25
         self.player_y = 0.0
@@ -175,6 +175,12 @@ class FlappyBirdNode(Node):
         o = self.ax.plot(x, y, marker="o", color="brown", markersize=25)[0]
         self.plot_objects.append(o)
     
+    def generatedisturb(self):
+        if self.disturb_data[-1] != 0.0 and self.disturb_data[-2] == 0.0:
+            marker_type = '^' if self.disturb_data[-1] > 0 else 'v'
+            triangle = self.ax.plot(self.time, self.signal_data[-1], marker=marker_type, color='orange', markersize=20)[0]
+            self.disturb_markers.append((self.time, self.signal_data[-1], triangle))
+    
     def on_press(self, key):
         try:
             direction = -1 if self.inverted_gravity else 1
@@ -202,9 +208,7 @@ class FlappyBirdNode(Node):
         lower_limit = self.signal_lower[-1]
 
         # If there is a disturbance advaise it to the player
-        if self.disturb_data[-1] != 0.0 and self.disturb_data[-2] == 0.0:
-            triangle = self.ax.plot(self.time, self.signal_data[-1], marker='v', color='orange', markersize=20)[0]
-            self.disturb_markers.append((self.time, self.signal_data[-1], triangle))
+        self.generatedisturb()
 
         # Reduce the offset of the signals to make the game more difficult, 
         # only if the player is not colliding with any limit (signals)
