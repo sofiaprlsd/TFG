@@ -3,7 +3,7 @@
 
 \begin{flushright}
 \begin{minipage}[]{9cm}
-\emph{El diseño no es solo lo que se ve y lo que se siente. El diseño es cómo funciona}\\
+\emph{El diseño no es solo lo que se ve y lo que se siente. El diseño es cómo funciona.}\\
 \end{minipage}\\
 
 Steve Jobs, \textit{conferencia de lanzamiento del Apple iPod, 2001}\\
@@ -36,7 +36,7 @@ Los estilos visuales se configuran con \verb|ttk.Style| y se definen dos frames 
 
 Se crean dos botones, \textit{Save} llama a \verb|savedata()| para guardar los datos, que a su vez llama a \verb|clear()| para limpiar los campos una vez que estos se han almacenado, y el botón \textit{Exit} llama a la función \verb|exit()| que cierra la aplicación.
 
-\verb|root.mainloop()| inicia el bucle de eventos de Tkinter y la interfaz está activa hasta que se cierra la ventana.
+\verb|root.mainloop()| inicia el bucle de eventos de Tkinter y la interfaz está activa hasta que el usuario cierra la ventana.
 
 En el Código \ref{cod:codejemplo}, escrito en \texttt{Python}, se muestra cómo se gestionan los directorios y la escritura del archivo CSV.
 
@@ -76,9 +76,9 @@ En la Imagen \ref{fig:database} puede observarse el estilo de la interfaz.
 \section{Interfaz de control}
 \label{section:controller}
 
-Este script combina ROS 2 y Tkinter para crear una GUI que gestiona límites físicos (mínimo, máximo y offset) del robot, configura y publica parámetros para crear una señal de control y perturbación para un sistema robótico, parámetros de asistencia y nivel de dificultad para un videojuego terapéutico y almacena dichas configuraciones por paciente.
+Este script combina ROS 2 y Tkinter para crear una GUI que gestiona límites físicos (mínimo, máximo y offset) del robot, teniendo en cuenta el brazo que se va a rehabilitar, configura y publica parámetros para crear una señal de control y perturbación para un sistema robótico, parámetros de asistencia y nivel de dificultad para un videojuego terapéutico y almacena dichas configuraciones por paciente.
 
-Al inicio del script se importan las librerías \verb|rclpy|, que es la API cliente de Python para ROS 2, \verb|tkinter| para crear la interfaz gráfica, \verb|std_msgs.msg| para gestionar los mensajes estándar de ROS 2, \verb|csv| para el manejo de archivos CSV, \verb|os| para interactuar con el sistema y \verb|datetime| para gestionar la fecha de creación de los archivos.
+Al inicio del script se importan las librerías \verb|rclpy| y \verb|std_msgs.msg| para gestionar la comunicación entre Python y ROS 2, \verb|tkinter| para crear la interfaz gráfica, \verb|csv| para el manejo de archivos CSV, \verb|os| para interactuar con el sistema y \verb|datetime| para gestionar la fecha de creación de los archivos.
 
 Se crea un directorio en el directorio de inicio del usuario, si no existe, bajo el nombre \textit{database}, donde se almacenan los ficheros con los datos de configuración de cada paciente.
 
@@ -90,8 +90,8 @@ Los datos se guardan en un archivo CSV bajo el nombre \verb|ID-year-month-day-co
 \verb|index| hace referencia al número de archivo de la sesión diaria.
 Si el archivo no existe, se escribe un encabezado con los nombres de los campos a los que hacen referencia los datos.
 
-Se crean deslizadores, utilizando \verb|ttk.Scale|, para ajustar la frecuencia, amplitud, offset, duración, periodo y asistencia del robot.
-Se utiliza \verb|Combox| para permitir la selección entre los distintos tipos de señal y perturbación y niveles de asistencia (del 0 al 5, donde 0 es asistencia nula y 5 asistencia máxima) y de juego (del 1 al 10).
+Se crean deslizadores, utilizando \verb|ttk.Scale|, para ajustar la frecuencia, amplitud, offset, duración y periodo de las señales.
+Se utiliza \verb|Combox| para permitir la selección entre los distintos tipos de señal y perturbación y niveles de asistencia (del 0 al 5, donde 0 es asistencia nula y 5 asistencia máxima) y de juego (del 1 al 10, de menor a mayor dificultad).
 Los botones \textit{Update Signal} y \textit{Update levels} se utilizan para actualizar los datos en el topic correspondiente, y el botón \textit{Exit} para salir.
 
 La función \verb|saveconfig()| guarda la configuración actual de la GUI en el archivo CSV.
@@ -103,7 +103,7 @@ Todos son \verb|float| excepto el último que es un \verb|int|.
 
 \verb|main()| es la función principal y se encarga de extraer el ID del paciente desde la ruta al archivo de registro, cargar los datos de las señales y el juego desde el CSV, crear el nodo \verb|ScrollPublisherNode| con dichos parámetros e iniciar la GUI.
 \verb|startgui()| es la primera interfaz que se lanza y gestiona la configuración del brazo que se va a rehabilitar y de los límites físicos del robot a través de la publicación de un \verb|Int32MultiArray| que actúa como un booleano indicando el botón que se ha pulsado (resetear, mínimo, máximo u offset).
-Además, comprueba que los límites mínimo y máximon se han definido correctamente antes de permitir establecer el offset o continuar a la siguiente ventana.
+Además, comprueba que se ha seleccionado o bien brazo derecho o izquierdo y que los límites mínimo y máximo se han definido correctamente antes de permitir establecer el offset o continuar a la siguiente ventana.
 
 En la Imagen \ref{fig:config} se muestra la ventana de inicio y en la Imagen \ref{fig:control} la ventana principal de control.
 
@@ -128,6 +128,7 @@ En la Imagen \ref{fig:config} se muestra la ventana de inicio y en la Imagen \re
 \end{figure}
 
 \section{Interfaz de visualización}
+\label{section:visualization}
 
 Este script permite observar y registrar la ejecución de un paciente en una tarea de seguimiento de trayectoria como parte de una sesión de rehabilitación motora.
 
@@ -135,7 +136,7 @@ Además de incluir las bibliotecas mencionadas en la Sección \ref{section:contr
 
 Se utiliza el modo interactivo de \verb|matplotlib|, \verb|plt.ion()|, que permite actualizar dinámicamente los gráficos sin bloquear el hilo principal.
 Las ventanas son deslizantes respecto al eje X, no obstante debemos mantener un tamaño fijo para que la señal no se desplace hacia la izquierda, por ello se implementa \verb|np.roll()|.
-El tamaño de la ventana en el eje Y se ajusta a $3 rad$ ya que es el máximo recorrido que puede hacer el brazo durante la terapia.
+El tamaño de la ventana en el eje Y se ajusta a $3$ ya que es el máximo recorrido que puede hacer el brazo.
 
 Se define la clase \verb|FlappyBirdViewerNode| que actúa como nodo de ROS 2 y se suscribe a los topics \verb|/CleanSignal|, donde se publica la señal de referencia que se toma como trayectoria deseada que el jugador debe seguir, \verb|/Disturbance|, que contiene la señal de perturbación, \verb|/ActuatorPosition|, que publica la posición del jugador en el eje Y, y \verb|/MotorParameters|, para obtener el tiempo del juego, la posición del jugador en el eje X y el nivel de asistencia del robot.
 Los mensajes de los primeros tres topics son de tipo \verb|Float32| y el último es un \verb|Float32MultiArray|.
@@ -172,23 +173,126 @@ La función principal \verb|main()| verifica que se ha pasado como único argume
 
 \begin{figure}[ht!]
 	\centering
-	\begin{minipage}{0.85\linewidth}
+	\begin{minipage}{0.90\linewidth}
 		\centering
-		\includegraphics[width=\linewidth]{figs/visual.png}
+		\includegraphics[width=\linewidth]{figs/visual2.png}
 	\end{minipage}
 	\caption[Interfaz de visualización]{Interfaz de visualización}
 	\label{fig:visual}
 \end{figure}
 
 \section{Juego flappy}
+\label{section:game}
 
-\section{Esquema de nodos y topics}
+Este script implementa un juego basado en el Flappy Bird, adaptado a un entorno ROS 2 para interactuar con sensores y actuadores en tiempo real.
+Existen dos modos de juego distintos, \textit{hold}, el jugador debe mantener la posición, y \textit{follow}, el jugador debe seguir una trayectoría.
 
-En la Imagen \ref{fig:nodes} se puede observar un esquema de los nodos, los topics en los que publican y a los que se suscriben y el tipo de datos del proyecto en general. 
+Se implementan las librerías \verb|rclpy|, y \verb|std_msgs| para permitir la comunicación con ROS 2, \verb|matplotlib| y \verb|numpy| para la visualización y el manejo de señales, y \verb|pygame| para utilizar efectos de sonido.
+
+Se emplean sonidos distintos cuando se sube de nivel, se consigue una recompensa o se colisiona.
+Esto permite que el juego sea más interactivo.
+En el Código \ref{cod:codejemplo2}, escrito en \textit{Python}, se observa como se carga un sonido desde un directorio, \textit{sounds}, dentro del paquete del proyecto.
+Los formatos de audio más comunes soportados por \verb|pygame.mixer| son .wav, .ogg y .mp3.
+La elección de utilizar la extensión .wav se debe a su simplicidad, alta calidad y compatibilidad con todos los sistemas.
+
+\begin{code}[h]
+\begin{lstlisting}[language=Python]
+pygame.mixer.init()
+level_up_sound = pygame.mixer.Sound('../sounds/level_up.wav')
+\end{lstlisting}
+\caption[Cargar un sonido]{Cargar un sonido}
+\label{cod:codejemplo2}
+\end{code}
+
+La clase \verb|FlappyBirdNode| engloba la lógica del programa.
+En \verb|__init__| se crean los suscriptores \verb|/CleanSignal|, de tipo \verb|Float32|, es la señal de referencia, \verb|/Disturbance|, también \verb|Float32|, es la perturbación, \verb|/GameParameters|, es un \verb|Int32MultiArray|, contiene el nivel del juego y de asistencia del robot, \verb|/SliderParameters|, \verb|Float32MultiArray|, para obtener el offset entre la señal y los límites superior e inferior, y \verb|/ActuatorPosition|, es un \verb|Float32|, contiene la posición del jugador en el eje Y.
+Se crea un publicador \verb|Float32MultiArray|, llamado \verb|/MotorParameters|, que contiene la marca de tiempo de la ventana, las referencias de la señal y la perturbación en $(x_p, y)$, la posición del jugador en el eje X y la asistencia actualizada.
+Se crea una ventana gráfica de tamaño $2x3$, donde 3 es el recorrido máximo del brazo.
+En ella se representan la señal principal, los límites mínimo y máximo, las perturbaciones, la posición del jugador y objetos como estrellas y asteroides que forman parte de la lógica del juego.
+
+La posición del jugador se representa como un punto rojo que cambia de color según la distancia a la que se encuentra entre la trayectoria deseada y los límites (negro significa que está cerca de la trayectoria, gris que está a una distancia media y rojo indica peligro de colisión con los límites).
+La posición se representa como una coordenada en los ejes XY, en el eje X permanece siempre a la misma distancia (a $0,25$ unidaddes del origen), y en el eje Y se muestra la posición que se recibe del sensor de posición del motor.
+En un principio, para validar el movimiento del jugador, la posición en el eje Y se basaba en el manejo de las flechas arriba y abajo del teclado.
+Para ello se utilizó la librería \verb|pynput|.
+En el Código \ref{cod:codejemplo3}, escrito en Python, se muestra la lógica de las teclas.
+
+\begin{code}[h]
+\begin{lstlisting}[language=Python]
+def on_press(self, key):
+	try:
+		direction = -1 if self.inverted_gravity else 1
+		if key == keyboard.Key.up:
+			self.player_y += 0.1 * direction
+		elif key == keyboard.Key.down:
+			self.player_y -= 0.1 * direction
+	except:
+		pass
+\end{lstlisting}
+\caption[Movimiento vertical del jugador]{Movimiento vertical del jugador}
+\label{cod:codejemplo3}
+\end{code}
+
+El método \verb|updatelevel()| cambia los colores del fondo y de la línea según el nivel, reproduce el sonido de subida de nivel y disminuye la asistencia para que la difucultad sea progresiva.
+La asistencia del robot se disminuye utilizando la Fórmula \ref{ec:ec3}.
+Se utiliza el máximo entre 0 y el valor calculado según el nivel para que la asistencia no sea un valor negativo.
+
+\begin{myequation}[h]
+\begin{equation}
+assitance = max(0, assistance - (level - 1) // 2)
+\nonumber
+\label{ec:ec3}
+\end{equation}
+\caption[Cálculo de la asistencia según el nivel de dificultad]{Cálculo de la asistencia según el nivel de dificultad}
+\end{myequation}
+
+Para crear un juego dinámico que capte la atención del paciente se crea una misión secundaria en cada nivel.
+Los niveles 1, 4 y 7 tienen como objetivo permanecer dentro de los límites por un tiempo determinado.
+Esto permite evaluar la precisión del paciente.
+Además, cuando se sobrepasa uno de los límites el contador se para y se reanuda de nuevo cuando se vuelve al camino.
+Los niveles 2 y 6 se enfocan en el ajuste de la posición para chocar con las estrellas que están dispuestas en la señal principal.
+De esta forma se consigue que el paciente permanezca y siga la trayectoria deseada.
+Los niveles 3 y 8 pretenden ejercitar la rapidez de reacción mientras el paciente evita colisionar con los asteroides.
+Los niveles 5 y 9 fomentan la flexibilidad cognitiva del paciente para adaptarse a una nueva lógica de control basada en el concepto de gravedad invertida (arriba es abajo y viceversa).
+Y, por último, el nivel 10 permite al médico evaluar distintos escenarios límites mediante ajustes en los parámetros de la señal, perturbación y el offset.
+En la Imagen \ref{fig:level} se puede observar uno de los niveles del juego.
 
 \begin{figure}[ht!]
 	\centering
-	\begin{minipage}{1.15\linewidth}
+	\begin{minipage}{0.90\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/flappy_level2.png}
+	\end{minipage}
+	\caption[Nivel del juego]{Nivel del juego}
+	\label{fig:level}
+\end{figure}
+
+Se introduce un sistema de recompensas para aumentar la motivación y destreza del paciente.
+Esto permite reforzar comportamientos y habilidades específicas para alcanzar los objetivos propuestos.
+Cada vez que se consigue una estrella y se sube de nivel se suman 10 y 30 puntos, respectivamente, a un contador.
+Y, cuando se colisiona con un asteroide, el contador decrementa en 5 puntos.
+Para ello se utilizan las funciones \verb|incrementscore()| y \verb|decrementscore()|.
+
+Los objetos como las estrellas, los asteroides y los triángulos, que indican el sentido y comienzo de una perturbación, se crean con \verb|ax.plot|.
+Las estrellas se generan de forma aleatoria en el eje X, y los asteroides en ambos ejes con límites definidos entre $(0.3, offset)$ y $(-offset, -0.3)$.
+El máximo de objetos visuales al mismo tiempo dentro de la ventana es 2.
+Las funciones \verb|generatestar()|, \verb|generateasteroid()| y \verb|generatedisturb()| encapsulan la lógica de creación de objetos, y la función \verb|clearobjects()| la eliminación de estos.
+
+El desarrollo del juego está concentrado en \verb|listenercallback()|, que es el bucle principal y se ejecuta cada vez que se recibe un nuevo dato en el topic \verb|/CleanSignal|.
+La señal y la perturbación se actualizan con \verb|np.roll|.
+Como se explica en la Sección \ref{section:visualization}, los gráficos se actualizan en tiempo real con \verb|plt.ion()|.
+
+Los callbacks actualizan los datos que se reciben de los topics, estas funciones son \verb|disturbcallback()|, \verb|levelcallback()|, \verb|offsetcallback()| y \verb|positioncallback()|.
+
+La función \verb|main()| inicializa el nodo ROS, crea una instancia del juego y entra en un bucle hasta que el usuario detenga el programa.
+
+\section{Esquema de nodos y topics}
+\label{section:review}
+
+En la Imagen \ref{fig:nodes} se contemapla un esquema de los nodos, topics y tipos de datos que se utilizan para la comunicación de la plataforma software con el actuador.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.90\linewidth}
 		\centering
 		\includegraphics[width=\linewidth]{figs/esquema_nodos.png}
 	\end{minipage}
