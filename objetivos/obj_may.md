@@ -136,4 +136,5 @@ He añadido sonidos cuando se choca con un asteroide, cuando se consigue una est
 
 ### Esquema de nodos
 
-![Captura desde 2025-05-23 13-13-17](https://github.com/user-attachments/assets/f7e2ce62-37b2-4041-8e3f-24ef35c41f88)
+![Captura desde 2025-05-23 13-13-17](https://github.com/user-attachments/assets/55ceceaa-e106-4ccb-b1d6-f09da4bf9f4b)
+
