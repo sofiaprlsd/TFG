@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pynput import keyboard
 import pygame
-import os
 
 pygame.mixer.init()
 level_up_sound = pygame.mixer.Sound('../sounds/level_up.wav')
@@ -168,9 +167,9 @@ class FlappyBirdNode(Node):
     
     def generateasteroid(self):
         x = self.time + np.random.uniform(0.5, 4.0)
-        y = np.random.uniform(1.0, self.offset_y)
+        y = np.random.uniform(0.3, self.offset_y)
         if np.random.rand() > 0.5:
-            y = np.random.uniform(-self.offset_y, -1.0)
+            y = np.random.uniform(-self.offset_y, -0.3)
         self.objects.append([x, y])
         o = self.ax.plot(x, y, marker="o", color="brown", markersize=25)[0]
         self.plot_objects.append(o)
@@ -377,7 +376,8 @@ class FlappyBirdNode(Node):
         self.offset_y = msg.data[2]
     
     def positioncallback(self, msg):
-        self.player_y = msg.data
+        direction = -1 if self.inverted_gravity else 1
+        self.player_y = msg.data * direction
 
 def main(args=None):
     rclpy.init(args=args)
