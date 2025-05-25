@@ -72,6 +72,7 @@ Estructura del directirio en `$HOME`:
 - [x] Añadir la perturbación al juego.
 - [x] Añadir elemento visual para indicar la perturbación
 - [x] Hacer esquema con la información a incluir en cada capítulo de la memoria.
+- [x] Permitir selección brazo derecho o izquierdo en scroll_publisher.py
 
 ## Conceptos aprendidos S15
 
@@ -121,7 +122,7 @@ Penalizaciones:
 
 Elementos visuales (perturbación):
 
-He añadido un triángulo naranja que indica el momento en el que comienza la perturbación.
+He añadido un triángulo naranja que indica el momento en el que comienza la perturbación. La punta indica el sentido de la perturbación (arriba o abajo).
 
 Elementos auditivos:
 
