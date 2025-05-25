@@ -71,8 +71,6 @@ Estructura del directirio en `$HOME`:
 - [x] Crear misiones para cada nivel.
 - [x] Añadir la perturbación al juego.
 - [x] Añadir elemento visual para indicar la perturbación
-- [x] Hacer esquema con la información a incluir en cada capítulo de la memoria.
-- [x] Permitir selección brazo derecho o izquierdo en scroll_publisher.py
 
 ## Conceptos aprendidos S15
 
@@ -128,7 +126,14 @@ Elementos auditivos:
 
 He añadido sonidos cuando se choca con un asteroide, cuando se consigue una estrella y cuando se sube de nivel.
 
+## Semana 16, 19/05/25 - 25/05/25
+
+- [x] Hacer esquema con la información a incluir en cada capítulo de la memoria.
+- [x] Permitir selección brazo derecho o izquierdo en scroll_publisher.py
+- [ ] Capítulo 1 de la memoria (introducción)
+
+## Conceptos aprendidos S16
+
 ### Esquema de nodos
 
 ![Captura desde 2025-05-23 13-13-17](https://github.com/user-attachments/assets/f7e2ce62-37b2-4041-8e3f-24ef35c41f88)
-
