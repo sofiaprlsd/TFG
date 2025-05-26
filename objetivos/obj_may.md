@@ -142,5 +142,5 @@ He añadido sonidos cuando se choca con un asteroide, cuando se consigue una est
 
 - [ ] Acabar la memoria
 
-## Conceptos aprendidos S16
+## Conceptos aprendidos S17
 
