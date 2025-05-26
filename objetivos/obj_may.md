@@ -138,3 +138,9 @@ He añadido sonidos cuando se choca con un asteroide, cuando se consigue una est
 
 ![Captura desde 2025-05-23 13-13-17](https://github.com/user-attachments/assets/55ceceaa-e106-4ccb-b1d6-f09da4bf9f4b)
 
+## Semana 17, 26/05/25 - 31/05/25
+
+- [ ] Acabar la memoria
+
+## Conceptos aprendidos S16
+
