@@ -147,7 +147,7 @@ class ScrollGUI:
         self.duration_scroller.set(self.duration)
         self.duration_scroller.pack(pady=5)
 
-        self.period_label = tk.Label(disturbance_frame, text=f"Disturbance Period: {self.period:.2f} s", font=("Arial", 14))
+        self.period_label = tk.Label(disturbance_frame, text=f"Time between disturbances: {self.period:.2f} s", font=("Arial", 14))
         self.period_label.pack(pady=2)
 
         self.period_scroller = ttk.Scale(disturbance_frame, from_=0.0, to=10.0, orient="horizontal", command=self.updateperiod, length=400)
@@ -227,7 +227,7 @@ class ScrollGUI:
     
     def updateperiod(self, val):
         self.period = float(val)
-        self.period_label.config(text=f"Disturbance Period: {self.period:.2f} s")
+        self.period_label.config(text=f"Time between disturbances: {self.period:.2f} s")
     
     def updatesignal(self):
         self.node.freq = self.frequency

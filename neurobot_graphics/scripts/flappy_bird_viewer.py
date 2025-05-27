@@ -68,6 +68,7 @@ class FlappyBirdViewerNode(Node):
         self.player_active = False
         self.last_disturb_val = 0.0
         self.assist_level = 0
+        self.disturb_type = 1.0
 
         self.log_time = []
         self.log_signal = []
@@ -165,6 +166,8 @@ class FlappyBirdViewerNode(Node):
         if np.any(self.disturb_data):
             self.line_disturb.set_xdata(self.time_data)
             self.line_disturb.set_ydata(self.disturb_data)
+            color = 'orange' if self.disturb_type == 2.0 else 'green'
+            self.line_disturb.set_color(color)
             self.line_disturb.set_visible(True)
         else:
             self.line_disturb.set_visible(False)
@@ -206,6 +209,7 @@ class FlappyBirdViewerNode(Node):
     
     def offsetcallback(self, msg):
         self.offset_y = msg.data[2]
+        self.disturb_type = msg.data[7]
     
     def positioncallback(self, msg):
         self.player_y = msg.data

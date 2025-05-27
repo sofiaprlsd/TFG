@@ -92,6 +92,9 @@ class FlappyBirdNode(Node):
         self.game_completed = False
         self.last_disturb_val = 0.0
         self.disturb_markers = []
+        self.disturb_type = 1.0
+        self.disturb_markers_active = []
+        self.direction = 1.0
 
         self.level_colors = [
             {'bg': '#e0f7fa', 'line': '#00796b'},    # light cian / teal
@@ -167,18 +170,22 @@ class FlappyBirdNode(Node):
     
     def generateasteroid(self):
         x = self.time + np.random.uniform(0.5, 4.0)
-        y = np.random.uniform(0.3, self.offset_y)
+        y = np.random.uniform(0.3, 1.5)
         if np.random.rand() > 0.5:
-            y = np.random.uniform(-self.offset_y, -0.3)
+            y = np.random.uniform(-1.5, -0.3)
         self.objects.append([x, y])
         o = self.ax.plot(x, y, marker="o", color="brown", markersize=25)[0]
         self.plot_objects.append(o)
     
     def generatedisturb(self):
+        # Detect change from 0 to another value or viceversa
         if self.disturb_data[-1] != 0.0 and self.disturb_data[-2] == 0.0:
-            marker_type = '^' if self.disturb_data[-1] > 0 else 'v'
-            triangle = self.ax.plot(self.time, self.signal_data[-1], marker=marker_type, color='orange', markersize=20)[0]
-            self.disturb_markers.append((self.time, self.signal_data[-1], triangle))
+            t = self.time
+            y = self.signal_data[-1]
+            color = 'orange' if self.disturb_type == 2.0 else 'green'
+            marker_type = '^' if self.last_disturb_val > 0 else 'v'
+            triangle = self.ax.plot(t, y, marker=marker_type, color=color, markersize=20)[0]
+            self.disturb_markers.append((t, y, triangle))
     
     def on_press(self, key):
         try:
@@ -348,8 +355,8 @@ class FlappyBirdNode(Node):
         # Publish signal and disturbance 'y' references when closest to player_x
         # Publish time to sync with viewer
         index = np.argmin(np.abs(self.time_data - self.player_x))
-        y_signal = self.signal_data[index]
-        y_disturb = self.disturb_data[index]
+        y_signal = self.signal_data[index] * self.direction
+        y_disturb = self.disturb_data[index] * self.direction
         signal_msg = Float32MultiArray()
         signal_msg.data = [y_signal, y_disturb, self.player_x, self.time, float(self.assistance)]
         self.references_publisher_.publish(signal_msg)
@@ -364,16 +371,20 @@ class FlappyBirdNode(Node):
         self.game_completed = False
         self.inside_limits = True
         self.start_time = None
+        self.direction = 1.0
+        self.clearobjects()
         self.updatelevel()
 
         if self.level in [2, 6]:
-            self.clearobjects()
             self.obj_counter = 0
             self.generatestar()
             self.last_obj_time = self.time
+        elif self.level in [5, 9]:
+            self.direction = -1.0
     
     def offsetcallback(self, msg):
         self.offset_y = msg.data[2]
+        self.disturb_type = msg.data[7]
     
     def positioncallback(self, msg):
         direction = -1 if self.inverted_gravity else 1
