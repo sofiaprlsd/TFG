@@ -28,13 +28,22 @@ Se definen tres funciones principales que gestionan las operaciones de la GUI.
 La función \verb|exit()| cierra la ventana pincipal de Tkinter, \verb|clear()| limpia los campos de entrada y texto, y \verb|savedata()| guarda los valores de los campos, valida que el ID sea un número y crea un subdirectorio bajo el nombre del ID, si no existe, donde guarda los datos en un archivo CSV llamado \verb|ID.csv|.
 Si el archivo no existe, se escribe el encabezado utilizando \verb|writer.writeheader()|.
 Los datos se escriben con \verb|csv.DictWriter| y son guardados como \verb|strings|.
-Cada campo es un \verb|Entry| enlazado a una variable de tipo \verb|StringVar| y hacen referencia al nombre, apellido e ID del paciente, frecuencia, amplitud y perturbación de la señal que generará el brazo robótico, nivel y progreso del juego y un espacio para que el doctor incluya observaciones.
 
 Se crea una ventana principal con un título y tamaño fijo de $600x500$ píxeles.
-
 Los estilos visuales se configuran con \verb|ttk.Style| y se definen dos frames distintas, \verb|main_frame| se utiliza como contenedor de los campos de entrada y texto y \verb|button_frame| agrupa la lógica de los botones.
-
+Cada campo es un \verb|Entry| enlazado a una variable de tipo \verb|StringVar| y hacen referencia al nombre, apellido e ID del paciente, frecuencia, amplitud y perturbación de la señal que generará el brazo robótico, nivel y progreso del juego y un espacio para que el doctor incluya observaciones.
 Se crean dos botones, \textit{Save} llama a \verb|savedata()| para guardar los datos, que a su vez llama a \verb|clear()| para limpiar los campos una vez que estos se han almacenado, y el botón \textit{Exit} llama a la función \verb|exit()| que cierra la aplicación.
+En la Imagen \ref{fig:database} puede observarse el estilo de la interfaz.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.65\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/registro.png}
+	\end{minipage}
+	\caption[Interfaz de registro de un paciente]{Interfaz de registro de un paciente}
+	\label{fig:database}
+\end{figure}
 
 \verb|root.mainloop()| inicia el bucle de eventos de Tkinter y la interfaz está activa hasta que el usuario cierra la ventana.
 
@@ -61,18 +70,6 @@ def savedata():
 \label{cod:codejemplo}
 \end{code}
 
-En la Imagen \ref{fig:database} puede observarse el estilo de la interfaz.
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.65\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/registro.png}
-	\end{minipage}
-	\caption[Interfaz de registro de un paciente]{Interfaz de registro de un paciente}
-	\label{fig:database}
-\end{figure}
-
 \section{Interfaz de control}
 \label{section:controller}
 
@@ -82,17 +79,43 @@ Al inicio del script se importan las librerías \verb|rclpy| y \verb|std_msgs.ms
 
 Se crea un directorio en el directorio de inicio del usuario, si no existe, bajo el nombre \textit{database}, donde se almacenan los ficheros con los datos de configuración de cada paciente.
 
-Se definen dos clases, \verb|ScrollPublisherNode| es una clase de ROS 2 que publica los parámetros de una señal (frecuencia, amplitud, offset y tipo) y de una perturbación (amplitud, duración, periodo y tipo) en el topic \verb|/SliderParameters| y los datos de asistencia y nivel de juego en \verb|/GameParameters|.
-Los mensajes son de tipo \verb|Float32MultiArray| y \verb|Int32MultiArray|, y se publican cada 0.1 segundos y únicamente cuando se actualiza el valor de los datos, respectivamente.
-El tipo de señal hace referencia al modo de juego y se codifica como 1.0 (hold) y 2.0 (follow), y el tipo de perturbación como 1.0 (sinusoidal) y 2.0 (escalón).
-\verb|ScrollGUI| es la clase que crea la interfaz gráfica y permite ajustar los parámetros del juego en tiempo real y publicarlos a través de un nodo de ROS.
+Se definen dos clases, \verb|ScrollPublisherNode| y \verb|ScrollGUI|.
+La primera es una clase de ROS 2 que publica los parámetros de dos señales, de tipo trayectoria y perturbación en el topic \verb|/SliderParameters| y los datos de asistencia y nivel de juego en \verb|/GameParameters|.
+Los mensajes son de tipo \verb|Float32MultiArray| y \verb|Int32MultiArray|, y se publican cada $100 ms$ y únicamente cuando se actualiza el valor de los datos, respectivamente.
+La decisión de publicar ambas señales en el mismo topic a dicha velocidad se debe a que la actualización de los datos debe realizarse de forma casi instantánea para permitir ajustes inmediatos en los parámetros de la terapia y evaluar la rapidez de respuesta del paciente.
+Y, se ha comprobado que esta estimación es lo suficientemente rápida para satisfacer estos requisitos.
+Los datos necesarios para generar la señal de trayectoria son frecuencia, amplitud y tipo, mientras que para la perturbación son duración, amplitud y tipo.
+El tiempo de las señales se define de manera distinta para evitar redundancias, ya que la perturbación no es constante.
+En su lugar, se estima una duración que facilita el entendimiento del terapeuta.
+El tipo de señal hace referencia al modo de juego y se codifica como 1.0 (hold o mantener) y 2.0 (follow o seguir), y el tipo de perturbación como 1.0 (sinusoidal) y 2.0 (step o escalón).
+También se define un offset que determina la distancia entre la señal principal y los límites superior e inferior, ajustando así los márgenes del camino.
+La segunda clase crea la interfaz gráfica y permite ajustar los parámetros del juego en tiempo real y publicarlos a través de un nodo de ROS.
 Los datos se guardan en un archivo CSV bajo el nombre \verb|ID-year-month-day-config_<index>.csv| en un subdirectorio llamado \textit{config} dentro del directorio \textit{home/user/database/ID/}.
 \verb|index| hace referencia al número de archivo de la sesión diaria.
-Si el archivo no existe, se escribe un encabezado con los nombres de los campos a los que hacen referencia los datos.
+Si el archivo no existe, se escribe un encabezado con los nombres de los campos a los que hacen referencia los datos como se observa en el Código \ref{cod:codejemplo2}.
 
-Se crean deslizadores, utilizando \verb|ttk.Scale|, para ajustar la frecuencia, amplitud, offset, duración y periodo de las señales.
+\begin{code}[h]
+\begin{lstlisting}[language=Python]
+header = ["frequency", "amplitude", "offset", "signal", "disturbance", "duration", "period", "mode"]
+\end{lstlisting}
+\caption[Encabezado del fichero de configuración]{Encabezado del fichero de configuración}
+\label{cod:codejemplo2}
+\end{code}
+
+Se crean deslizadores, utilizando \verb|ttk.Scale|, para ajustar la frecuencia, amplitud, offset, duración y periodo de las señales, lo que facilita la configuración de los parámetros con mayor precisión y comodidad.
 Se utiliza \verb|Combox| para permitir la selección entre los distintos tipos de señal y perturbación y niveles de asistencia (del 0 al 5, donde 0 es asistencia nula y 5 asistencia máxima) y de juego (del 1 al 10, de menor a mayor dificultad).
 Los botones \textit{Update Signal} y \textit{Update levels} se utilizan para actualizar los datos en el topic correspondiente, y el botón \textit{Exit} para salir.
+En la Imagen \ref{fig:control} se observa el aspecto de la ventana principal de control.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.55\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/control_pannel.png}
+	\end{minipage}
+	\caption[Interfaz de control]{Interfaz de control}
+	\label{fig:control}
+\end{figure}
 
 La función \verb|saveconfig()| guarda la configuración actual de la GUI en el archivo CSV.
 Las funciones \verb|update*()| convierten el valor del deslizador de \verb|str| a \verb|float|.
@@ -103,9 +126,10 @@ Todos son \verb|float| excepto el último que es un \verb|int|.
 
 \verb|main()| es la función principal y se encarga de extraer el ID del paciente desde la ruta al archivo de registro, cargar los datos de las señales y el juego desde el CSV, crear el nodo \verb|ScrollPublisherNode| con dichos parámetros e iniciar la GUI.
 \verb|startgui()| es la primera interfaz que se lanza y gestiona la configuración del brazo que se va a rehabilitar y de los límites físicos del robot a través de la publicación de un \verb|Int32MultiArray| que actúa como un booleano indicando el botón que se ha pulsado (resetear, mínimo, máximo u offset).
+El offset corresponde a la posición inicial desde la cual comienza la terapia.
 Además, comprueba que se ha seleccionado o bien brazo derecho o izquierdo y que los límites mínimo y máximo se han definido correctamente antes de permitir establecer el offset o continuar a la siguiente ventana.
-
-En la Imagen \ref{fig:config} se muestra la ventana de inicio y en la Imagen \ref{fig:control} la ventana principal de control.
+La decisión de ajustar los límites y el offset mediante el movimiento del brazo robótico a una posición específica, y luego guardar dicha posición a través de un botón, responde a un requisito explícito del cliente.
+En la Imagen \ref{fig:config} se muestra el formato de la ventana de inicio.
 
 \begin{figure}[ht!]
 	\centering
@@ -115,16 +139,6 @@ En la Imagen \ref{fig:config} se muestra la ventana de inicio y en la Imagen \re
 	\end{minipage}
 	\caption[Interfaz de configuración de los límites del brazo robótico]{Interfaz de configuración de los límites del brazo robótico}
 	\label{fig:config}
-\end{figure}
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.55\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/control_pannel.png}
-	\end{minipage}
-	\caption[Interfaz de control]{Interfaz de control}
-	\label{fig:control}
 \end{figure}
 
 \section{Interfaz de visualización}
@@ -144,10 +158,23 @@ Los mensajes de los primeros tres topics son de tipo \verb|Float32| y el último
 Para la detección de colisiones se implementa una lógica simple basada en la comparación de la posición del jugador con los límites de la señal.
 \verb|playercallback()| actualiza la posición del jugador, el offset que separa la señal de los límites y el tiempo total y marca que el jugador está activo.
 
-En la Imagen \ref{fig:visual}, se muestran dos gráficos, el que está en la parte superior permite visualizar la señal principal, la perturbación, los límites superior e inferior y la posición actual del jugador.
+En la Imagen \ref{fig:visual}, se muestran dos gráficos.
+El que está en la parte superior muestra la señal de trayectoria (línea azul), la perturbación de tipo escalón (línea verde), los límites superior e inferior (líneas discontinuas grises) y la posición actual del jugador (punto rojo), proporcionando una visión clara y completa de la terapia.
 Y, la parte inferior grafica el error de posición con respecto a la trayectoria deseada en función del tiempo, lo que permite detectar fallos de control, fatiga o pérdida de atención.
 
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.80\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/visual.png}
+	\end{minipage}
+	\caption[Interfaz de visualización del terapeuta]{Interfaz de visualización del terapeuta}
+	\label{fig:visual}
+\end{figure}
+
 En un principio, el error se calculaba en función del tiempo como se muestra en la Ecuación \ref{ec:ec1}, pero, más adelante, se optó por calcular la interpolación (o selección por índice más cercano) del valor de la trayectoria de referencia (x, y) evaluando la posición del jugador en el eje X, $x_p$, como se muestra en la Ecuación \ref{ec:ec2}.
+El segundo cálculo ofrece una aproximación más precisa al error, ya que está directamente relacionado con la ubicación del jugador.
+A diferencia del primer cálculo, que depende del instante de tiempo y puede verse afectado por variaciones en la sincronización de los datos.
 
 \begin{myequation}[h]
 \begin{equation}
@@ -171,16 +198,6 @@ Esto facilita un análisis posterior de la terapia.
 
 La función principal \verb|main()| verifica que se ha pasado como único argumento un archivo CSV con los datos de registro del paciente, extrae el ID desde la ruta, crea el nodo \verb|FlappyBirdViewerNode| y escucha de los topics.
 
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.90\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/visual2.png}
-	\end{minipage}
-	\caption[Interfaz de visualización]{Interfaz de visualización}
-	\label{fig:visual}
-\end{figure}
-
 \section{Juego flappy}
 \label{section:game}
 
@@ -191,7 +208,7 @@ Se implementan las librerías \verb|rclpy|, y \verb|std_msgs| para permitir la c
 
 Se emplean sonidos distintos cuando se sube de nivel, se consigue una recompensa o se colisiona.
 Esto permite que el juego sea más interactivo.
-En el Código \ref{cod:codejemplo2}, escrito en \textit{Python}, se observa como se carga un sonido desde un directorio, \textit{sounds}, dentro del paquete del proyecto.
+En el Código \ref{cod:codejemplo3}, escrito en \textit{Python}, se observa como se carga un sonido desde un directorio, \textit{sounds}, dentro del paquete del proyecto.
 Los formatos de audio más comunes soportados por \verb|pygame.mixer| son .wav, .ogg y .mp3.
 La elección de utilizar la extensión .wav se debe a su simplicidad, alta calidad y compatibilidad con todos los sistemas.
 
@@ -200,8 +217,8 @@ La elección de utilizar la extensión .wav se debe a su simplicidad, alta calid
 pygame.mixer.init()
 level_up_sound = pygame.mixer.Sound('../sounds/level_up.wav')
 \end{lstlisting}
-\caption[Cargar un sonido]{Cargar un sonido}
-\label{cod:codejemplo2}
+\caption[Cargar un sonido al juego]{Cargar un sonido al juego}
+\label{cod:codejemplo3}
 \end{code}
 
 La clase \verb|FlappyBirdNode| engloba la lógica del programa.
@@ -214,7 +231,7 @@ La posición del jugador se representa como un punto rojo que cambia de color se
 La posición se representa como una coordenada en los ejes XY, en el eje X permanece siempre a la misma distancia (a $0,25$ unidaddes del origen), y en el eje Y se muestra la posición que se recibe del sensor de posición del motor.
 En un principio, para validar el movimiento del jugador, la posición en el eje Y se basaba en el manejo de las flechas arriba y abajo del teclado.
 Para ello se utilizó la librería \verb|pynput|.
-En el Código \ref{cod:codejemplo3}, escrito en Python, se muestra la lógica de las teclas.
+En el Código \ref{cod:codejemplo4}, escrito en Python, se muestra la lógica de las teclas.
 
 \begin{code}[h]
 \begin{lstlisting}[language=Python]
@@ -229,7 +246,7 @@ def on_press(self, key):
 		pass
 \end{lstlisting}
 \caption[Movimiento vertical del jugador]{Movimiento vertical del jugador}
-\label{cod:codejemplo3}
+\label{cod:codejemplo4}
 \end{code}
 
 El método \verb|updatelevel()| cambia los colores del fondo y de la línea según el nivel, reproduce el sonido de subida de nivel y disminuye la asistencia para que la difucultad sea progresiva.
@@ -254,16 +271,29 @@ De esta forma se consigue que el paciente permanezca y siga la trayectoria desea
 Los niveles 3 y 8 pretenden ejercitar la rapidez de reacción mientras el paciente evita colisionar con los asteroides.
 Los niveles 5 y 9 fomentan la flexibilidad cognitiva del paciente para adaptarse a una nueva lógica de control basada en el concepto de gravedad invertida (arriba es abajo y viceversa).
 Y, por último, el nivel 10 permite al médico evaluar distintos escenarios límites mediante ajustes en los parámetros de la señal, perturbación y el offset.
-En la Imagen \ref{fig:level} se puede observar uno de los niveles del juego.
+En las Imágenes \ref{fig:level} y \ref{fig:level2} se comparan dos niveles diferentes del juego.
+La primera imagen presenta límites más estrictos que la segunda.
+En la segunda imagen, se observan dos perturbaciones de tipo sinusoidal con sentidos opuestos, representadas por triángulos verdes cuya punta indica el signo de la perturbación.
+En contraste, la primera imagen no muestra ninguna perturbación.
 
 \begin{figure}[ht!]
 	\centering
-	\begin{minipage}{0.90\linewidth}
+	\begin{minipage}{0.85\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/flappy_level.png}
+	\end{minipage}
+	\caption[Nivel 2 del juego sin perturbación]{Nivel 2 del juego sin perturbación}
+	\label{fig:level}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.70\linewidth}
 		\centering
 		\includegraphics[width=\linewidth]{figs/flappy_level2.png}
 	\end{minipage}
-	\caption[Nivel del juego]{Nivel del juego}
-	\label{fig:level}
+	\caption[Nivel 1 del juego con perturbación]{Nivel 1 del juego con perturbación}
+	\label{fig:level2}
 \end{figure}
 
 Se introduce un sistema de recompensas para aumentar la motivación y destreza del paciente.
