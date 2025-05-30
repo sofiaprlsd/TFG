@@ -73,7 +73,7 @@ def savedata():
 \section{Interfaz de control}
 \label{section:controller}
 
-Este script combina ROS 2 y Tkinter para crear una GUI que gestiona límites físicos (mínimo, máximo y offset) del robot, teniendo en cuenta el brazo que se va a rehabilitar, configura y publica parámetros para crear una señal de control y perturbación para un sistema robótico, parámetros de asistencia y nivel de dificultad para un videojuego terapéutico y almacena dichas configuraciones por paciente.
+Este script combina ROS 2 y Tkinter para crear una GUI que gestiona límites físicos (mínimo, máximo y offset) del robot, adaptándose al brazo específico del paciente que se va a rehabilitar, configura y publica parámetros para crear una señal de control y perturbación para un sistema robótico, parámetros de asistencia y nivel de dificultad para un videojuego terapéutico y almacena dichas configuraciones por paciente.
 
 Al inicio del script se importan las librerías \verb|rclpy| y \verb|std_msgs.msg| para gestionar la comunicación entre Python y ROS 2, \verb|tkinter| para crear la interfaz gráfica, \verb|csv| para el manejo de archivos CSV, \verb|os| para interactuar con el sistema y \verb|datetime| para gestionar la fecha de creación de los archivos.
 
@@ -121,7 +121,7 @@ La función \verb|saveconfig()| guarda la configuración actual de la GUI en el 
 Las funciones \verb|update*()| convierten el valor del deslizador de \verb|str| a \verb|float|.
 Entre ellas se destacan \verb|updatesignal()|, que actualiza los atributos del nodo y llama a \verb|saveconfig()|, que añade al final del archivo la nueva configuración, y \verb|updatelevel()|, que publica un mensaje con los datos de asistencia y nivel de dificultad del juego.
 La función \verb|close()| finaliza el nodo y cierra la GUI y el método \verb|run()| inicia el bucle de eventos de Tkinter junto con \verb|spin_once()|.
-\verb|loadcsv()| lee el último registro del archivo del paciente que se pasa como parámetro y devuelve los valores de frecuencia, amplitud, perturbación, duración, periodo y nivel del juego.
+\verb|loadcsv()| lee el último registro del archivo del paciente que se pasa como parámetro y devuelve los valores de frecuencia (Hz), amplitud (rad) de las señales de trayectoria y perturbación, duración (s), periodo (s) y nivel del juego.
 Todos son \verb|float| excepto el último que es un \verb|int|.
 
 \verb|main()| es la función principal y se encarga de extraer el ID del paciente desde la ruta al archivo de registro, cargar los datos de las señales y el juego desde el CSV, crear el nodo \verb|ScrollPublisherNode| con dichos parámetros e iniciar la GUI.

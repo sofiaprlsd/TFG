@@ -45,7 +45,7 @@ La versión de Python utilizada para el desarrollo de la GUI es Python 3.10.13. 
 \subsection{ROS 2}
 \label{sec:entornos}
 
-Como explica \cite{perales10a}, ROS es un middleware que aumenta las capacidades del sistema para crear aplicaciones robóticas. El número dos indica que se trata de la segunda generación de este middleware.
+Como explica \cite{perales10a}, ROS\footnote{\url{https://www.ros.org/}} es un middleware que aumenta las capacidades del sistema para crear aplicaciones robóticas. El número dos indica que se trata de la segunda generación de este middleware.
 Los paquetes de ROS 2 están organizados en distribuciones, las cuales están formadas por múltiples paquetes que aseguran su interoperabilidad.
 Esta arquitectura modular permite estructurar el sistema como un grafo de computación, compuesto por nodos de ROS 2 que se comunican entre sí, permitiendo así que un robot realice una serie de tareas.
 
@@ -60,6 +60,7 @@ Se destacan las siguientes librerías:
 \label{sec:entornos}
 
 Una vez definido el software, se especifica el hardware encargado de ejecutar las acciones en un entorno físico.
+A pesar de que este trabajo se centra en el software del sistema, es importante conocer los dispositivos a utilizar y el propósito de los misos para desarrollar una arquitectura que se ajuste mejor a las necesidades y alcances del proyecto global.
 
 Para el movimiento del brazo robótico se utiliza un actuador de HEBI Robotics\footnote{\url{https://www.hebirobotics.com/actuators}}, más concretamente el modelo T-Series como puede observarse en la Imagen \ref{fig:actuador}.
 Este actuador está diseñado para funcionar como un componente robótico con todas las funciones.
@@ -67,8 +68,9 @@ La salida gira continuamente, no requiere calibración ni referencia alguna de a
 Diseñado para funcionar en brazos robóticos con múltiples grados de libertad.
 Integra varios sensores facilmente accessibles a través de varias APIs.
 
-La selección de este modelo se debe a la incorporación de un sensor de posición, lo que permite registrar el movimiento del brazo del paciente.
-Esto resulta fundamental para la validación de los entornos gamificados, los cuales proponen una serie de actividades donde la posición del paciente se toma como referencia para el desarrollo de actividades interactivas y dinámicas dentro de un contexto terapéutico.
+La selección de este modelo se debe a la incorporación de un sensor de posición, lo que permite registrar el movimiento del brazo del paciente, así como su capacidad de control en fuerza al tratarse de un Sistema Electrónico de Actuación (SEA).
+El sensor de posición resulta fundamental para la validación de los entornos gamificados, los cuales proponen una serie de actividades donde la posición del paciente se toma como referencia para el desarrollo de actividades interactivas y dinámicas dentro de un contexto terapéutico.
+Además, el control por fuerza permite diseñar señales de tipo perturbación que simulan un nivel de resistencia o asistencia durante el ejercicio, lo que favorece la adaptación de la terapia a las capacidades de cada paciente.
 
 \begin{figure}[ht!]
 	\centering
