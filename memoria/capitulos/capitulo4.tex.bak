@@ -20,12 +20,12 @@ El proyecto se divide en cuatro scripts, el primero se utiliza para crear o regi
 
 Este script permite gestionar un conjunto de datos, que registran a un paciente, mediante una GUI.
 
-En primer lugar, se importan las bibliotecas estándar, mencionadas en el capítulo anterior, como \verb|tkinter|, que se utiliza para crear la interfaz gráfica, \verb|csv| para guardar los datos en un archivo CSV para su posterior uso, y \verb|os| para interactuar con el sistema de archivos.
+En primer lugar, se importan las bibliotecas estádar, mencionadas en el capítulo anterior, como \verb|tkinter|, que se utiliza para crear la interfaz gráfica, \verb|csv| para guardar los datos en un archivo CSV para su posterior uso, y \verb|os| para interactuar con el sistema de archivos.
 
 Se obtiene el directorio de inicio del usuario y se crea un directorio dentro de este, si no existe, bajo el nombre \textit{database}, donde se almacenan los ficheros con los datos de registro y análisis terapéuticos de cada paciente.
 
 Se definen tres funciones principales que gestionan las operaciones de la GUI.
-La función \verb|exit()| cierra la ventana principal de Tkinter, \verb|clear()| limpia los campos de entrada y texto, y \verb|savedata()| guarda los valores de los campos, valida que el ID sea un número y crea un subdirectorio bajo el nombre del ID, si no existe, donde guarda los datos en un archivo CSV llamado \verb|ID.csv|.
+La función \verb|exit()| cierra la ventana pincipal de Tkinter, \verb|clear()| limpia los campos de entrada y texto, y \verb|savedata()| guarda los valores de los campos, valida que el ID sea un número y crea un subdirectorio bajo el nombre del ID, si no existe, donde guarda los datos en un archivo CSV llamado \verb|ID.csv|.
 Si el archivo no existe, se escribe el encabezado utilizando \verb|writer.writeheader()|.
 Los datos se escriben con \verb|csv.DictWriter| y son guardados como \verb|strings|.
 
@@ -228,7 +228,7 @@ Se crea una ventana gráfica de tamaño $2x3$, donde 3 es el recorrido máximo d
 En ella se representan la señal principal, los límites mínimo y máximo, las perturbaciones, la posición del jugador y objetos como estrellas y asteroides que forman parte de la lógica del juego.
 
 La posición del jugador se representa como un punto rojo que cambia de color según la distancia a la que se encuentra entre la trayectoria deseada y los límites (negro significa que está cerca de la trayectoria, gris que está a una distancia media y rojo indica peligro de colisión con los límites).
-La posición se representa como una coordenada en los ejes XY, en el eje X permanece siempre a la misma distancia (a $0,25$ unidades del origen), y en el eje Y se muestra la posición que se recibe del sensor de posición del motor.
+La posición se representa como una coordenada en los ejes XY, en el eje X permanece siempre a la misma distancia (a $0,25$ unidaddes del origen), y en el eje Y se muestra la posición que se recibe del sensor de posición del motor.
 En un principio, para validar el movimiento del jugador, la posición en el eje Y se basaba en el manejo de las flechas arriba y abajo del teclado.
 Para ello se utilizó la librería \verb|pynput|.
 En el Código \ref{cod:codejemplo4}, escrito en Python, se muestra la lógica de las teclas.
@@ -249,7 +249,7 @@ def on_press(self, key):
 \label{cod:codejemplo4}
 \end{code}
 
-El método \verb|updatelevel()| cambia los colores del fondo y de la línea según el nivel, reproduce el sonido de subida de nivel y disminuye la asistencia para que la dificultad sea progresiva.
+El método \verb|updatelevel()| cambia los colores del fondo y de la línea según el nivel, reproduce el sonido de subida de nivel y disminuye la asistencia para que la difucultad sea progresiva.
 La asistencia del robot se disminuye utilizando la Fórmula \ref{ec:ec3}.
 Se utiliza el máximo entre 0 y el valor calculado según el nivel para que la asistencia no sea un valor negativo.
 

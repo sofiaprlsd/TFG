@@ -39,7 +39,7 @@ Con el fin de alcanzar esta meta, se han definido los siguientes objetivos espec
     \item \textit{O1.} Desarrollar entornos gamificados que incluyan estímulos visuales y auditivos, niveles de dificultad y misiones particulares, adaptadas al perfil del paciente, con el objetivo mejorar su atención y motivación.
     \item \textit{O2.} Diseñar una interfaz gráfica intuitiva para que el terapeuta controle el desarrollo de la terapia y el modo de rehabilitación, permitiéndole visualizar el progreso del paciente y ajustar los parámetros del juego según su rendimiento.
     \item \textit{O3.} Establecer una arquitectura capaz de recibir datos de sensores y controlar actuadores para coordinar estímulos visuales y físicos que el paciente experimente durante la terapia, con el fin de crear un entorno inmersivo que potencie la eficacia del tratamiento.
-    \item \textit{O4.} Crear una interfaz gráfica que permita definir los datos personales de un paciente y registrar su progreso después de cada sesión, con el objetivo de personalizar y ajustar de forma automática los parámetros en futuras sesiones.
+    \item \textit{O4.} Crear una interfaz gráfica que permita definir los datos personales de un paciente y registrar su progreso depués de cada sesión, con el objetivo de personalizar y ajustar de forma automática los parámetros en futuras sesiones.
     \item \textit{O5.} Integrar perturbaciones controladas en el entorno de juego terapéutico, con el fin de introducir obstáculos que desafíen el control motor y la capacidad de adaptación del paciente, promoviendo una mayor atención, planificación motora y activación neuromuscular.
 \end{itemize}\
 
@@ -61,17 +61,26 @@ A continuación, se enumeran los requisitos que se deben satisfacer:
 \section{Competencias}
 \label{sec:competencias}
 
-Durante la realización de este proyecto, se han puesto en práctica diversas competencias generales, específicas y básicas del grado y del desarrollo de interfaces y sistemas dinámicos.
+Durante la realización de este proyecto, se han puesto en práctica diversas competencias generales del grado y específicas del desarrollo de interfaces y sistemas dinámicos.
+
+\subsection{Competencias generales}
+\label{sec:competencias}
 
 \begin{itemize}
     \item \textit{CG1:} Diseño software. Conocimiento de materias básicas y tecnologías, que le capacite para el aprendizaje de nuevos métodos y tecnologías, así como que le dote de una gran versatilidad para adaptarse a nuevas situaciones.
+    \item \textit{CE15:} Arquitectura software para robots. Capacidad de diseñar y programar aplicaciones robóticas y sistemas inteligentes en red usando middlewares, mecanismos de comunicación y estándares propios del ámbito de la Ingeniería Robótica.
     \item \textit{CB2:} Planificación y sistemas cognitivos. Que los estudiantes sepan aplicar sus conocimientos a su trabajo o vocación de una forma profesional y posean las competencias que suelen demostrarse por medio de la elaboración y defensa de argumentos y la resolución de problemas dentro de su área de estudio.
     \item \textit{CB4:} Trabajo de Fin de Grado. Que los estudiantes puedan transmitir información, ideas, problemas y soluciones a un público tanto especializado como no especializado.
+\end{itemize}\
+
+\subsection{Competencias específicas}
+\label{sec:competencias}
+
+\begin{itemize}
     \item \textit{CE1.} Diseño e implementación de interfaces gráficas de usuario (GUI) con herramientas como Tkinter.
     \item \textit{CE2.} Desarrollo de aplicaciones interactivas con elementos de gamificación, aplicando principios de diseño centrado en el usuario.
     \item \textit{CE3.} Integración de interfaces con dispositivos físicos mediante comunicación en tiempo real basada en el Sistema Operativo Robótico (ROS).
     \item \textit{CE4.} Evaluación de la usabilidad y experiencia de usuario con métricas objetivas y percepciones.
-    \item \textit{CE15:} Arquitectura software para robots. Capacidad de diseñar y programar aplicaciones robóticas y sistemas inteligentes en red usando middlewares, mecanismos de comunicación y estándares propios del ámbito de la Ingeniería Robótica.
 \end{itemize}\
 
 \section{Metodología}
@@ -80,7 +89,7 @@ Durante la realización de este proyecto, se han puesto en práctica diversas co
 Para llevar a cabo este proyecto, se ha optado por seguir el paradigma iterativo centrado en el usuario (User-Centered Design).
 Previamente, se ha realizado una fase de análisis e investigación sobre el estado del arte y necesidades específicas para comprobar la viabilidad de su desarrollo.
 Posteriormente, se procedió con el diseño del prototipo para validar el diseño gráfico y la navegación.
-Más adelante, la realización de pruebas continuas favoreció la incorporación de mejoras en el diseño visual, la lógica de juego y la retroalimentación.
+Más adelante, la realización de pruebas contínuas favoreció la incorporación de mejoras en el diseño visual, la lógica de juego y la retroalimentación.
 Una vez se desarrolló una primera versión fiable, las interfaces se conectaron con el sistema de control del robot permitiendo crear un entorno cambiante y adaptable.
 Por último, se llevó a cabo una evaluación de conformidad a los usuarios para comprobar la efectividad de la plataforma.
 
