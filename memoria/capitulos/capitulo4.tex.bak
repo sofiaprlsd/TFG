@@ -13,6 +13,42 @@ Steve Jobs, \textit{conferencia de lanzamiento del Apple iPod, 2001}\\
 
 Después de definir la plataforma de desarrollo, se procede a explicar el diseño de la aplicación.
 
+El sistema está diseñado para gestionar la rehabilitación motora de pacientes post-ictus mediante la interacción con un brazo robótico.
+Esto se lleva a cabo a través de una aplicación que controla diersos parámetros que afectan a la trayectoria, las perturbaciones y nivel de asistencia del brazo.
+A continuación, se definen los puntos clave del sistema:
+\begin{itemize}
+    \item Trayectoria: representa el recorrido deseado que el paciente debe seguir durante la terapia. Es una señal definida por los parámetros de frecuencia, amplitud y tipo de señal (trayecto constante o dinámico). El objetivo es medir la precisión del paciente al seguir la trayectoria.
+	\item Perturbación: es una señal que altera la trayectoria. Se define mediante los parámetros de amplitud, duración y tipo (perturbación escalón o sinusoidal). El objetivo es proporcionar un desafío adicional al paciente.
+	\item Límites: definen las restricciones físicas de movilidad del brazo robótico. Se establecen un límite inferior (mínimo) y superior (máximo), así como un offset que deteermina la posición inicial del brazo. Se ajustan llevando el brazo a la posición deseada.
+	\item Asistencia: se refiere al grado de apoyo que ofrece el brazo robótico al paciente. Este parámetro se ajusta tanto de forma dinámica, según el nivel de dificultad del juego, como manual, a través de la interfaz de control.
+	\item Nivel de dificultad: hace referencia al nivel de dificultad del juego. El nivel de dificultad aumenta de forma progresiva, reduciendo el nivel de asistencia del robot. Puede ajustarse tanto dinámicamente como manualmente al igual que la asistencia.\\
+\end{itemize}\
+
+Más adelante, se describen los nodos y topics utilizados en la plataforma.
+
+\section{Esquema de nodos y topics}
+\label{section:review}
+
+En la Imagen \ref{fig:nodes} se contempla un esquema de los nodos, topics y tipos de datos que se utilizan para la comunicación de la plataforma software con el actuador.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{1.0\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/esquema_nodos.png}
+	\end{minipage}
+	\caption[Esquema de nodos y topics]{Esquema de nodos y topics}
+	\label{fig:nodes}
+\end{figure}
+
+Seguidamente, se detalla la función de los nodo y la información trasmitida por cada uno de los topics:
+\begin{itemize}
+    \item \verb|LimitNode|: este nodo gestiona la configuración de los límites del brazo robótico. Utiliza el topic \verb|/RobotLimits|, como un booleano para indicar el límite que se ajusta.
+	\item \verb|ScrollPublisherNode|: este nodo publica los parámetros de la trayectoria, la perturbación y del juego (asistencia y nivel de dificultad). La actualización de los datos se realiza cada $100 ms$.
+	\item \verb|FlappyBirdNode|: este nodo implementa la lógica del juego basado en seguir una trayectoria o mantener una posición. Recibe la señal de referencia del topic \verb|/CleanSignal|, la señal de perturbación de \verb|/Disturbance|, la asistencia y nivel de dificultad de \verb|/GameParameters|, los límites y el offset de \verb|/SliderParameters| y la posición del jugador de \verb|/ActuatorPosition|. Y publica los datos de referencia de las señales y tiempo, en el momento de la posición del jugador en el eje X, en el topic \verb|MotorParameters|.
+	\item \verb|FlappyBirdViewerNode|: este nodo grafica las señales de trayectoria, perturbación y la posición del paciente, que recibe de los topics \verb|/CleanSignal|, \verb|/Disturbance| y \verb|/ActuatorPosition|, respectivamente, para visulizar el progreso del paciente durante la terapia. Además, calcula el error de posición a través de los datos publicados en el topic \verb|MotorParameters|, explicados en el nodo anterior.\\
+\end{itemize}\
+
 El proyecto se divide en cuatro scripts, el primero se utiliza para crear o registrar un paciente, el segundo lanza la GUI y controla los parámetros del juego, el tercero permite visualizar el comportamiento del paciente durante la terapia, y el cuarto es el propio juego.
 
 \section{Interfaz de registro de un paciente}
@@ -20,12 +56,12 @@ El proyecto se divide en cuatro scripts, el primero se utiliza para crear o regi
 
 Este script permite gestionar un conjunto de datos, que registran a un paciente, mediante una GUI.
 
-En primer lugar, se importan las bibliotecas estádar, mencionadas en el capítulo anterior, como \verb|tkinter|, que se utiliza para crear la interfaz gráfica, \verb|csv| para guardar los datos en un archivo CSV para su posterior uso, y \verb|os| para interactuar con el sistema de archivos.
+En primer lugar, se importan las bibliotecas estándar, mencionadas en el capítulo anterior, como \verb|tkinter|, que se utiliza para crear la interfaz gráfica, \verb|csv| para guardar los datos en un archivo CSV para su posterior uso, y \verb|os| para interactuar con el sistema de archivos.
 
 Se obtiene el directorio de inicio del usuario y se crea un directorio dentro de este, si no existe, bajo el nombre \textit{database}, donde se almacenan los ficheros con los datos de registro y análisis terapéuticos de cada paciente.
 
 Se definen tres funciones principales que gestionan las operaciones de la GUI.
-La función \verb|exit()| cierra la ventana pincipal de Tkinter, \verb|clear()| limpia los campos de entrada y texto, y \verb|savedata()| guarda los valores de los campos, valida que el ID sea un número y crea un subdirectorio bajo el nombre del ID, si no existe, donde guarda los datos en un archivo CSV llamado \verb|ID.csv|.
+La función \verb|exit()| cierra la ventana principal de Tkinter, \verb|clear()| limpia los campos de entrada y texto, y \verb|savedata()| guarda los valores de los campos, valida que el ID sea un número y crea un subdirectorio bajo el nombre del ID, si no existe, donde guarda los datos en un archivo CSV llamado \verb|ID.csv|.
 Si el archivo no existe, se escribe el encabezado utilizando \verb|writer.writeheader()|.
 Los datos se escriben con \verb|csv.DictWriter| y son guardados como \verb|strings|.
 
@@ -46,29 +82,6 @@ En la Imagen \ref{fig:database} puede observarse el estilo de la interfaz.
 \end{figure}
 
 \verb|root.mainloop()| inicia el bucle de eventos de Tkinter y la interfaz está activa hasta que el usuario cierra la ventana.
-
-En el Código \ref{cod:codejemplo}, escrito en \texttt{Python}, se muestra cómo se gestionan los directorios y la escritura del archivo CSV.
-
-\begin{code}[h]
-\begin{lstlisting}[language=Python]
-def savedata():
-    ID_DIR = os.path.join(DATABASE_DIR, id)
-    os.makedirs(ID_DIR, exist_ok=True)
-    file_name = f"{id}{ext}"
-    file_path = os.path.join(ID_DIR, file_name)
-
-    # [...]
-
-    file_exists = os.path.isfile(file_path)
-    with open(file_path, mode="a", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=patient_data.keys())
-        if not file_exists:
-            writer.writeheader()
-        writer.writerow(patient_data)
-\end{lstlisting}
-\caption[Función para guardar los datos de un paciente]{Función para guardar los datos de un paciente}
-\label{cod:codejemplo}
-\end{code}
 
 \section{Interfaz de control}
 \label{section:controller}
@@ -228,7 +241,7 @@ Se crea una ventana gráfica de tamaño $2x3$, donde 3 es el recorrido máximo d
 En ella se representan la señal principal, los límites mínimo y máximo, las perturbaciones, la posición del jugador y objetos como estrellas y asteroides que forman parte de la lógica del juego.
 
 La posición del jugador se representa como un punto rojo que cambia de color según la distancia a la que se encuentra entre la trayectoria deseada y los límites (negro significa que está cerca de la trayectoria, gris que está a una distancia media y rojo indica peligro de colisión con los límites).
-La posición se representa como una coordenada en los ejes XY, en el eje X permanece siempre a la misma distancia (a $0,25$ unidaddes del origen), y en el eje Y se muestra la posición que se recibe del sensor de posición del motor.
+La posición se representa como una coordenada en los ejes XY, en el eje X permanece siempre a la misma distancia (a $0,25$ unidades del origen), y en el eje Y se muestra la posición que se recibe del sensor de posición del motor.
 En un principio, para validar el movimiento del jugador, la posición en el eje Y se basaba en el manejo de las flechas arriba y abajo del teclado.
 Para ello se utilizó la librería \verb|pynput|.
 En el Código \ref{cod:codejemplo4}, escrito en Python, se muestra la lógica de las teclas.
@@ -249,7 +262,7 @@ def on_press(self, key):
 \label{cod:codejemplo4}
 \end{code}
 
-El método \verb|updatelevel()| cambia los colores del fondo y de la línea según el nivel, reproduce el sonido de subida de nivel y disminuye la asistencia para que la difucultad sea progresiva.
+El método \verb|updatelevel()| cambia los colores del fondo y de la línea según el nivel, reproduce el sonido de subida de nivel y disminuye la asistencia para que la dificultad sea progresiva.
 La asistencia del robot se disminuye utilizando la Fórmula \ref{ec:ec3}.
 Se utiliza el máximo entre 0 y el valor calculado según el nivel para que la asistencia no sea un valor negativo.
 
@@ -309,7 +322,8 @@ El máximo de objetos visuales al mismo tiempo dentro de la ventana es 2.
 Las funciones \verb|generatestar()|, \verb|generateasteroid()| y \verb|generatedisturb()| encapsulan la lógica de creación de objetos, y la función \verb|clearobjects()| la eliminación de estos.
 
 El desarrollo del juego está concentrado en \verb|listenercallback()|, que es el bucle principal y se ejecuta cada vez que se recibe un nuevo dato en el topic \verb|/CleanSignal|.
-La señal y la perturbación se actualizan con \verb|np.roll|.
+Se utilizan las funciones \verb|np.roll| y \verb|plt.ion()| de las bibliotecas \verb|NumPy| y \verb|Matplotlib|, respectivamente.
+\verb|np.roll| actualiza la señal y la perturbación.
 Como se explica en la Sección \ref{section:visualization}, los gráficos se actualizan en tiempo real con \verb|plt.ion()|.
 
 Los callbacks actualizan los datos que se reciben de los topics, estas funciones son \verb|disturbcallback()|, \verb|levelcallback()|, \verb|offsetcallback()| y \verb|positioncallback()|.
@@ -319,18 +333,3 @@ La función \verb|main()| inicializa el nodo ROS, crea una instancia del juego y
 El proyecto es fácilmente escalable en el caso que se quiera añadir una señal que sea combinación de otras.
 Simplemente se debe obtener la señal del topic \verb|/CleanSignal| si es de tipo trayectoria o de \verb|/Disturbance| si es de tipo perturbación.
 En cuanto a la selección de esta nueva señal, es suficiente con incluir una nueva opción dentro de la \verb|Combox| a la que hace referencia.
-
-\section{Esquema de nodos y topics}
-\label{section:review}
-
-En la Imagen \ref{fig:nodes} se contempla un esquema de los nodos, topics y tipos de datos que se utilizan para la comunicación de la plataforma software con el actuador.
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.90\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/esquema_nodos.png}
-	\end{minipage}
-	\caption[Esquema de nodos y topics]{Esquema de nodos y topics}
-	\label{fig:nodes}
-\end{figure}

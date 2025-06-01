@@ -13,7 +13,18 @@ Steve Jobs, \textit{conferencia de lanzamiento del Apple iPod, 2001}\\
 
 Después de definir la plataforma de desarrollo, se procede a explicar el diseño de la aplicación.
 
-El proyecto se divide en cuatro scripts, el primero se utiliza para crear o registrar un paciente, el segundo lanza la GUI y controla los parámetros del juego, el tercero permite visualizar el comportamiento del paciente durante la terapia, y el cuarto es el propio juego.
+El sistema está diseñado para gestionar la rehabilitación motora de pacientes post-ictus mediante la interacción con un brazo robótico.
+Esto se lleva a cabo a través de una aplicación que controla diversos parámetros que afectan a la trayectoria, las perturbaciones y nivel de asistencia del brazo.
+A continuación, se definen los puntos clave del sistema:
+\begin{itemize}
+    \item Trayectoria: representa el recorrido deseado que el paciente debe seguir durante la terapia. Es una señal definida por los parámetros de frecuencia, amplitud y tipo de señal (trayecto constante o dinámico). El objetivo es medir la precisión del paciente al seguir la trayectoria.
+	\item Perturbación: es una señal que altera la trayectoria. Se define mediante los parámetros de amplitud, duración y tipo (perturbación escalón o sinusoidal). El objetivo es proporcionar un desafío adicional al paciente.
+	\item Límites: definen las restricciones físicas de movilidad del brazo robótico. Se establecen un límite inferior (mínimo) y superior (máximo), así como un offset que determina la posición inicial del brazo. Se ajustan llevando el brazo a la posición deseada.
+	\item Asistencia: se refiere al grado de apoyo que ofrece el brazo robótico al paciente. Este parámetro se ajusta tanto de forma dinámica, según el nivel de dificultad del juego, como manual, a través de la interfaz de control.
+	\item Nivel de dificultad: hace referencia al nivel de dificultad del juego. El nivel de dificultad aumenta de forma progresiva, reduciendo el nivel de asistencia del robot. Puede ajustarse tanto dinámicamente como manualmente al igual que la asistencia.\\
+\end{itemize}\
+
+Más adelante, se describen los nodos y topics utilizados en la plataforma.
 
 \section{Esquema de nodos y topics}
 \label{section:review}
@@ -30,7 +41,15 @@ En la Imagen \ref{fig:nodes} se contempla un esquema de los nodos, topics y tipo
 	\label{fig:nodes}
 \end{figure}
 
+Seguidamente, se detalla la función de los nodo y la información trasmitida por cada uno de los topics:
+\begin{itemize}
+    \item \verb|LimitNode|: este nodo gestiona la configuración de los límites del brazo robótico. Utiliza el topic \verb|/RobotLimits|, como un booleano para indicar el límite que se ajusta.
+	\item \verb|ScrollPublisherNode|: este nodo publica los parámetros de la trayectoria y la perturbación en el topic \verb|/SliderParameters|, y del juego (asistencia y nivel de dificultad) en \verb|/GameParameters|. La actualización de los datos se realiza cada $50 ms$.
+	\item \verb|FlappyBirdNode|: este nodo implementa la lógica del juego basado en seguir una trayectoria o mantener una posición. Recibe la señal de referencia del topic \verb|/CleanSignal|, la señal de perturbación de \verb|/Disturbance|, la asistencia y nivel de dificultad de \verb|/GameParameters|, los límites y el offset de \verb|/SliderParameters| y la posición del jugador de \verb|/ActuatorPosition|. Y publica los datos de referencia de las señales y tiempo, en el momento de la posición del jugador en el eje X, en el topic \verb|/MotorParameters|. La actualización de los datos se realiza cada $10 ms$.
+	\item \verb|FlappyBirdViewerNode|: este nodo grafica las señales de trayectoria, perturbación y la posición del paciente, que recibe de los topics \verb|/CleanSignal|, \verb|/Disturbance| y \verb|/ActuatorPosition|, respectivamente, para visualizar el progreso del paciente durante la terapia. Además, calcula el error de posición a través de los datos publicados en el topic \verb|/MotorParameters|, explicados en el nodo anterior.\\
+\end{itemize}\
 
+El proyecto se divide en cuatro scripts, el primero se utiliza para crear o registrar un paciente, el segundo lanza la GUI y controla los parámetros del juego, el tercero permite visualizar el comportamiento del paciente durante la terapia, y el cuarto es el propio juego.
 
 \section{Interfaz de registro de un paciente}
 \label{section:registro}
@@ -75,7 +94,7 @@ Se crea un directorio en el directorio de inicio del usuario, si no existe, bajo
 
 Se definen dos clases, \verb|ScrollPublisherNode| y \verb|ScrollGUI|.
 La primera es una clase de ROS 2 que publica los parámetros de dos señales, de tipo trayectoria y perturbación en el topic \verb|/SliderParameters| y los datos de asistencia y nivel de juego en \verb|/GameParameters|.
-Los mensajes son de tipo \verb|Float32MultiArray| y \verb|Int32MultiArray|, y se publican cada $100 ms$ y únicamente cuando se actualiza el valor de los datos, respectivamente.
+Los mensajes son de tipo \verb|Float32MultiArray| y \verb|Int32MultiArray|, y se publican cada $50 ms$ y únicamente cuando se actualiza el valor de los datos, respectivamente.
 La decisión de publicar ambas señales en el mismo topic a dicha velocidad se debe a que la actualización de los datos debe realizarse de forma casi instantánea para permitir ajustes inmediatos en los parámetros de la terapia y evaluar la rapidez de respuesta del paciente.
 Y, se ha comprobado que esta estimación es lo suficientemente rápida para satisfacer estos requisitos.
 Los datos necesarios para generar la señal de trayectoria son frecuencia, amplitud y tipo, mientras que para la perturbación son duración, amplitud y tipo.
