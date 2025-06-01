@@ -14,7 +14,7 @@ A su vez, se han cumplido todos los subobjetivos definidos en la Sección \ref{s
     \item Se ha evaluado la usabilidad de la plataforma a través de una encuesta de satisfacción a los usuarios.
 \end{enumerate}\
 
-Se concluye que los entornos gamificados incrementan significativamente la motivación de los usuarios durante el proceso de rehabilitación, según las encuestas realizadas.
+Se concluye que los entornos gamificados incrementa significativamente la motivación de los usuarios durante el proceso de rehabilitación, según las encuestas realizadas.
 Los usuarios disfrutan más cuando la terapia se desarrolla en un entorno dinámico e interactivo.
 Además, la introducción de misiones secundarias dentro del juego ha demostrado una mejora del nivel de compromiso de los usuarios, ya que se sienten más involucrados en el proceso.
 
@@ -25,8 +25,7 @@ Esto mejora la eficacia del tratamiento y deriva en una mayor adherencia.\\
 Para finalizar, se proponen las siguientes mejoras que permiten la continuidad de este proyecto:
 \begin{itemize}
     \item Mostrar el comienzo de la señal sinusoidal de tipo perturbación, en vez de un dibujar un triángulo, para que el usuario identifique el movimiento de forma más clara.
-    \item Integrar una nueva señal que sea combinación de otras para introducir variabilidad a las señales de trayectoria y perturbación.
+    \item Integrar una nueva señal que sea combinación de otras para introducir variabilidad a las señales de trayectoría y perturbación.
     \item Crear un script que analice el rendimiento del paciente a partir de los datos terapéuticos almacenados. 
     \item Diseñar un nuevo juego enfocado en la mejora de la coordinación motora, ofreciendo una alternativa de rehabilitación.
-    \item Evaluar la plataforma en pacientes con ictus para determinar su eficacia en un entorno sanitario.
 \end{itemize}\

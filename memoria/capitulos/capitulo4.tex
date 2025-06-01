@@ -15,6 +15,23 @@ Después de definir la plataforma de desarrollo, se procede a explicar el diseñ
 
 El proyecto se divide en cuatro scripts, el primero se utiliza para crear o registrar un paciente, el segundo lanza la GUI y controla los parámetros del juego, el tercero permite visualizar el comportamiento del paciente durante la terapia, y el cuarto es el propio juego.
 
+\section{Esquema de nodos y topics}
+\label{section:review}
+
+En la Imagen \ref{fig:nodes} se contempla un esquema de los nodos, topics y tipos de datos que se utilizan para la comunicación de la plataforma software con el actuador.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{1.0\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/esquema_nodos.png}
+	\end{minipage}
+	\caption[Esquema de nodos y topics]{Esquema de nodos y topics}
+	\label{fig:nodes}
+\end{figure}
+
+
+
 \section{Interfaz de registro de un paciente}
 \label{section:registro}
 
@@ -46,29 +63,6 @@ En la Imagen \ref{fig:database} puede observarse el estilo de la interfaz.
 \end{figure}
 
 \verb|root.mainloop()| inicia el bucle de eventos de Tkinter y la interfaz está activa hasta que el usuario cierra la ventana.
-
-En el Código \ref{cod:codejemplo}, escrito en \texttt{Python}, se muestra cómo se gestionan los directorios y la escritura del archivo CSV.
-
-\begin{code}[h]
-\begin{lstlisting}[language=Python]
-def savedata():
-    ID_DIR = os.path.join(DATABASE_DIR, id)
-    os.makedirs(ID_DIR, exist_ok=True)
-    file_name = f"{id}{ext}"
-    file_path = os.path.join(ID_DIR, file_name)
-
-    # [...]
-
-    file_exists = os.path.isfile(file_path)
-    with open(file_path, mode="a", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=patient_data.keys())
-        if not file_exists:
-            writer.writeheader()
-        writer.writerow(patient_data)
-\end{lstlisting}
-\caption[Función para guardar los datos de un paciente]{Función para guardar los datos de un paciente}
-\label{cod:codejemplo}
-\end{code}
 
 \section{Interfaz de control}
 \label{section:controller}
@@ -309,7 +303,8 @@ El máximo de objetos visuales al mismo tiempo dentro de la ventana es 2.
 Las funciones \verb|generatestar()|, \verb|generateasteroid()| y \verb|generatedisturb()| encapsulan la lógica de creación de objetos, y la función \verb|clearobjects()| la eliminación de estos.
 
 El desarrollo del juego está concentrado en \verb|listenercallback()|, que es el bucle principal y se ejecuta cada vez que se recibe un nuevo dato en el topic \verb|/CleanSignal|.
-La señal y la perturbación se actualizan con \verb|np.roll|.
+Se utilizan las funciones \verb|np.roll| y \verb|plt.ion()| de las bibliotecas \verb|NumPy| y \verb|Matplotlib|, respectivamente.
+\verb|np.roll| actualiza la señal y la perturbación.
 Como se explica en la Sección \ref{section:visualization}, los gráficos se actualizan en tiempo real con \verb|plt.ion()|.
 
 Los callbacks actualizan los datos que se reciben de los topics, estas funciones son \verb|disturbcallback()|, \verb|levelcallback()|, \verb|offsetcallback()| y \verb|positioncallback()|.
@@ -319,18 +314,3 @@ La función \verb|main()| inicializa el nodo ROS, crea una instancia del juego y
 El proyecto es fácilmente escalable en el caso que se quiera añadir una señal que sea combinación de otras.
 Simplemente se debe obtener la señal del topic \verb|/CleanSignal| si es de tipo trayectoria o de \verb|/Disturbance| si es de tipo perturbación.
 En cuanto a la selección de esta nueva señal, es suficiente con incluir una nueva opción dentro de la \verb|Combox| a la que hace referencia.
-
-\section{Esquema de nodos y topics}
-\label{section:review}
-
-En la Imagen \ref{fig:nodes} se contempla un esquema de los nodos, topics y tipos de datos que se utilizan para la comunicación de la plataforma software con el actuador.
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.90\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/esquema_nodos.png}
-	\end{minipage}
-	\caption[Esquema de nodos y topics]{Esquema de nodos y topics}
-	\label{fig:nodes}
-\end{figure}

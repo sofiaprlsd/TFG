@@ -1,16 +1,7 @@
 \chapter{Plataforma de desarrollo}
 \label{cap:capitulo3}
 
-\begin{flushright}
-\begin{minipage}[]{6.5cm}
-\emph{Lo simple es mejor que lo complejo.}\\
-\end{minipage}\\
-
-Tim Peters, \textit{The Zen of Python}\\
-\end{flushright}
-
-\vspace{1cm}
-\setcounter{footnote}{9}
+%\setcounter{footnote}{9}
 
 A continuación, se explican las plataformas de desarrollo utilizadas a nivel de software y hardware, que han permitido alcanzar los objetivos descritos en el capítulo anterior.
 
@@ -62,15 +53,9 @@ Se destacan las siguientes librerías:
 Una vez definido el software, se especifica el hardware encargado de ejecutar las acciones en un entorno físico.
 A pesar de que este trabajo se centra en el software del sistema, es importante conocer los dispositivos a utilizar y el propósito de los mismos para desarrollar una arquitectura que se ajuste mejor a las necesidades y alcances del proyecto global.
 
-Para el movimiento del brazo robótico se utiliza un actuador de HEBI Robotics\footnote{\url{https://www.hebirobotics.com/actuators}}, más concretamente el modelo T-Series como puede observarse en la Imagen \ref{fig:actuador}.
+Para el movimiento del brazo robótico se utiliza un actuador de HEBI Robotics\footnote{\url{https://www.hebirobotics.com/actuators}}, más concretamente el modelo T-Series, como puede observarse en la Imagen \ref{fig:actuador}.
 Este actuador está diseñado para funcionar como un componente robótico con todas las funciones.
-La salida gira continuamente, no requiere calibración ni referencia alguna de arranque.
-Diseñado para funcionar en brazos robóticos con múltiples grados de libertad.
-Integra varios sensores fácilmente accesibles a través de varias APIs.
-
-La selección de este modelo se debe a la incorporación de un sensor de posición, lo que permite registrar el movimiento del brazo del paciente, así como su capacidad de control en fuerza al tratarse de un Sistema Electrónico de Actuación (SEA).
-El sensor de posición resulta fundamental para la validación de los entornos gamificados, los cuales proponen una serie de actividades donde la posición del paciente se toma como referencia para el desarrollo de actividades interactivas y dinámicas dentro de un contexto terapéutico.
-Además, el control por fuerza permite diseñar señales de tipo perturbación que simulan un nivel de resistencia o asistencia durante el ejercicio, lo que favorece la adaptación de la terapia a las capacidades de cada paciente.
+La salida gira continuamente, no requiere calibración ni referencia alguna de arranque, lo que permite que funcione en brazos robóticos con múltiples grados de libertad.
 
 \begin{figure}[ht!]
 	\centering
@@ -78,6 +63,13 @@ Además, el control por fuerza permite diseñar señales de tipo perturbación q
 		\centering
 		\includegraphics[width=\linewidth]{figs/actuador_T-Series.jpg}
 	\end{minipage}
-	\caption[Actuador T-Series]{Actuador T-Series}
+	\caption[Actuador T-Series]{Fuente: HEBI Robotics}
 	\label{fig:actuador}
 \end{figure}
+
+Destaca por tener un torque preciso y controlado, fundamental en aplicaciones que requieren movimientos suaves y controlados, como es el caso.
+Gracias a su diseño, puede mantener un torque constante durante el movimiento, lo que asegura precisión y fluidez en las acciones del brazo.
+Además, permite simular niveles de resistencia y asistencia debido a su ajuste dinámico.
+
+Una de las principales razones de la selección de este modelo es la integración de un sensor de posición, lo que permite registrar el movimiento del brazo del paciente y facilita la validación de los entornos gamificados, los cuales proponen una serie de actividades donde la posición del paciente se toma como referencia para el desarrollo de actividades interactivas y dinámicas dentro de un contexto terapéutico.
+De la misma manera, el actuador incorpora un control de fuerza, que permite diseñar señales de tipo perturbación que simulan un nivel de resistencia o asistencia durante el ejercicio, lo que favorece la adaptación de la terapia a las capacidades de cada paciente.
