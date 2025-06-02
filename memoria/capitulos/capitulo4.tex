@@ -21,8 +21,18 @@ A continuación, se definen los puntos clave del sistema:
 	\item Perturbación: es una señal que altera la trayectoria. Se define mediante los parámetros de amplitud, duración y tipo (perturbación escalón o sinusoidal). El objetivo es proporcionar un desafío adicional al paciente.
 	\item Límites: definen las restricciones físicas de movilidad del brazo robótico. Se establecen un límite inferior (mínimo) y superior (máximo), así como un offset que determina la posición inicial del brazo. Se ajustan llevando el brazo a la posición deseada.
 	\item Asistencia: se refiere al grado de apoyo que ofrece el brazo robótico al paciente. Este parámetro se ajusta tanto de forma dinámica, según el nivel de dificultad del juego, como manual, a través de la interfaz de control.
-	\item Nivel de dificultad: hace referencia al nivel de dificultad del juego. El nivel de dificultad aumenta de forma progresiva, reduciendo el nivel de asistencia del robot. Puede ajustarse tanto dinámicamente como manualmente al igual que la asistencia.\\
+	\item Nivel de dificultad: hace referencia al nivel de dificultad del juego. El nivel de dificultad aumenta de forma progresiva, reduciendo el nivel de asistencia del robot. Puede ajustarse tanto dinámicamente como manualmente al igual que la asistencia.
 \end{itemize}\
+
+El sistema combina una lógica de ajuste automática y manual para la asistencia y nivel de dificultad.
+El ajuste automático permite adaptar la terapia en tiempo real según el rendimiento del paciente, lo que favorece una progresión personalizada y reduce la necesidad de intervención del terapeuta.
+Por otro lado, el control manual ofrece flexibilidad al terapeuta para modificar los parámetros según criterios específicos o en situaciones particulares.
+Esta dualidad mejora la versatilidad del sistema y permite adaptarlo tanto a sesiones autónomas como supervisadas.\\
+
+Durante el desarrollo surgieron distintos desafíos que condicionaron el diseño final de la plataforma.
+Entre ellos se destaca la diferencia en los rangos de movimiento de los diferentes perfiles terapéuticos.
+Para ello, se decidió representar las gráficas estableciendo un tamaño fijo de ventana en base a los valores de los límites mínimo y máximo definidos.
+De esta manera se crea un margen visual más amplio que permite al usuario centrarse en la dinámica del juego.\\
 
 Más adelante, se describen los nodos y topics utilizados en la plataforma.
 
@@ -46,8 +56,13 @@ Seguidamente, se detalla la función de los nodo y la información trasmitida po
     \item \verb|LimitNode|: este nodo gestiona la configuración de los límites del brazo robótico. Utiliza el topic \verb|/RobotLimits|, como un booleano para indicar el límite que se ajusta.
 	\item \verb|ScrollPublisherNode|: este nodo publica los parámetros de la trayectoria y la perturbación en el topic \verb|/SliderParameters|, y del juego (asistencia y nivel de dificultad) en \verb|/GameParameters|. La actualización de los datos se realiza cada $50 ms$.
 	\item \verb|FlappyBirdNode|: este nodo implementa la lógica del juego basado en seguir una trayectoria o mantener una posición. Recibe la señal de referencia del topic \verb|/CleanSignal|, la señal de perturbación de \verb|/Disturbance|, la asistencia y nivel de dificultad de \verb|/GameParameters|, los límites y el offset de \verb|/SliderParameters| y la posición del jugador de \verb|/ActuatorPosition|. Y publica los datos de referencia de las señales y tiempo, en el momento de la posición del jugador en el eje X, en el topic \verb|/MotorParameters|. La actualización de los datos se realiza cada $10 ms$.
-	\item \verb|FlappyBirdViewerNode|: este nodo grafica las señales de trayectoria, perturbación y la posición del paciente, que recibe de los topics \verb|/CleanSignal|, \verb|/Disturbance| y \verb|/ActuatorPosition|, respectivamente, para visualizar el progreso del paciente durante la terapia. Además, calcula el error de posición a través de los datos publicados en el topic \verb|/MotorParameters|, explicados en el nodo anterior.\\
+	\item \verb|FlappyBirdViewerNode|: este nodo grafica las señales de trayectoria, perturbación y la posición del paciente, que recibe de los topics \verb|/CleanSignal|, \verb|/Disturbance| y \verb|/ActuatorPosition|, respectivamente, para visualizar el progreso del paciente durante la terapia. Además, calcula el error de posición a través de los datos publicados en el topic \verb|/MotorParameters|, explicados en el nodo anterior.
 \end{itemize}\
+
+La arquitectura modular de los nodos permite una separación clara entre la lógica del juego, la visualización y el control de la plataforma.
+Esta estructura facilita el desarrollo, pero introduce restricciones en cuanto a la sincronización de los datos.
+Pueden producirse desfases leves en sesiones prolongadas o con múltiples perturbaciones simultáneas debido a la diferencia entre la frecuencia de publicación y la latencia de los callbacks.
+No obstante, la fecuencia fija de actualización es suficiente para mantener una ejecución estable.\\
 
 El proyecto se divide en cuatro scripts, el primero se utiliza para crear o registrar un paciente, el segundo lanza la GUI y controla los parámetros del juego, el tercero permite visualizar el comportamiento del paciente durante la terapia, y el cuarto es el propio juego.
 
@@ -275,15 +290,15 @@ assistance = max(0, assistance - (level - 1) // 2)
 \caption[Cálculo del nivel de asistencia según el nivel de dificultad]{Cálculo del nivel de asistencia según el nivel de dificultad}
 \end{myequation}
 
-Para crear un juego dinámico que capte la atención del paciente se crea una misión secundaria en cada nivel.
-Los niveles 1, 4 y 7 tienen como objetivo permanecer dentro de los límites por un tiempo determinado.
-Esto permite evaluar la precisión del paciente.
-Además, cuando se sobrepasa uno de los límites el contador se para y se reanuda de nuevo cuando se vuelve al camino.
-Los niveles 2 y 6 se enfocan en el ajuste de la posición para chocar con las estrellas que están dispuestas en la señal principal.
-De esta forma se consigue que el paciente permanezca y siga la trayectoria deseada.
-Los niveles 3 y 8 pretenden ejercitar la rapidez de reacción mientras el paciente evita colisionar con los asteroides.
-Los niveles 5 y 9 fomentan la flexibilidad cognitiva del paciente para adaptarse a una nueva lógica de control basada en el concepto de gravedad invertida (arriba es abajo y viceversa).
-Y, por último, el nivel 10 permite al médico evaluar distintos escenarios límites mediante ajustes en los parámetros de la señal, perturbación y el offset.
+Para crear un juego dinámico que capte la atención del paciente se crea una misión secundaria en cada nivel que se explica a continuación:
+\begin{itemize}
+    \item Niveles 1, 4 y 7: tienen como objetivo permanecer dentro de los límites por un tiempo determinado. Esto permite evaluar la precisión del paciente. Además, cuando se sobrepasa uno de los límites el contador se para y se reanuda de nuevo cuando se vuelve al camino.
+	\item Niveles 2 y 6: se enfocan en el ajuste de la posición para chocar con las estrellas que están dispuestas en la señal principal. De esta forma se consigue que el paciente permanezca y siga la trayectoria deseada.
+	\item Niveles 3 y 8: pretenden ejercitar la rapidez de reacción mientras el paciente evita colisionar con los asteroides.
+	\item Niveles 5 y 9: fomentan la flexibilidad cognitiva del paciente para adaptarse a una nueva lógica de control basada en el concepto de gravedad invertida (arriba es abajo y viceversa).
+	\item Nivel 10: permite al médico evaluar distintos escenarios límites mediante ajustes en los parámetros de la señal, perturbación y el offset.
+\end{itemize}\
+
 En las Imágenes \ref{fig:level} y \ref{fig:level2} se comparan dos niveles diferentes del juego.
 La primera imagen presenta límites más estrictos que la segunda, que se han coloreado para que se vean claramente en el estudio, pero en el juego son dos líneas de color blanco punteadas para evitar distracciones del paciente.
 En la segunda imagen, se observan dos perturbaciones de tipo sinusoidal con sentidos opuestos, representadas por triángulos verdes cuya punta indica el signo de la perturbación.
