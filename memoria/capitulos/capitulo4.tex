@@ -13,15 +13,15 @@ Steve Jobs, \textit{conferencia de lanzamiento del Apple iPod, 2001}\\
 
 Después de definir la plataforma de desarrollo, se procede a explicar el diseño de la aplicación.
 
-El sistema está diseñado para gestionar la rehabilitación motora de pacientes post-ictus mediante la interacción con un brazo robótico.
+El sistema implementa terapias de rehabilitación motora, que facilitan el movimiento de pacientes post-ictus, mediante la interacción con un dispositivo robótico.
 Esto se lleva a cabo a través de una aplicación que controla diversos parámetros que afectan a la trayectoria, las perturbaciones y nivel de asistencia del brazo.
 A continuación, se definen los puntos clave del sistema:
 \begin{itemize}
-    \item Trayectoria: representa el recorrido deseado que el paciente debe seguir durante la terapia. Es una señal definida por los parámetros de frecuencia, amplitud y tipo de señal (trayecto constante o dinámico). El objetivo es medir la precisión del paciente al seguir la trayectoria.
+    \item Trayectoria: representa el recorrido deseado que el paciente debe seguir durante la terapia. Es una señal definida por los parámetros de frecuencia, amplitud y tipo de señal (trayecto constante, que se trata de una señal con amplitud cero o dinámico, que es una señal con amplitud distinta de cero). El objetivo es medir la precisión del paciente al seguir la trayectoria.
 	\item Perturbación: es una señal que altera la trayectoria. Se define mediante los parámetros de amplitud, duración y tipo (perturbación escalón o sinusoidal). El objetivo es proporcionar un desafío adicional al paciente.
-	\item Límites: definen las restricciones físicas de movilidad del brazo robótico. Se establecen un límite inferior (mínimo) y superior (máximo), así como un offset que determina la posición inicial del brazo. Se ajustan llevando el brazo a la posición deseada.
-	\item Asistencia: se refiere al grado de apoyo que ofrece el brazo robótico al paciente. Este parámetro se ajusta tanto de forma dinámica, según el nivel de dificultad del juego, como manual, a través de la interfaz de control.
-	\item Nivel de dificultad: hace referencia al nivel de dificultad del juego. El nivel de dificultad aumenta de forma progresiva, reduciendo el nivel de asistencia del robot. Puede ajustarse tanto dinámicamente como manualmente al igual que la asistencia.
+	\item Límites: definen las restricciones físicas de movilidad del dispositivo robótico. Se establecen un límite inferior (mínimo) y superior (máximo), así como un offset que determina la posición inicial del brazo. Se ajustan llevando el eje del actuador a la posición deseada.
+	\item Asistencia: se refiere al grado de apoyo que ofrece el robot al paciente. Este parámetro se ajusta tanto de forma automática, según el nivel de dificultad del juego, como manual, a través de la interfaz de control.
+	\item Nivel de dificultad: hace referencia al nivel de dificultad del juego. El nivel de dificultad aumenta de forma progresiva, reduciendo el nivel de asistencia del robot. Puede ajustarse tanto automáticamente como manualmente al igual que la asistencia.
 \end{itemize}\
 
 El sistema combina una lógica de ajuste automática y manual para la asistencia y nivel de dificultad.
@@ -51,9 +51,10 @@ En la Imagen \ref{fig:nodes} se contempla un esquema de los nodos, topics y tipo
 	\label{fig:nodes}
 \end{figure}
 
-Seguidamente, se detalla la función de los nodo y la información trasmitida por cada uno de los topics:
+Seguidamente, se detalla la función de los nodos y la información trasmitida por cada uno de los topics.
+El proyecto se compone de cinco nodos:
 \begin{itemize}
-    \item \verb|LimitNode|: este nodo gestiona la configuración de los límites del brazo robótico. Utiliza el topic \verb|/RobotLimits|, como un booleano para indicar el límite que se ajusta.
+    \item \verb|LimitNode|: este nodo gestiona la orientación y la configuración de los límites del actuador. Utiliza el topic \verb|/RobotLimits|.
 	\item \verb|ScrollPublisherNode|: este nodo publica los parámetros de la trayectoria y la perturbación en el topic \verb|/SliderParameters|, y del juego (asistencia y nivel de dificultad) en \verb|/GameParameters|. La actualización de los datos se realiza cada $50 ms$.
 	\item \verb|FlappyBirdNode|: este nodo implementa la lógica del juego basado en seguir una trayectoria o mantener una posición. Recibe la señal de referencia del topic \verb|/CleanSignal|, la señal de perturbación de \verb|/Disturbance|, la asistencia y nivel de dificultad de \verb|/GameParameters|, los límites y el offset de \verb|/SliderParameters| y la posición del jugador de \verb|/ActuatorPosition|. Y publica los datos de referencia de las señales y tiempo, en el momento de la posición del jugador en el eje X, en el topic \verb|/MotorParameters|. La actualización de los datos se realiza cada $10 ms$.
 	\item \verb|FlappyBirdViewerNode|: este nodo grafica las señales de trayectoria, perturbación y la posición del paciente, que recibe de los topics \verb|/CleanSignal|, \verb|/Disturbance| y \verb|/ActuatorPosition|, respectivamente, para visualizar el progreso del paciente durante la terapia. Además, calcula el error de posición a través de los datos publicados en el topic \verb|/MotorParameters|, explicados en el nodo anterior.
@@ -64,12 +65,12 @@ Esta estructura facilita el desarrollo, pero introduce restricciones en cuanto a
 Pueden producirse desfases leves en sesiones prolongadas o con múltiples perturbaciones simultáneas debido a la diferencia entre la frecuencia de publicación y la latencia de los callbacks.
 No obstante, la fecuencia fija de actualización es suficiente para mantener una ejecución estable.\\
 
-El proyecto se divide en cuatro scripts, el primero se utiliza para crear o registrar un paciente, el segundo lanza la GUI y controla los parámetros del juego, el tercero permite visualizar el comportamiento del paciente durante la terapia, y el cuarto es el propio juego.
+El software se divide en cuatro programas, el primero se utiliza para crear o registrar un paciente, el segundo lanza la GUI y controla los parámetros del juego, el tercero permite visualizar el comportamiento del paciente durante la terapia, y el cuarto es el propio juego.
 
 \section{Interfaz de registro de un paciente}
 \label{section:registro}
 
-Este script permite gestionar un conjunto de datos, que registran a un paciente, mediante una GUI.
+Permite gestionar un conjunto de datos, que registran a un paciente, mediante una GUI.
 
 En primer lugar, se importan las bibliotecas estándar, mencionadas en el capítulo anterior, como \verb|tkinter|, que se utiliza para crear la interfaz gráfica, \verb|csv| para guardar los datos en un archivo CSV para su posterior uso, y \verb|os| para interactuar con el sistema de archivos.
 
@@ -101,23 +102,25 @@ En la Imagen \ref{fig:database} puede observarse el estilo de la interfaz.
 \section{Interfaz de control}
 \label{section:controller}
 
-Este script combina ROS 2 y Tkinter para crear una GUI que gestiona límites físicos (mínimo, máximo y offset) del robot, adaptándose al brazo específico del paciente que se va a rehabilitar, configura y publica parámetros para crear una señal de control y perturbación para un sistema robótico, parámetros de asistencia y nivel de dificultad para un videojuego terapéutico y almacena dichas configuraciones por paciente.
+Combina ROS 2 y Tkinter para crear una GUI que gestiona límites físicos (mínimo, máximo y offset) del robot, adaptándose al brazo específico del paciente que se va a rehabilitar, configura y publica parámetros para crear una señal de control y perturbación para un sistema robótico, asistencia y nivel de dificultad para un videojuego terapéutico y almacena dichas configuraciones por paciente.
 
 Al inicio del script se importan las librerías \verb|rclpy| y \verb|std_msgs.msg| para gestionar la comunicación entre Python y ROS 2, \verb|tkinter| para crear la interfaz gráfica, \verb|csv| para el manejo de archivos CSV, \verb|os| para interactuar con el sistema y \verb|datetime| para gestionar la fecha de creación de los archivos.
 
 Se crea un directorio en el directorio de inicio del usuario, si no existe, bajo el nombre \textit{database}, donde se almacenan los ficheros con los datos de configuración de cada paciente.
 
-Se definen dos clases, \verb|ScrollPublisherNode| y \verb|ScrollGUI|.
-La primera es una clase de ROS 2 que publica los parámetros de dos señales, de tipo trayectoria y perturbación en el topic \verb|/SliderParameters| y los datos de asistencia y nivel de juego en \verb|/GameParameters|.
+Se definen dos nodos, \verb|LimitNode| y \verb|ScrollPublisherNode|.
+El primero crea la interfaz de configuración del brazo que se va a rehabilitar y los límites físicos del robot, y publica el botón que se ha pulsado de la interfaz (resetear, mínimo, máximo u offset) para indicar la orientación o el ajuste de posición del actuador.
+El mensaje que se publica es de tipo \verb|Int32MultiArray|.
+El segundo publica los parámetros de dos señales, de tipo trayectoria y perturbación en el topic \verb|/SliderParameters| y los datos de asistencia y nivel de juego en \verb|/GameParameters|.
 Los mensajes son de tipo \verb|Float32MultiArray| y \verb|Int32MultiArray|, y se publican cada $50 ms$ y únicamente cuando se actualiza el valor de los datos, respectivamente.
 La decisión de publicar ambas señales en el mismo topic a dicha velocidad se debe a que la actualización de los datos debe realizarse de forma casi instantánea para permitir ajustes inmediatos en los parámetros de la terapia y evaluar la rapidez de respuesta del paciente.
-Y, se ha comprobado que esta estimación es lo suficientemente rápida para satisfacer estos requisitos.
-Los datos necesarios para generar la señal de trayectoria son frecuencia, amplitud y tipo, mientras que para la perturbación son duración, amplitud y tipo.
+Se ha comprobado que esta estimación es lo suficientemente rápida para satisfacer estos requisitos.
 El tiempo de las señales se define de manera distinta para evitar redundancias, ya que la perturbación no es constante.
 En su lugar, se estima una duración que facilita el entendimiento del terapeuta.
 El tipo de señal hace referencia al modo de juego y se codifica como 1.0 (hold o mantener) y 2.0 (follow o seguir), y el tipo de perturbación como 1.0 (sinusoidal) y 2.0 (step o escalón).
 También se define un offset que determina la distancia entre la señal principal y los límites superior e inferior, ajustando así los márgenes del camino.
-La segunda clase crea la interfaz gráfica y permite ajustar los parámetros del juego en tiempo real y publicarlos a través de un nodo de ROS.
+
+La clase \verb|ScrollGUI| crea la interfaz gráfica y permite ajustar los parámetros del juego en tiempo real y publicarlos a través de un nodo de ROS.
 Los datos se guardan en un archivo CSV bajo el nombre \verb|ID-year-month-day-config_<index>.csv| en un subdirectorio llamado \textit{config} dentro del directorio \textit{home/user/database/ID/}.
 \verb|index| hace referencia al número de archivo de la sesión diaria.
 Si el archivo no existe, se escribe un encabezado con los nombres de los campos a los que hacen referencia los datos como se observa en el Código \ref{cod:codejemplo2}.
@@ -152,8 +155,8 @@ La función \verb|close()| finaliza el nodo y cierra la GUI y el método \verb|r
 \verb|loadcsv()| lee el último registro del archivo del paciente que se pasa como parámetro y devuelve los valores de frecuencia (Hz), amplitud (rad) de las señales de trayectoria y perturbación, duración (s), periodo (s) y nivel del juego.
 Todos son \verb|float| excepto el último que es un \verb|int|.
 
+El programa comienza con la función \verb|startgui()| que crea el nodo \verb|LimitNode|.
 \verb|main()| es la función principal y se encarga de extraer el ID del paciente desde la ruta al archivo de registro, cargar los datos de las señales y el juego desde el CSV, crear el nodo \verb|ScrollPublisherNode| con dichos parámetros e iniciar la GUI.
-\verb|startgui()| es la primera interfaz que se lanza y gestiona la configuración del brazo que se va a rehabilitar y de los límites físicos del robot a través de la publicación de un \verb|Int32MultiArray| que actúa como un booleano indicando el botón que se ha pulsado (resetear, mínimo, máximo u offset).
 El offset corresponde a la posición inicial desde la cual comienza la terapia.
 Además, comprueba que se ha seleccionado o bien brazo derecho o izquierdo y que los límites mínimo y máximo se han definido correctamente antes de permitir establecer el offset o continuar a la siguiente ventana.
 La decisión de ajustar los límites y el offset mediante el movimiento del brazo robótico a una posición específica, y luego guardar dicha posición a través de un botón, responde a un requisito explícito del cliente.
@@ -172,7 +175,7 @@ En la Imagen \ref{fig:config} se muestra el formato de la ventana de inicio.
 \section{Interfaz de visualización}
 \label{section:visualization}
 
-Este script permite observar y registrar la ejecución de un paciente en una tarea de seguimiento de trayectoria como parte de una sesión de rehabilitación motora.
+Diseñado para observar y registrar la ejecución de un paciente en una tarea de seguimiento de trayectoria como parte de una sesión de rehabilitación motora.
 
 Además de incluir las bibliotecas mencionadas en la Sección \ref{section:controller}, se utilizan \verb|matplotlib| para visualizar los datos del rendimiento del jugador en tiempo real, \verb|numpy| para manejar los datos de las señales que cambian con el tiempo y \verb|sys| para gestionar la ruta al archivo CSV con los datos de registro del paciente.
 
@@ -187,7 +190,7 @@ Para la detección de colisiones se implementa una lógica simple basada en la c
 \verb|playercallback()| actualiza la posición del jugador, el offset que separa la señal de los límites y el tiempo total y marca que el jugador está activo.
 
 En la Imagen \ref{fig:visual}, se muestran dos gráficos.
-El que está en la parte superior muestra la señal de trayectoria (línea azul), la perturbación de tipo escalón (línea verde), los límites superior e inferior (líneas discontinuas grises) y la posición actual del jugador (punto rojo), proporcionando una visión clara y completa de la terapia.
+El que está en la parte superior muestra la señal de trayectoria (línea azul), la perturbación de tipo seno (línea verde), los límites superior e inferior (líneas discontinuas grises) y la posición actual del jugador (punto rojo), proporcionando una visión clara y completa de la terapia.
 Y, la parte inferior grafica el error de posición con respecto a la trayectoria deseada en función del tiempo, lo que permite detectar fallos de control, fatiga o pérdida de atención.
 
 \begin{figure}[ht!]
@@ -200,24 +203,16 @@ Y, la parte inferior grafica el error de posición con respecto a la trayectoria
 	\label{fig:visual}
 \end{figure}
 
-En un principio, el error se calculaba en función del tiempo como se muestra en la Ecuación \ref{ec:ec1}, pero, más adelante, se optó por calcular la interpolación (o selección por índice más cercano) del valor de la trayectoria de referencia (x, y) evaluando la posición del jugador en el eje X, $x_p$, como se muestra en la Ecuación \ref{ec:ec2}.
-El segundo cálculo ofrece una aproximación más precisa al error, ya que está directamente relacionado con la ubicación del jugador.
-A diferencia del primer cálculo, que depende del instante de tiempo y puede verse afectado por variaciones en la sincronización de los datos.
+El error se calcula mediante la interpolación (o selección por índice más cercano) del valor de la trayectoria de referencia (x, y) evaluando la posición del jugador en el eje X, $x_p$, como se muestra en la Ecuación \ref{ec:ec2}.
+Como el eje X hace referencia al tiempo, el error es la diferencia entre la señal de trayectoria y la posición del jugador en el mismo instante de tiempo.
 
 \begin{myequation}[h]
-\begin{equation}
-error_t = | y_{player}(t) - y_{reference}(t) |
-\nonumber
-\label{ec:ec1}
-\end{equation}
-\caption[Cálculo del error de trayectoria en el tiempo]{Cálculo del error de trayectoria en el tiempo}
-
 \begin{equation}
 error(x_p, y_p) = | y_p - f(x_p) |
 \nonumber
 \label{ec:ec2}
 \end{equation}
-\caption[Cálculo del error de trayectoria por posición]{Cálculo del error de trayectoria por posición}
+\caption[Cálculo del error de trayectoria]{Cálculo del error de trayectoria}
 \end{myequation}
 
 Al finalizar la ejecución, los datos más relevantes como el tiempo, la señal, los límites mínimo y máximo, la posición del jugador, el offset, el error, las colisiones y el nivel de asistencia se almacenan en un archivo CSV bajo el nombre \verb|ID-year-month-day-metrics_<index>.csv| en un subdirectorio llamado \textit{metrics} dentro del directorio \textit{home/user/database/ID/}.
@@ -229,8 +224,8 @@ La función principal \verb|main()| verifica que se ha pasado como único argume
 \section{Juego flappy}
 \label{section:game}
 
-Este script implementa un juego basado en el Flappy Bird, adaptado a un entorno ROS 2 para interactuar con sensores y actuadores en tiempo real.
-Existen dos modos de juego distintos, \textit{hold}, el jugador debe mantener la posición, y \textit{follow}, el jugador debe seguir una trayectoría.
+Se trata de un juego basado en el Flappy Bird, adaptado a un entorno ROS 2 para interactuar con sensores y actuadores en tiempo real.
+Se han programado dos modos de juego distintos, \textit{hold}, el jugador debe mantener la posición, y \textit{follow}, el jugador debe seguir una trayectoría.
 
 Se implementan las librerías \verb|rclpy|, y \verb|std_msgs| para permitir la comunicación con ROS 2, \verb|matplotlib| y \verb|numpy| para la visualización y el manejo de señales, y \verb|pygame| para utilizar efectos de sonido.
 
@@ -348,3 +343,6 @@ La función \verb|main()| inicializa el nodo ROS, crea una instancia del juego y
 El proyecto es fácilmente escalable en el caso que se quiera añadir una señal que sea combinación de otras.
 Simplemente se debe obtener la señal del topic \verb|/CleanSignal| si es de tipo trayectoria o de \verb|/Disturbance| si es de tipo perturbación.
 En cuanto a la selección de esta nueva señal, es suficiente con incluir una nueva opción dentro de la \verb|Combox| a la que hace referencia.
+
+\section{Realización y resultado de los ensayos}
+\label{section:encuestas}
