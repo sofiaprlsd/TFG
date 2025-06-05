@@ -13,16 +13,59 @@ Steve Jobs, \textit{conferencia de lanzamiento del Apple iPod, 2001}\\
 
 Después de definir la plataforma de desarrollo, se procede a explicar el diseño de la aplicación.
 
-El sistema está diseñado para gestionar la rehabilitación motora de pacientes post-ictus mediante la interacción con un brazo robótico.
-Esto se lleva a cabo a través de una aplicación que controla diersos parámetros que afectan a la trayectoria, las perturbaciones y nivel de asistencia del brazo.
-A continuación, se definen los puntos clave del sistema:
+El sistema implementa terapias de rehabilitación motora dirigidas a pacientes post-ictus, facilitando el movimiento del miembro superior derecho mediante la interacción con un dispositivo robótico.
+La rehabilitación se basa en un diseño que fomenta el matener una posición estática como la movilidad dinámica del brazo dentro de un entorno gamificado.
+Dicho entorno permite al terapeuta monitorear y adaptar las sesiones en tiempo real.
+
+La función del sistema es guiar y asistir al paciente durante la realización de movimientos específicos con el fin de mejorar el control motor.
+Para ello, se desarrolla una aplicación que permite configurar y controlar distintos parámetros que regulan el comportamiento del dispositivo robótico, como la trayectoria, las perturbaciones (resistencia variable) y nivel de asistencia del sistema.
+Estos parámetros son esenciales para personalizar la terapia según el desempeño y progreso de cada paciente:
 \begin{itemize}
-    \item Trayectoria: representa el recorrido deseado que el paciente debe seguir durante la terapia. Es una señal definida por los parámetros de frecuencia, amplitud y tipo de señal (trayecto constante o dinámico). El objetivo es medir la precisión del paciente al seguir la trayectoria.
+    \item Trayectoria: representa el recorrido deseado que el paciente debe seguir durante la terapia. Es una señal definida por los parámetros de frecuencia, amplitud y tipo de señal (trayecto constante, señal con amplitud cero o dinámico, señal con amplitud distinta de cero).
+	El objetivo es medir la precisión del paciente al seguir la trayectoria. Para ello, se calcula el error absoluto entre la posición del brazo y la posición de referencia, en cada instante de tiempo. El resultado refleja la desviación puntual del paciente respecto al recorrido ideal durante el desempeño de la tarea.
+	En la Imagen \ref{fig:trajectory} se observa la representación de una señal de tipo seno, con amplitud $1,0 ud$ y frecuencia $0,3 Hz$.
+	\begin{figure}[ht!]
+		\centering
+		\begin{minipage}{0.65\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{figs/trayectoria.png}
+		\end{minipage}
+		\caption[Trayectoria dinámica de tipo seno]{Señal sinusoidal. Eje X: Tiempo en segundos. Eje Y: Amplitud de la señal de trayectoria}
+		\label{fig:trajectory}
+	\end{figure}
 	\item Perturbación: es una señal que altera la trayectoria. Se define mediante los parámetros de amplitud, duración y tipo (perturbación escalón o sinusoidal). El objetivo es proporcionar un desafío adicional al paciente.
-	\item Límites: definen las restricciones físicas de movilidad del brazo robótico. Se establecen un límite inferior (mínimo) y superior (máximo), así como un offset que deteermina la posición inicial del brazo. Se ajustan llevando el brazo a la posición deseada.
-	\item Asistencia: se refiere al grado de apoyo que ofrece el brazo robótico al paciente. Este parámetro se ajusta tanto de forma dinámica, según el nivel de dificultad del juego, como manual, a través de la interfaz de control.
-	\item Nivel de dificultad: hace referencia al nivel de dificultad del juego. El nivel de dificultad aumenta de forma progresiva, reduciendo el nivel de asistencia del robot. Puede ajustarse tanto dinámicamente como manualmente al igual que la asistencia.\\
+	En la Imagen \ref{fig:perturbacion} se observa la representación de una señal de tipo escalón, con amplitud $1,0 ud$ y duración $1,0 s$.
+	\begin{figure}[ht!]
+		\centering
+		\begin{minipage}{0.65\linewidth}
+			\centering
+			\includegraphics[width=\linewidth]{figs/perturbacion.png}
+		\end{minipage}
+		\caption[Perturbación de tipo escalón]{Señal escalón. Eje X: Tiempo en segundos. Eje Y: Amplitud de la señal de perturbación}
+		\label{fig:perturbacion}
+	\end{figure}
+	\item Límites: definen las restricciones físicas de movilidad del dispositivo robótico. Se establecen un límite inferior (mínimo) y superior (máximo), así como un offset que determina la posición inicial del brazo. Se ajustan llevando el eje del actuador a la posición deseada.
+	\item Asistencia: se refiere al grado de ayuda que ofrece el robot al paciente. El juego modifica automáticamente este parámetro. Además, el terapeuta puede cambiar el nivel de asistencia de forma manual, a través de la interfaz de control. El ajuste automático se realiza según la Ecuación \ref{ec:ec3}.
+	\begin{myequation}[h]
+		\begin{equation}
+		assistance = max(0, assistance - (level - 1) // 2)
+		\nonumber
+		\label{ec:ec3}
+		\end{equation}
+		\caption[Cálculo del nivel de asistencia según el nivel de dificultad]{Cálculo del nivel de asistencia según el nivel de dificultad}
+	\end{myequation}
+	\item Nivel de dificultad: hace referencia al nivel de dificultad del juego. Aumenta de forma progresiva reduciendo el nivel de asistencia del robot. Cuando se supera una misión el juego sube automáticamente de nivel. También puede modificarse manualmente desde la interfaz de control.
 \end{itemize}\
+
+El sistema combina una lógica de ajuste automática y manual para la asistencia y nivel de dificultad.
+El ajuste automático permite adaptar la terapia en tiempo real según el rendimiento del paciente, lo que favorece una progresión personalizada y reduce la necesidad de intervención del terapeuta.
+Por otro lado, el control manual ofrece flexibilidad al terapeuta para modificar los parámetros según criterios específicos o en situaciones particulares.
+Esta dualidad mejora la versatilidad del sistema y permite adaptarlo tanto a sesiones autónomas como supervisadas.\\
+
+Durante el desarrollo surgieron distintos desafíos que condicionaron el diseño final de la plataforma.
+Uno de ellos fue delimitar el tamaño del eje Y, puesto que el movimiento del robot no permitía reflejar colisiones con los límites del juego.
+Para ello, se decidió representar las gráficas estableciendo un tamaño fijo de ventana en base a los valores de los límites mínimo y máximo definidos.
+De esta manera, se crea un margen visual más amplio que permite al usuario centrarse en la dinámica del juego.\\
 
 Más adelante, se describen los nodos y topics utilizados en la plataforma.
 
@@ -41,20 +84,34 @@ En la Imagen \ref{fig:nodes} se contempla un esquema de los nodos, topics y tipo
 	\label{fig:nodes}
 \end{figure}
 
-Seguidamente, se detalla la función de los nodo y la información trasmitida por cada uno de los topics:
+Seguidamente, se detalla la función de los nodos y la información trasmitida por cada uno de los topics.
+El proyecto se compone de cinco nodos:
 \begin{itemize}
-    \item \verb|LimitNode|: este nodo gestiona la configuración de los límites del brazo robótico. Utiliza el topic \verb|/RobotLimits|, como un booleano para indicar el límite que se ajusta.
-	\item \verb|ScrollPublisherNode|: este nodo publica los parámetros de la trayectoria, la perturbación y del juego (asistencia y nivel de dificultad). La actualización de los datos se realiza cada $100 ms$.
-	\item \verb|FlappyBirdNode|: este nodo implementa la lógica del juego basado en seguir una trayectoria o mantener una posición. Recibe la señal de referencia del topic \verb|/CleanSignal|, la señal de perturbación de \verb|/Disturbance|, la asistencia y nivel de dificultad de \verb|/GameParameters|, los límites y el offset de \verb|/SliderParameters| y la posición del jugador de \verb|/ActuatorPosition|. Y publica los datos de referencia de las señales y tiempo, en el momento de la posición del jugador en el eje X, en el topic \verb|MotorParameters|.
-	\item \verb|FlappyBirdViewerNode|: este nodo grafica las señales de trayectoria, perturbación y la posición del paciente, que recibe de los topics \verb|/CleanSignal|, \verb|/Disturbance| y \verb|/ActuatorPosition|, respectivamente, para visulizar el progreso del paciente durante la terapia. Además, calcula el error de posición a través de los datos publicados en el topic \verb|MotorParameters|, explicados en el nodo anterior.\\
+    \item \verb|LimitNode|: este nodo gestiona la orientación y la configuración de los límites del actuador. Utiliza el topic \verb|/RobotLimits|.
+	\item \verb|ScrollPublisherNode|: este nodo publica los parámetros de la trayectoria y la perturbación en el topic \verb|/SliderParameters|, y del juego (asistencia y nivel de dificultad) en \verb|/GameParameters|. La actualización de los datos se realiza cada $50 ms$.
+	\item \verb|FlappyBirdNode|: este nodo implementa la lógica del juego. Recibe la señal de referencia del topic \verb|/CleanSignal|, la señal de perturbación de \verb|/Disturbance|, la asistencia y nivel de dificultad de \verb|/GameParameters|, los límites y el offset (valor que determina los límites superior e inferior que delimitan el camino del juego) de \verb|/SliderParameters| y la posición del jugador (coordenadas $(x, y)$ en el juego basadas en la posición del brazo que publica el sensor de posición del actuador) de \verb|/ActuatorPosition|. Y publica los datos de referencia de las señales y tiempo, en el momento de la posición del jugador en el eje X, en el topic \verb|/MotorParameters|. La actualización de los datos se realiza cada $10 ms$.
+	\item \verb|FlappyBirdViewerNode|: este nodo grafica las señales de trayectoria, perturbación y la posición del paciente, que recibe de los topics \verb|/CleanSignal|, \verb|/Disturbance| y \verb|/ActuatorPosition|, respectivamente, para visualizar el progreso del paciente durante la terapia. Además, calcula el error absoluto entre la posición del brazo y la posición de referencia, en cada instante de tiempo, utilizando los datos del topic \verb|/MotorParameters|. Este cálculo se detalla en la Ecuación \ref{ec:ec1}.
+	\begin{myequation}[h]
+		\begin{equation}
+		error_t = | y_{player}(t) - y_{ref}(t) |
+		\nonumber
+		\label{ec:ec1}
+		\end{equation}
+		\caption[Cálculo del error de trayectoria]{Cálculo del error de trayectoria}
+	\end{myequation}
 \end{itemize}\
 
-El proyecto se divide en cuatro scripts, el primero se utiliza para crear o registrar un paciente, el segundo lanza la GUI y controla los parámetros del juego, el tercero permite visualizar el comportamiento del paciente durante la terapia, y el cuarto es el propio juego.
+La arquitectura modular de los nodos permite una separación clara entre la lógica del juego, la visualización y el control de la plataforma.
+Esta estructura facilita el desarrollo, pero introduce restricciones en cuanto a la sincronización de los datos.
+Pueden producirse desfases leves en sesiones prolongadas o con múltiples perturbaciones simultáneas debido a la diferencia entre la frecuencia de publicación y la latencia de los \textit{callbacks}.
+No obstante, la fecuencia fija de actualización es suficiente para mantener una ejecución estable.\\
+
+El software se divide en cuatro programas, el primero se utiliza para crear o registrar un paciente, el segundo lanza la GUI y controla los parámetros del juego, el tercero permite visualizar el comportamiento del paciente durante la terapia, y el cuarto es el propio juego.
 
 \section{Interfaz de registro de un paciente}
 \label{section:registro}
 
-Este script permite gestionar un conjunto de datos, que registran a un paciente, mediante una GUI.
+Permite gestionar un conjunto de datos, que registran a un paciente, mediante una GUI.
 
 En primer lugar, se importan las bibliotecas estándar, mencionadas en el capítulo anterior, como \verb|tkinter|, que se utiliza para crear la interfaz gráfica, \verb|csv| para guardar los datos en un archivo CSV para su posterior uso, y \verb|os| para interactuar con el sistema de archivos.
 
@@ -67,7 +124,7 @@ Los datos se escriben con \verb|csv.DictWriter| y son guardados como \verb|strin
 
 Se crea una ventana principal con un título y tamaño fijo de $600x500$ píxeles.
 Los estilos visuales se configuran con \verb|ttk.Style| y se definen dos frames distintas, \verb|main_frame| se utiliza como contenedor de los campos de entrada y texto y \verb|button_frame| agrupa la lógica de los botones.
-Cada campo es un \verb|Entry| enlazado a una variable de tipo \verb|StringVar| y hacen referencia al nombre, apellido e ID del paciente, frecuencia, amplitud y perturbación de la señal que generará el brazo robótico, nivel y progreso del juego y un espacio para que el doctor incluya observaciones.
+Cada campo es un \verb|Entry| enlazado a una variable de tipo \verb|StringVar| y hacen referencia al nombre, apellido e ID del paciente, frecuencia, amplitud y perturbación de la señal que generará el brazo robótico, nivel y progreso del juego y un espacio para que el terapeuta incluya observaciones.
 Se crean dos botones, \textit{Save} llama a \verb|savedata()| para guardar los datos, que a su vez llama a \verb|clear()| para limpiar los campos una vez que estos se han almacenado, y el botón \textit{Exit} llama a la función \verb|exit()| que cierra la aplicación.
 En la Imagen \ref{fig:database} puede observarse el estilo de la interfaz.
 
@@ -86,23 +143,25 @@ En la Imagen \ref{fig:database} puede observarse el estilo de la interfaz.
 \section{Interfaz de control}
 \label{section:controller}
 
-Este script combina ROS 2 y Tkinter para crear una GUI que gestiona límites físicos (mínimo, máximo y offset) del robot, adaptándose al brazo específico del paciente que se va a rehabilitar, configura y publica parámetros para crear una señal de control y perturbación para un sistema robótico, parámetros de asistencia y nivel de dificultad para un videojuego terapéutico y almacena dichas configuraciones por paciente.
+Combina ROS 2 y Tkinter para crear una GUI que gestiona límites físicos (mínimo, máximo y offset) del robot, adaptándose al brazo específico del paciente que se va a rehabilitar, configura y publica parámetros para crear una señal de control y perturbación para un sistema robótico, asistencia y nivel de dificultad para un videojuego terapéutico y almacena dichas configuraciones por paciente.
 
 Al inicio del script se importan las librerías \verb|rclpy| y \verb|std_msgs.msg| para gestionar la comunicación entre Python y ROS 2, \verb|tkinter| para crear la interfaz gráfica, \verb|csv| para el manejo de archivos CSV, \verb|os| para interactuar con el sistema y \verb|datetime| para gestionar la fecha de creación de los archivos.
 
 Se crea un directorio en el directorio de inicio del usuario, si no existe, bajo el nombre \textit{database}, donde se almacenan los ficheros con los datos de configuración de cada paciente.
 
-Se definen dos clases, \verb|ScrollPublisherNode| y \verb|ScrollGUI|.
-La primera es una clase de ROS 2 que publica los parámetros de dos señales, de tipo trayectoria y perturbación en el topic \verb|/SliderParameters| y los datos de asistencia y nivel de juego en \verb|/GameParameters|.
-Los mensajes son de tipo \verb|Float32MultiArray| y \verb|Int32MultiArray|, y se publican cada $100 ms$ y únicamente cuando se actualiza el valor de los datos, respectivamente.
+Se definen dos nodos, \verb|LimitNode| y \verb|ScrollPublisherNode|.
+El primero crea la interfaz de configuración del brazo que se va a rehabilitar y los límites físicos del robot, y publica el botón que se ha pulsado de la interfaz (resetear, mínimo, máximo u offset) para indicar la orientación o el ajuste de posición del actuador.
+El mensaje que se publica es de tipo \verb|Int32MultiArray|.
+El segundo publica los parámetros de dos señales, de tipo trayectoria y perturbación en el topic \verb|/SliderParameters| y los datos de asistencia y nivel de juego en \verb|/GameParameters|.
+Los mensajes son de tipo \verb|Float32MultiArray| y \verb|Int32MultiArray|, y se publican cada $50 ms$ y únicamente cuando se actualiza el valor de los datos, respectivamente.
 La decisión de publicar ambas señales en el mismo topic a dicha velocidad se debe a que la actualización de los datos debe realizarse de forma casi instantánea para permitir ajustes inmediatos en los parámetros de la terapia y evaluar la rapidez de respuesta del paciente.
-Y, se ha comprobado que esta estimación es lo suficientemente rápida para satisfacer estos requisitos.
-Los datos necesarios para generar la señal de trayectoria son frecuencia, amplitud y tipo, mientras que para la perturbación son duración, amplitud y tipo.
+Se ha comprobado que esta estimación es lo suficientemente rápida para satisfacer estos requisitos.
 El tiempo de las señales se define de manera distinta para evitar redundancias, ya que la perturbación no es constante.
 En su lugar, se estima una duración que facilita el entendimiento del terapeuta.
 El tipo de señal hace referencia al modo de juego y se codifica como 1.0 (hold o mantener) y 2.0 (follow o seguir), y el tipo de perturbación como 1.0 (sinusoidal) y 2.0 (step o escalón).
-También se define un offset que determina la distancia entre la señal principal y los límites superior e inferior, ajustando así los márgenes del camino.
-La segunda clase crea la interfaz gráfica y permite ajustar los parámetros del juego en tiempo real y publicarlos a través de un nodo de ROS.
+También se define un offset que, como se ha explicado en la Sección \ref{section:review}, determina la distancia entre la señal principal y los límites superior e inferior del juego, ajustando así los márgenes del camino.
+
+La clase \verb|ScrollGUI| crea la interfaz gráfica y permite ajustar los parámetros del juego en tiempo real y publicarlos a través de un nodo de ROS 2.
 Los datos se guardan en un archivo CSV bajo el nombre \verb|ID-year-month-day-config_<index>.csv| en un subdirectorio llamado \textit{config} dentro del directorio \textit{home/user/database/ID/}.
 \verb|index| hace referencia al número de archivo de la sesión diaria.
 Si el archivo no existe, se escribe un encabezado con los nombres de los campos a los que hacen referencia los datos como se observa en el Código \ref{cod:codejemplo2}.
@@ -137,8 +196,8 @@ La función \verb|close()| finaliza el nodo y cierra la GUI y el método \verb|r
 \verb|loadcsv()| lee el último registro del archivo del paciente que se pasa como parámetro y devuelve los valores de frecuencia (Hz), amplitud (rad) de las señales de trayectoria y perturbación, duración (s), periodo (s) y nivel del juego.
 Todos son \verb|float| excepto el último que es un \verb|int|.
 
+El programa comienza con la función \verb|startgui()| que crea el nodo \verb|LimitNode|.
 \verb|main()| es la función principal y se encarga de extraer el ID del paciente desde la ruta al archivo de registro, cargar los datos de las señales y el juego desde el CSV, crear el nodo \verb|ScrollPublisherNode| con dichos parámetros e iniciar la GUI.
-\verb|startgui()| es la primera interfaz que se lanza y gestiona la configuración del brazo que se va a rehabilitar y de los límites físicos del robot a través de la publicación de un \verb|Int32MultiArray| que actúa como un booleano indicando el botón que se ha pulsado (resetear, mínimo, máximo u offset).
 El offset corresponde a la posición inicial desde la cual comienza la terapia.
 Además, comprueba que se ha seleccionado o bien brazo derecho o izquierdo y que los límites mínimo y máximo se han definido correctamente antes de permitir establecer el offset o continuar a la siguiente ventana.
 La decisión de ajustar los límites y el offset mediante el movimiento del brazo robótico a una posición específica, y luego guardar dicha posición a través de un botón, responde a un requisito explícito del cliente.
@@ -157,7 +216,7 @@ En la Imagen \ref{fig:config} se muestra el formato de la ventana de inicio.
 \section{Interfaz de visualización}
 \label{section:visualization}
 
-Este script permite observar y registrar la ejecución de un paciente en una tarea de seguimiento de trayectoria como parte de una sesión de rehabilitación motora.
+Diseñado para observar y registrar la ejecución de un paciente en una tarea de seguimiento de trayectoria como parte de una sesión de rehabilitación motora.
 
 Además de incluir las bibliotecas mencionadas en la Sección \ref{section:controller}, se utilizan \verb|matplotlib| para visualizar los datos del rendimiento del jugador en tiempo real, \verb|numpy| para manejar los datos de las señales que cambian con el tiempo y \verb|sys| para gestionar la ruta al archivo CSV con los datos de registro del paciente.
 
@@ -172,8 +231,9 @@ Para la detección de colisiones se implementa una lógica simple basada en la c
 \verb|playercallback()| actualiza la posición del jugador, el offset que separa la señal de los límites y el tiempo total y marca que el jugador está activo.
 
 En la Imagen \ref{fig:visual}, se muestran dos gráficos.
-El que está en la parte superior muestra la señal de trayectoria (línea azul), la perturbación de tipo escalón (línea verde), los límites superior e inferior (líneas discontinuas grises) y la posición actual del jugador (punto rojo), proporcionando una visión clara y completa de la terapia.
-Y, la parte inferior grafica el error de posición con respecto a la trayectoria deseada en función del tiempo, lo que permite detectar fallos de control, fatiga o pérdida de atención.
+El que está en la parte superior muestra la señal de trayectoria (línea azul), la perturbación de tipo seno (línea verde), los límites superior e inferior (líneas discontinuas grises) y la posición actual del brazo (punto rojo), proporcionando una visión clara y completa de la terapia.
+La parte inferior grafica el error de posición con respecto a la trayectoria deseada en función del tiempo, lo que permite detectar fallos de control, fatiga o pérdida de atención.
+Este cálculo se explica en la Ecuación \ref{ec:ec1}.
 
 \begin{figure}[ht!]
 	\centering
@@ -181,29 +241,10 @@ Y, la parte inferior grafica el error de posición con respecto a la trayectoria
 		\centering
 		\includegraphics[width=\linewidth]{figs/visual.png}
 	\end{minipage}
-	\caption[Interfaz de visualización del terapeuta]{Interfaz de visualización del terapeuta}
+	\caption[Interfaz de visualización del terapeuta]{Gráfico superior: Monotorización del juego, trayectoria (línea azul continua), perturbación sinusoidal (línea verde continua), límites del juego (líneas grises discontinuas), posición del brazo (punto rojo).
+	Gráfico inferior: Graficación del error de trayectoria y media del error en el tiempo}
 	\label{fig:visual}
 \end{figure}
-
-En un principio, el error se calculaba en función del tiempo como se muestra en la Ecuación \ref{ec:ec1}, pero, más adelante, se optó por calcular la interpolación (o selección por índice más cercano) del valor de la trayectoria de referencia (x, y) evaluando la posición del jugador en el eje X, $x_p$, como se muestra en la Ecuación \ref{ec:ec2}.
-El segundo cálculo ofrece una aproximación más precisa al error, ya que está directamente relacionado con la ubicación del jugador.
-A diferencia del primer cálculo, que depende del instante de tiempo y puede verse afectado por variaciones en la sincronización de los datos.
-
-\begin{myequation}[h]
-\begin{equation}
-error_t = | y_{player}(t) - y_{reference}(t) |
-\nonumber
-\label{ec:ec1}
-\end{equation}
-\caption[Cálculo del error de trayectoria en el tiempo]{Cálculo del error de trayectoria en el tiempo}
-
-\begin{equation}
-error(x_p, y_p) = | y_p - f(x_p) |
-\nonumber
-\label{ec:ec2}
-\end{equation}
-\caption[Cálculo del error de trayectoria por posición]{Cálculo del error de trayectoria por posición}
-\end{myequation}
 
 Al finalizar la ejecución, los datos más relevantes como el tiempo, la señal, los límites mínimo y máximo, la posición del jugador, el offset, el error, las colisiones y el nivel de asistencia se almacenan en un archivo CSV bajo el nombre \verb|ID-year-month-day-metrics_<index>.csv| en un subdirectorio llamado \textit{metrics} dentro del directorio \textit{home/user/database/ID/}.
 \verb|index| hace referencia al número de archivo de la sesión diaria.
@@ -214,8 +255,8 @@ La función principal \verb|main()| verifica que se ha pasado como único argume
 \section{Juego flappy}
 \label{section:game}
 
-Este script implementa un juego basado en el Flappy Bird, adaptado a un entorno ROS 2 para interactuar con sensores y actuadores en tiempo real.
-Existen dos modos de juego distintos, \textit{hold}, el jugador debe mantener la posición, y \textit{follow}, el jugador debe seguir una trayectoría.
+Se trata de un juego basado en el Flappy Bird, adaptado a un entorno ROS 2 para interactuar con sensores y actuadores en tiempo real.
+Se han programado dos modos de juego distintos, \textit{hold}, el jugador debe mantener la posición, y \textit{follow}, el jugador debe seguir una trayectoría.
 
 Se implementan las librerías \verb|rclpy|, y \verb|std_msgs| para permitir la comunicación con ROS 2, \verb|matplotlib| y \verb|numpy| para la visualización y el manejo de señales, y \verb|pygame| para utilizar efectos de sonido.
 
@@ -240,7 +281,19 @@ Se crea un publicador \verb|Float32MultiArray|, llamado \verb|/MotorParameters|,
 Se crea una ventana gráfica de tamaño $2x3$, donde 3 es el recorrido máximo del brazo.
 En ella se representan la señal principal, los límites mínimo y máximo, las perturbaciones, la posición del jugador y objetos como estrellas y asteroides que forman parte de la lógica del juego.
 
-La posición del jugador se representa como un punto rojo que cambia de color según la distancia a la que se encuentra entre la trayectoria deseada y los límites (negro significa que está cerca de la trayectoria, gris que está a una distancia media y rojo indica peligro de colisión con los límites).
+La posición del brazo se representa como un punto rojo que cambia de color según la distancia a la que se encuentra entre la trayectoria deseada y los límites (negro significa que está cerca de la trayectoria, gris que está a una distancia media y rojo indica peligro de colisión con los límites).
+En la Imagen \ref{fig:colors} se muestra el color de la posición del brazo, según su coordenada en el eje Y, en el juego.
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.65\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/position_colors.png}
+	\end{minipage}
+	\caption[Color de la posición del brazo según la distancia con los límites del juego]{Color de la posición del brazo según la distancia con los límites del juego.
+	Posición del brazo (punto negro, gris y rojo), trayectoria (linea azul continua) y límites (líneas verdes continuas)}
+	\label{fig:colors}
+\end{figure}
+
 La posición se representa como una coordenada en los ejes XY, en el eje X permanece siempre a la misma distancia (a $0,25$ unidades del origen), y en el eje Y se muestra la posición que se recibe del sensor de posición del motor.
 En un principio, para validar el movimiento del jugador, la posición en el eje Y se basaba en el manejo de las flechas arriba y abajo del teclado.
 Para ello se utilizó la librería \verb|pynput|.
@@ -263,51 +316,52 @@ def on_press(self, key):
 \end{code}
 
 El método \verb|updatelevel()| cambia los colores del fondo y de la línea según el nivel, reproduce el sonido de subida de nivel y disminuye la asistencia para que la dificultad sea progresiva.
-La asistencia del robot se disminuye utilizando la Fórmula \ref{ec:ec3}.
+Como se explica al inicio del capítulo, la asistencia del robot se ajusta de forma automática según la Fórmula \ref{ec:ec3}.
 Se utiliza el máximo entre 0 y el valor calculado según el nivel para que la asistencia no sea un valor negativo.
 
-\begin{myequation}[h]
-\begin{equation}
-assistance = max(0, assistance - (level - 1) // 2)
-\nonumber
-\label{ec:ec3}
-\end{equation}
-\caption[Cálculo del nivel de asistencia según el nivel de dificultad]{Cálculo del nivel de asistencia según el nivel de dificultad}
-\end{myequation}
+Para crear un juego dinámico que capte la atención del paciente se crea una misión secundaria en cada nivel que se explica a continuación:
+\begin{itemize}
+    \item Niveles 1, 4 y 7: tienen como objetivo permanecer dentro de los límites por un tiempo determinado. Esto permite evaluar la precisión del paciente. Además, cuando se sobrepasa uno de los límites el contador se para y se reanuda de nuevo cuando se vuelve al camino.
+	\item Niveles 2 y 6: se enfocan en el ajuste de la posición para chocar con las estrellas que están dispuestas en la señal principal. De esta forma se consigue que el paciente permanezca y siga la trayectoria deseada.
+	\item Niveles 3 y 8: pretenden ejercitar la rapidez de reacción mientras el paciente evita colisionar con los asteroides.
+	\item Niveles 5 y 9: fomentan la flexibilidad cognitiva del paciente para adaptarse a una nueva lógica de control basada en el concepto de gravedad invertida (arriba es abajo y viceversa). Para estos niveles se invierten las referencias de posición para que el robot se ajuste a la nueva lógica del juego.
+	\item Nivel 10: permite al terapeuta evaluar distintos escenarios límites mediante ajustes en los parámetros de la señal, perturbación y el offset.
+\end{itemize}\
 
-Para crear un juego dinámico que capte la atención del paciente se crea una misión secundaria en cada nivel.
-Los niveles 1, 4 y 7 tienen como objetivo permanecer dentro de los límites por un tiempo determinado.
-Esto permite evaluar la precisión del paciente.
-Además, cuando se sobrepasa uno de los límites el contador se para y se reanuda de nuevo cuando se vuelve al camino.
-Los niveles 2 y 6 se enfocan en el ajuste de la posición para chocar con las estrellas que están dispuestas en la señal principal.
-De esta forma se consigue que el paciente permanezca y siga la trayectoria deseada.
-Los niveles 3 y 8 pretenden ejercitar la rapidez de reacción mientras el paciente evita colisionar con los asteroides.
-Los niveles 5 y 9 fomentan la flexibilidad cognitiva del paciente para adaptarse a una nueva lógica de control basada en el concepto de gravedad invertida (arriba es abajo y viceversa).
-Y, por último, el nivel 10 permite al médico evaluar distintos escenarios límites mediante ajustes en los parámetros de la señal, perturbación y el offset.
-En las Imágenes \ref{fig:level} y \ref{fig:level2} se comparan dos niveles diferentes del juego.
-La primera imagen presenta límites más estrictos que la segunda, que se han coloreado para que se vean claramente en el estudio, pero en el juego son dos líneas de color blanco punteadas para evitar distracciones del paciente.
-En la segunda imagen, se observan dos perturbaciones de tipo sinusoidal con sentidos opuestos, representadas por triángulos verdes cuya punta indica el signo de la perturbación.
+En las Imágenes \ref{fig:level1}, \ref{fig:level2} y \ref{fig:level3} se comparan tres niveles diferentes del juego.
+La primera imagen presenta límites menos estrictos que las dos siguientes (offset de $3 ud$, $1 ud$ y $2 ud$, por orden), que se han coloreado para que se vean claramente en el estudio, pero en el juego son dos líneas de color blanco punteadas para evitar distracciones del paciente.
+En la primera, se observan dos perturbaciones de tipo sinusoidal con sentidos opuestos, representadas por triángulos verdes cuya punta indica el signo de la perturbación.
 Si fuese una perturbación de tipo escalón, los triángulos se pintan de color naranja siguiendo la misma lógica de graficación.
-En contraste, la primera imagen no muestra ninguna perturbación.
+En contraste, la segunda y tercera imagen no muestran ninguna perturbación.
 
 \begin{figure}[ht!]
 	\centering
-	\begin{minipage}{0.85\linewidth}
+	\begin{minipage}{0.71\linewidth}
 		\centering
-		\includegraphics[width=\linewidth]{figs/flappy_level.png}
+		\includegraphics[width=\linewidth]{figs/flappy_level1.png}
 	\end{minipage}
-	\caption[Nivel 2 del juego sin perturbación]{Nivel 2 del juego sin perturbación}
-	\label{fig:level}
+	\caption[Nivel 1 del juego con perturbación]{Nivel 1 del juego con perturbación}
+	\label{fig:level1}
 \end{figure}
 
 \begin{figure}[ht!]
 	\centering
-	\begin{minipage}{0.70\linewidth}
+	\begin{minipage}{0.65\linewidth}
 		\centering
 		\includegraphics[width=\linewidth]{figs/flappy_level2.png}
 	\end{minipage}
-	\caption[Nivel 1 del juego con perturbación]{Nivel 1 del juego con perturbación}
+	\caption[Nivel 2 del juego sin perturbación]{Nivel 2 del juego sin perturbación}
 	\label{fig:level2}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.65\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/flappy_level3.png}
+	\end{minipage}
+	\caption[Nivel 3 del juego sin perturbación]{Nivel 3 del juego sin perturbación}
+	\label{fig:level3}
 \end{figure}
 
 Se introduce un sistema de recompensas para aumentar la motivación y destreza del paciente.
@@ -326,10 +380,109 @@ Se utilizan las funciones \verb|np.roll| y \verb|plt.ion()| de las bibliotecas \
 \verb|np.roll| actualiza la señal y la perturbación.
 Como se explica en la Sección \ref{section:visualization}, los gráficos se actualizan en tiempo real con \verb|plt.ion()|.
 
-Los callbacks actualizan los datos que se reciben de los topics, estas funciones son \verb|disturbcallback()|, \verb|levelcallback()|, \verb|offsetcallback()| y \verb|positioncallback()|.
+Los \textit{callbacks} actualizan los datos que se reciben de los topics, estas funciones son \verb|disturbcallback()|, \verb|levelcallback()|, \verb|offsetcallback()| y \verb|positioncallback()|.
 
 La función \verb|main()| inicializa el nodo ROS, crea una instancia del juego y entra en un bucle hasta que el usuario detenga el programa.\\
 
 El proyecto es fácilmente escalable en el caso que se quiera añadir una señal que sea combinación de otras.
 Simplemente se debe obtener la señal del topic \verb|/CleanSignal| si es de tipo trayectoria o de \verb|/Disturbance| si es de tipo perturbación.
 En cuanto a la selección de esta nueva señal, es suficiente con incluir una nueva opción dentro de la \verb|Combox| a la que hace referencia.
+
+\section{Realización y resultado de los ensayos}
+\label{section:encuestas}
+
+Se ha realizado una encuesta con 9 preguntas sobre la experiencia del juego a personas que no presentan ninguna discapacidad tras sufrir un ictus.
+Los resultados obtenidos han sido los siguientes (n=9):
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.75\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta1.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 1]{El $100\%$ de los participantes considera que la interfaz es sencilla}
+	\label{fig:level1}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.75\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta2.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 2]{El $100\%$ de los participantes está deacuerdo con que el diseño de la interfaz de control es cómoda de utilizar}
+	\label{fig:level2}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.75\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta3.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 3]{El $100\%$ de los participantes ha votado que hay variedad en los niveles de juego}
+	\label{fig:level3}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.71\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta4.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 4]{El $55,6\%$ de los participantes piensa que algunas misiones del juego son difíciles de superar y el $44,4\%$ no cree que sean complejas}
+	\label{fig:level1}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.85\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta5.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 5]{Las misiones más difíciles según los usuarios son: mantenerse dentro de los límites del juego, conseguir estrelas y gravedad invertida}
+	\label{fig:level2}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.85\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta6.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 6]{El $55,6\%$ de los participantes ha votado que la misión más entretenida es la de gravedad invertida}
+	\label{fig:level3}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.75\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta7.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 7]{El $100\%$ de los participantes piensa que las perturbaciones están bien señalizadas en el juego}
+	\label{fig:level1}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.75\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta8.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 8]{El $100\%$ de los participantes considera que las perturbaciones aparecen con anterioridad antes de que sean notables}
+	\label{fig:level2}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.85\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta9.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 9]{El $66,7\%$ de los participantes ha votado que la sesión terapéutica es interactiva y personalizada}
+	\label{fig:level3}
+\end{figure}
+
+Como conclusión se refleja que la interfaz del juego es sencilla (el $100\%$ de los participantes así lo consideran), que unas misiones son más entretenidas y difíciles que otras y que las sesiones son interactivas y personalizadas (el $66,7\%$ de los participantes en la encuesta han contestado la mayor puntuación).
+
+Está pendiente realizar la encuesta con pacientes post-ictus.

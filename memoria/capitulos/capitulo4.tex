@@ -14,7 +14,7 @@ Steve Jobs, \textit{conferencia de lanzamiento del Apple iPod, 2001}\\
 Después de definir la plataforma de desarrollo, se procede a explicar el diseño de la aplicación.
 
 El sistema implementa terapias de rehabilitación motora dirigidas a pacientes post-ictus, facilitando el movimiento del miembro superior derecho mediante la interacción con un dispositivo robótico.
-La rehabilitación se basa en un diseño que fomenta el matener una posición estática como la movilidad dinámica del brazo dentro de un entorno gamificado.
+La rehabilitación se basa en un diseño que fomenta el mantener una posición estática como la movilidad dinámica del brazo dentro de un entorno gamificado.
 Dicho entorno permite al terapeuta monitorear y adaptar las sesiones en tiempo real.
 
 La función del sistema es guiar y asistir al paciente durante la realización de movimientos específicos con el fin de mejorar el control motor.
@@ -54,6 +54,7 @@ Estos parámetros son esenciales para personalizar la terapia según el desempe�
 		\end{equation}
 		\caption[Cálculo del nivel de asistencia según el nivel de dificultad]{Cálculo del nivel de asistencia según el nivel de dificultad}
 	\end{myequation}
+	Se definen cinco niveles de asistencia que son orientativos para el terapeuta, ya que el ajuste de este parámetro es parte de la lógica de control del actuador.
 	\item Nivel de dificultad: hace referencia al nivel de dificultad del juego. Aumenta de forma progresiva reduciendo el nivel de asistencia del robot. Cuando se supera una misión el juego sube automáticamente de nivel. También puede modificarse manualmente desde la interfaz de control.
 \end{itemize}\
 
@@ -104,7 +105,7 @@ El proyecto se compone de cinco nodos:
 La arquitectura modular de los nodos permite una separación clara entre la lógica del juego, la visualización y el control de la plataforma.
 Esta estructura facilita el desarrollo, pero introduce restricciones en cuanto a la sincronización de los datos.
 Pueden producirse desfases leves en sesiones prolongadas o con múltiples perturbaciones simultáneas debido a la diferencia entre la frecuencia de publicación y la latencia de los \textit{callbacks}.
-No obstante, la fecuencia fija de actualización es suficiente para mantener una ejecución estable.\\
+No obstante, la frecuencia fija de actualización es suficiente para mantener una ejecución estable.\\
 
 El software se divide en cuatro programas, el primero se utiliza para crear o registrar un paciente, el segundo lanza la GUI y controla los parámetros del juego, el tercero permite visualizar el comportamiento del paciente durante la terapia, y el cuarto es el propio juego.
 
@@ -157,7 +158,7 @@ Los mensajes son de tipo \verb|Float32MultiArray| y \verb|Int32MultiArray|, y se
 La decisión de publicar ambas señales en el mismo topic a dicha velocidad se debe a que la actualización de los datos debe realizarse de forma casi instantánea para permitir ajustes inmediatos en los parámetros de la terapia y evaluar la rapidez de respuesta del paciente.
 Se ha comprobado que esta estimación es lo suficientemente rápida para satisfacer estos requisitos.
 El tiempo de las señales se define de manera distinta para evitar redundancias, ya que la perturbación no es constante.
-En su lugar, se estima una duración que facilita el entendimiento del terapeuta.
+En su lugar, se establece una duración según lo acordado con la parte encargada del control del actuador.
 El tipo de señal hace referencia al modo de juego y se codifica como 1.0 (hold o mantener) y 2.0 (follow o seguir), y el tipo de perturbación como 1.0 (sinusoidal) y 2.0 (step o escalón).
 También se define un offset que, como se ha explicado en la Sección \ref{section:review}, determina la distancia entre la señal principal y los límites superior e inferior del juego, ajustando así los márgenes del camino.
 
@@ -256,7 +257,7 @@ La función principal \verb|main()| verifica que se ha pasado como único argume
 \label{section:game}
 
 Se trata de un juego basado en el Flappy Bird, adaptado a un entorno ROS 2 para interactuar con sensores y actuadores en tiempo real.
-Se han programado dos modos de juego distintos, \textit{hold}, el jugador debe mantener la posición, y \textit{follow}, el jugador debe seguir una trayectoría.
+Se han programado dos modos de juego distintos, \textit{hold}, el jugador debe mantener la posición, y \textit{follow}, el jugador debe seguir una trayectoria.
 
 Se implementan las librerías \verb|rclpy|, y \verb|std_msgs| para permitir la comunicación con ROS 2, \verb|matplotlib| y \verb|numpy| para la visualización y el manejo de señales, y \verb|pygame| para utilizar efectos de sonido.
 
@@ -387,102 +388,3 @@ La función \verb|main()| inicializa el nodo ROS, crea una instancia del juego y
 El proyecto es fácilmente escalable en el caso que se quiera añadir una señal que sea combinación de otras.
 Simplemente se debe obtener la señal del topic \verb|/CleanSignal| si es de tipo trayectoria o de \verb|/Disturbance| si es de tipo perturbación.
 En cuanto a la selección de esta nueva señal, es suficiente con incluir una nueva opción dentro de la \verb|Combox| a la que hace referencia.
-
-\section{Realización y resultado de los ensayos}
-\label{section:encuestas}
-
-Se ha realizado una encuesta con 9 preguntas sobre la experiencia del juego a personas que no presentan ninguna discapacidad tras sufrir un ictus.
-Los resultados obtenidos han sido los siguientes (n=9):
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.75\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/pregunta1.png}
-	\end{minipage}
-	\caption[Encuesta de satisfacción. Pregunta 1]{El $100\%$ de los participantes considera que la interfaz es sencilla}
-	\label{fig:level1}
-\end{figure}
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.75\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/pregunta2.png}
-	\end{minipage}
-	\caption[Encuesta de satisfacción. Pregunta 2]{El $100\%$ de los participantes está deacuerdo con que el diseño de la interfaz de control es cómoda de utilizar}
-	\label{fig:level2}
-\end{figure}
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.75\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/pregunta3.png}
-	\end{minipage}
-	\caption[Encuesta de satisfacción. Pregunta 3]{El $100\%$ de los participantes ha votado que hay variedad en los niveles de juego}
-	\label{fig:level3}
-\end{figure}
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.71\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/pregunta4.png}
-	\end{minipage}
-	\caption[Encuesta de satisfacción. Pregunta 4]{El $55,6\%$ de los participantes piensa que algunas misiones del juego son difíciles de superar y el $44,4\%$ no cree que sean complejas}
-	\label{fig:level1}
-\end{figure}
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.85\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/pregunta5.png}
-	\end{minipage}
-	\caption[Encuesta de satisfacción. Pregunta 5]{Las misiones más difíciles según los usuarios son: mantenerse dentro de los límites del juego, conseguir estrelas y gravedad invertida}
-	\label{fig:level2}
-\end{figure}
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.85\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/pregunta6.png}
-	\end{minipage}
-	\caption[Encuesta de satisfacción. Pregunta 6]{El $55,6\%$ de los participantes ha votado que la misión más entretenida es la de gravedad invertida}
-	\label{fig:level3}
-\end{figure}
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.75\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/pregunta7.png}
-	\end{minipage}
-	\caption[Encuesta de satisfacción. Pregunta 7]{El $100\%$ de los participantes piensa que las perturbaciones están bien señalizadas en el juego}
-	\label{fig:level1}
-\end{figure}
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.75\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/pregunta8.png}
-	\end{minipage}
-	\caption[Encuesta de satisfacción. Pregunta 8]{El $100\%$ de los participantes considera que las perturbaciones aparecen con anterioridad antes de que sean notables}
-	\label{fig:level2}
-\end{figure}
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.85\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{figs/pregunta9.png}
-	\end{minipage}
-	\caption[Encuesta de satisfacción. Pregunta 9]{El $66,7\%$ de los participantes ha votado que la sesión terapéutica es interactiva y personalizada}
-	\label{fig:level3}
-\end{figure}
-
-Como conclusión se refleja que la interfaz del juego es sencilla (el $100\%$ de los participantes así lo consideran), que unas misiones son más entretenidas y difíciles que otras y que las sesiones son interactivas y personalizadas (el $66,7\%$ de los participantes en la encuesta han contestado la mayor puntuación).
-
-Está pendiente realizar la encuesta con pacientes post-ictus.

@@ -1,33 +1,102 @@
-\chapter{Conclusiones}
+\chapter{Resultados y validación}
 \label{cap:capitulo5}
 
-En este último capítulo se detallan los objetivos y requisitos cumplidos, se redactan las conclusiones que se han obtenido a lo largo de todo el proyecto y se describen las posibles líneas futuras que dan continuidad a este trabajo de fin de grado.\\
+\vspace{1cm}
 
-Se ha alcanzado el objetivo principal de este proyecto, esto es, diseñar una interfaz gráfica intuitiva y funcional para que un terapeuta controle y personalice las sesiones terapéuticas post-ictus, así como desarrollar un entorno gamificado que motive y facilite la participación activa del paciente durante su rehabilitación motora unilateral.
-A su vez, se han cumplido todos los subobjetivos definidos en la Sección \ref{sec:descripcion} y los requisitos establecidos en la Sección \ref{sec:requisitos}:
-\begin{enumerate}
-    \item Se ha desarrollado un entorno gamificado personalizado al perfil de cada paciente, que incluye diferentes estímulos visuales y auditivos, niveles de dificultad y asistencia, y misiones particulares.
-    \item Se han integrado perturbaciones controladas en el entorno de juego terapéutico, lo que hace que sea variable y presente un desafío en el control motor y la capacidad de adaptación del paciente.
-    \item Se ha diseñado una interfaz gráfica funcional y adaptable para que el terapeuta controle el desarrollo de la terapia y el modo de rehabilitación, permitiéndole visualizar el progreso del paciente y ajustar los parámetros del juego según su rendimiento.
-    \item La arquitectura software de la plataforma es capaz de recibir datos de sensores y controlar actuadores para coordinar los estímulos visuales y físicos que el paciente experimente durante la terapia.
-    \item Se ha creado una interfaz gráfica que permite definir los datos personales de un paciente y registrar su progreso después de cada sesión.
-    \item Se ha evaluado la usabilidad de la plataforma a través de una encuesta de satisfacción a los usuarios.
-\end{enumerate}\
+Una vez finalizado el desarrollo del proyecto, se evalúa la usabilidad de la plataforma mediante una encuesta de satisfacción a los usuarios, quienes valoraron su funcionamiento.\\
 
-Se concluye que los entornos gamificados incrementan significativamente la motivación de los usuarios durante el proceso de rehabilitación, según las encuestas de satisfacción realizadas a los usuarios que probaron la plataforma.
-Los resultados graficados se encuentran en la Sección \ref{section:encuestas}.
-Los usuarios disfrutan más cuando la terapia se desarrolla en un entorno dinámico e interactivo.
-Además, la introducción de misiones secundarias dentro del juego ha demostrado una mejora del nivel de compromiso de los usuarios, ya que se sienten más involucrados en el proceso.
+Se ha realizado una encuesta con 9 preguntas sobre la experiencia del juego a personas sanas.
+Los resultados obtenidos han sido los siguientes (n=9):
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.75\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta1.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 1]{El $100\%$ de los participantes considera que la interfaz es sencilla}
+	\label{fig:level1}
+\end{figure}
 
-La personalización de las sesiones de rehabilitación, adaptadas a las necesidades de cada paciente, permite que el sistema se ajuste a su progreso y ofrece mejores resultados terapéuticos.
-Según las encuestas, los usuarios se muestran más satisfechos con esta adaptación, porque les ofrece una terapia diseñada específicamente para sus capacidades.
-Esto mejora la eficacia del tratamiento y deriva en una mayor adherencia.\\
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.75\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta2.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 2]{El $100\%$ de los participantes está de acuerdo con que el diseño de la interfaz de control es cómoda de utilizar}
+	\label{fig:level2}
+\end{figure}
 
-Para finalizar, se proponen las siguientes mejoras que permiten la continuidad de este proyecto:
-\begin{itemize}
-    \item Mostrar el comienzo de la señal sinusoidal de tipo perturbación, en vez de un dibujar un triángulo, para que el usuario identifique el movimiento de forma más clara.
-    \item Integrar una nueva señal que sea combinación de otras para introducir variabilidad a las señales de trayectoria y perturbación.
-    \item Crear un script que analice el rendimiento del paciente a partir de los datos terapéuticos almacenados. 
-    \item Diseñar un nuevo juego enfocado en la mejora de la coordinación motora, ofreciendo una alternativa de rehabilitación.
-    \item Evaluar la plataforma en pacientes con ictus para determinar su eficacia en un entorno sanitario.
-\end{itemize}\
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.75\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta3.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 3]{El $100\%$ de los participantes ha votado que hay variedad en los niveles de juego}
+	\label{fig:level3}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.71\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta4.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 4]{El $55,6\%$ de los participantes piensa que algunas misiones del juego son difíciles de superar y el $44,4\%$ no cree que sean complejas}
+	\label{fig:level1}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.85\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta5.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 5]{Las misiones más difíciles según los usuarios son: mantenerse dentro de los límites del juego, conseguir estrellas y gravedad invertida}
+	\label{fig:level2}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.85\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta6.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 6]{El $55,6\%$ de los participantes ha votado que la misión más entretenida es la de gravedad invertida}
+	\label{fig:level3}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.75\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta7.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 7]{El $100\%$ de los participantes piensa que las perturbaciones están bien señalizadas en el juego}
+	\label{fig:level1}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.75\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta8.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 8]{El $100\%$ de los participantes considera que las perturbaciones aparecen con anterioridad antes de que sean notables}
+	\label{fig:level2}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.85\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/pregunta9.png}
+	\end{minipage}
+	\caption[Encuesta de satisfacción. Pregunta 9]{El $66,7\%$ de los participantes ha votado que la sesión terapéutica es interactiva y personalizada}
+	\label{fig:level3}
+\end{figure}
+
+Como conclusión se refleja que la interfaz del juego es sencilla (el $100\%$ de los participantes así lo consideran), que unas misiones son más entretenidas y difíciles que otras y que las sesiones son interactivas y personalizadas (el $66,7\%$ de los participantes en la encuesta han contestado la mayor puntuación).
+
+Está pendiente realizar la encuesta con pacientes post-ictus.
